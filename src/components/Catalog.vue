@@ -1,7 +1,6 @@
 <template>
   <base-modal v-if="isCartModalOpen" title="Your cart">
     <cart :products="cart"></cart>
-
     <template #actions>
       <base-button mode="primary">Continue shopping</base-button>
     </template>
@@ -9,7 +8,7 @@
 
   <div class="catalog">
     <base-heading variant="h2">Catalog</base-heading>
-    <category-tabs :items="categories" @onCategoryClick="setActiveCategory"></category-tabs>
+    <category-tabs :items="categories" @onCategoryClick="setActiveCategory" v-if="products.length > 0"></category-tabs>
   </div>
   <hr />
   <product-list :products="productList"></product-list>
@@ -26,7 +25,6 @@ import ProductList from './ProductList.vue';
 import BaseModal from './UI/BaseModal.vue';
 import Cart from './Cart.vue';
 import BaseButton from './UI/BaseButton.vue';
-
 
 export default {
   components: { BaseHeading, CategoryTabs, BaseCard, Card, BaseList, ProductList, BaseModal, Cart, BaseButton },
@@ -74,21 +72,21 @@ hr {
   border-top: 2px solid #f6f6f6;
 }
 
-ul {
+/* ul {
   display: grid;
   gap: 25px;
   list-style: none;
   padding: 40px 0;
-}
+} */
 
-@media screen and (min-width: 768px) {
+/* @media screen and (min-width: 768px) {
   ul {
     display: grid;
     gap: 25px;
     grid-template-columns: repeat(2, 1fr);
     padding: 60px 0;
   }
-}
+} */
 
 @media screen and (min-width: 1024px) {
   .catalog {
@@ -97,14 +95,14 @@ ul {
     align-items: center;
   }
 
-  ul {
+  /* ul {
     grid-template-columns: repeat(3, 1fr);
-  }
+  } */
 }
 
-@media screen and (min-width: 1280px) {
+/* @media screen and (min-width: 1280px) {
   ul {
     grid-template-columns: repeat(4, 1fr);
   }
-}
+} */
 </style>

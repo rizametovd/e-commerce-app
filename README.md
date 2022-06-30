@@ -1,5 +1,8 @@
 # e-commerce-app
 
+Пэт проект. В процессе. На текущий момент работают: табы, корзина (добавление/изменение количества/удаление)
+деплой: https://polite-beijinho-ecade0.netlify.app
+
 ## Project setup
 ```
 npm install

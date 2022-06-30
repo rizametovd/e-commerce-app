@@ -34,9 +34,8 @@ export default {
     ...mapActions(['openModal']),
 
     openCartModal() {
-      console.log('Modal isOpened')
       this.openModal();
-    }
+    },
   },
   computed: {
     ...mapGetters(['cartTotalProductsQuantity']),

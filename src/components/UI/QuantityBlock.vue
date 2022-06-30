@@ -1,13 +1,26 @@
 <template>
   <div class="quantity">
-    <button class="quantity__btn" type="button" @click="$emit('decrement')" :disabled="isButtonDisabled">-</button>
+    <base-button @click="$emit('decrement')" :isDisabled="isButtonDisabled" mode="secondary">
+      <icon-base>
+        <minus-icon></minus-icon>
+      </icon-base>
+    </base-button>
     <span class="quantity__count">{{ quantity }}</span>
-    <button class="quantity__btn" type="button" @click="$emit('increment')">+</button>
+    <base-button @click="$emit('increment')" mode="secondary">
+      <icon-base>
+        <plus-icon></plus-icon>
+      </icon-base>
+    </base-button>
   </div>
 </template>
 
 <script>
+import BaseButton from './BaseButton.vue';
+import PlusIcon from '../icons/PlusIcon.vue';
+import MinusIcon from '../icons/MinusIcon.vue';
+import IconBase from './IconBase.vue';
 export default {
+  components: { BaseButton, PlusIcon, MinusIcon, IconBase },
   emits: ['increment', 'decrement'],
   props: {
     quantity: {
@@ -54,6 +67,5 @@ export default {
     transition: background-color 0.15s linear;
     background-color: #e2e2e2;
   }
-
 }
 </style>

@@ -1,6 +1,10 @@
 <template>
   <base-modal v-if="isCartModalOpen" title="Your cart">
-    <cart @closeModal="closeModal" :products="cart"></cart>
+    <cart :products="cart"></cart>
+
+    <template #actions>
+      <base-button mode="primary">Continue shopping</base-button>
+    </template>
   </base-modal>
 
   <div class="catalog">
@@ -21,10 +25,11 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import ProductList from './ProductList.vue';
 import BaseModal from './UI/BaseModal.vue';
 import Cart from './Cart.vue';
+import BaseButton from './UI/BaseButton.vue';
 
 
 export default {
-  components: { BaseHeading, CategoryTabs, BaseCard, Card, BaseList, ProductList, BaseModal, Cart },
+  components: { BaseHeading, CategoryTabs, BaseCard, Card, BaseList, ProductList, BaseModal, Cart, BaseButton },
 
   data() {
     return {
@@ -33,7 +38,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['fetchProducts', 'closeModal']),
+    ...mapActions(['fetchProducts']),
 
     setActiveCategory(activeCategory) {
       this.activeCategory = activeCategory;
@@ -48,10 +53,6 @@ export default {
       if (this.activeCategory === 'all') return this.products;
       return this.products.filter((product) => product.category === this.activeCategory);
     },
-
-    // cartItemsCount() {
-    //   return this.cart.length;
-    // },
   },
 
   mounted() {

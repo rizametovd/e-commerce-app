@@ -1,5 +1,5 @@
 <template>
-  <base-modal v-if="isCartModalOpen" title="Your cart">
+  <base-modal :isModalOpen="isCartModalOpen" title="Your cart">
     <cart :products="cart"></cart>
     <template #actions>
       <base-button mode="primary">Continue shopping</base-button>

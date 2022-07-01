@@ -59,7 +59,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 30px;
-  position: fixed;
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -93,4 +93,5 @@ export default {
     opacity: 1;
   }
 }
+
 </style>

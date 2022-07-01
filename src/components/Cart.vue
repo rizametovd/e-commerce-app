@@ -1,52 +1,55 @@
 <template>
   <section class="cart">
-    <div class="cart__grid">
-      <label class="cart__title">Photo</label>
-      <label class="cart__title">Title</label>
-      <label class="cart__title">Quantity</label>
-      <label class="cart__title">Price</label>
-      <label class="cart__title">Subtotal</label>
+
+    <div class="cart__mobile">
+      <div class="cart__grid">
+        <label class="cart__title">Photo</label>
+        <label class="cart__title">Title</label>
+        <label class="cart__title">Quantity</label>
+        <label class="cart__title">Price</label>
+        <label class="cart__title">Subtotal</label>
+      </div>
     </div>
 
     <ul class="cart__list">
       <li class="cart__grid" v-for="product in products" :key="product.id">
         <img :src="product.image" class="cart__img" />
         <p class="cart__item-title cart__item-text">{{ product.title }}</p>
-        <quantity-block :quantity="product.quantity" @increment="incrementQuantity(product.id)" @decrement="decrementQuantity(product.id)"></quantity-block>
-        <p class="cart__item-text">${{ product.price }}</p>
-        <p class="cart__item-text">${{ (product.price * product.quantity).toFixed(2) }}</p>
-        <base-button @click="deleteProduct(product.id)" mode="icon">
-          <icon-base>
-            <deleteIcon></deleteIcon>
-          </icon-base>
-        </base-button>
+
+        <div class="cart__mobile">
+          <span>Quantity:</span>
+          <quantity-block :quantity="product.quantity" @increment="incrementQuantity(product.id)" @decrement="decrementQuantity(product.id)"></quantity-block>
+        </div>
+
+        <div class="cart__mobile">
+          <span>Price:</span>
+          <p class="cart__item-text">${{ product.price }}</p>
+        </div>
+        
+        <div class="cart__mobile">
+          <span>Subtotal:</span>
+          <p class="cart__item-text">${{ (product.price * product.quantity).toFixed(2) }}</p>
+        </div>
+
+        <div class="cart__mobile-action">
+          <base-button @click="deleteProduct(product.id)" mode="icon">
+            <icon-base>
+              <deleteIcon></deleteIcon>
+            </icon-base>
+          </base-button>
+        </div>
+        <hr />
       </li>
     </ul>
 
     <div class="cart__totals-block">
       <span class="cart__title">Total quantity:</span>
-      <p>{{ totalQuantity }}pcs</p>
+      <p>{{ totalQuantity }} pcs</p>
     </div>
     <div class="cart__totals-block">
       <span class="cart__title">Total amount: </span>
       <p>${{ totalAmount }}</p>
     </div>
-
-    <!-- <ul class="cart__list">
-      <li class="cart__item" v-for="product in products" :key="product.id">
-        <img :src="product.image" class="cart__img" />
-        <h6>{{ product.title }}</h6>
-        <quantity-block :quantity="product.quantity" @increment="incrementQuantity(product.id)" @decrement="decrementQuantity(product.id)"></quantity-block>
-        <p>${{ product.price }}</p>
-        <p>${{ product.price * product.quantity }}</p>
-
-        <base-button @click="deleteProduct(product.id)" mode="icon">
-          <icon-base>
-            <deleteIcon></deleteIcon>
-          </icon-base>
-        </base-button>
-      </li>
-    </ul> -->
 
     <div class="cart__actions">
       <!-- <button @click="$emit('closeModal')">Continue shopping</button> -->
@@ -88,33 +91,46 @@ export default {
 </script>
 
 <style scoped>
+.cart {
+  display: grid;
+}
+
 .cart__title {
-  font-weight: 600;
+  display: none;
 }
 
 .cart__grid {
-  max-width: 900px;
-  margin: auto;
-  display: grid;
-  align-items: center;
-  justify-items: center;
+  display: none;
+}
 
-  grid-template-columns: 1fr 4fr 1fr 1fr 1fr 1fr;
-  grid-gap: 15px;
-  color: #222;
-  border-bottom: 1px solid #ddd;
-  padding: 1em 0;
+.cart__grid {
+  display: grid;
+  gap: 15px;
+}
+
+.cart__mobile {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.cart__mobile-action {
+  justify-self: start;
+}
+
+.cart__mobile > span {
+  font-weight: 600;
 }
 
 .cart__list {
+  display: grid;
+  gap: 20px;
   padding: 0;
   list-style: none;
 }
 
 .cart__img {
-  width: 100%;
-  height: 40px;
-  object-fit: contain;
+  display: none;
 }
 
 .cart__item-title {
@@ -136,5 +152,50 @@ export default {
   display: flex;
   justify-content: flex-end;
   gap: 20px;
+}
+
+@media screen and (min-width: 768px) {
+  .cart {
+    display: block;
+  }
+  .cart__grid {
+    max-width: 900px;
+    margin: auto;
+    align-items: center;
+    justify-items: center;
+    grid-template-columns: 1fr 4fr 1fr 1fr 1fr 1fr;
+    grid-gap: 15px;
+    color: #222;
+    padding: 15px 0;
+    border-bottom: 1px solid lightgray;
+  }
+
+  .cart__title {
+    display: block;
+   font-weight: 600;
+  }
+
+  .cart__grid {
+    display: grid;
+  }
+
+  .cart__img {
+    display: block;
+    width: 100%;
+    height: 40px;
+    object-fit: contain;
+  }
+
+  .cart__mobile {
+    display: contents;
+  }
+
+  .cart__mobile > span {
+    display: none;
+  }
+
+  .cart__mobile-action {
+    justify-self: center;
+  }
 }
 </style>

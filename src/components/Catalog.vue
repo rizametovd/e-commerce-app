@@ -1,6 +1,7 @@
 <template>
   <base-modal :isModalOpen="isCartModalOpen" title="Your cart">
-    <cart :products="cart"></cart>
+    <cart :products="cart" v-if="cart.length > 0"></cart>
+    <p v-else>Your cart is empty</p>
     <template #actions>
       <base-button mode="primary">Continue shopping</base-button>
     </template>

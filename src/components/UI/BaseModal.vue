@@ -5,10 +5,10 @@
 
   <transition name="modal">
     <dialog class="modal" open v-if="isModalOpen">
-      <h2 class="modal__title">
+      <h2>
         {{ title }}
       </h2>
-      <section class="modal__content">
+      <section>
         <slot></slot>
       </section>
 
@@ -58,34 +58,19 @@ export default {
 .modal {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 30px;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   max-width: 800px;
-  padding: 0;
+  padding: 40px 20px;
   border-radius: 16px;
   z-index: 2;
   border: 1px solid black;
 }
 
-.modal__title {
-  background: #fcf7eb;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  padding: 10px 0;
-}
-
-.modal__content {
-  padding: 0 20px;
-}
-
 .modal__actions {
-  border-bottom-left-radius: 16px;
-  border-bottom-right-radius: 16px;
-  padding: 10px 20px;
-  background: #fcf7eb;
   display: flex;
   gap: 20px;
   justify-content: flex-end;

@@ -60,5 +60,10 @@ export default {
     transition: background-color 0.15s linear;
     background-color: #e2e2e2;
   }
+
+    .button__primary:not(:disabled):hover {
+    transition: background-color 0.15s linear;
+    background-color: #e2e2e2;
+  }
 }
 </style>

@@ -14,18 +14,23 @@
         <p class="cart__item-title cart__item-text">{{ product.title }}</p>
         <quantity-block :quantity="product.quantity" @increment="incrementQuantity(product.id)" @decrement="decrementQuantity(product.id)"></quantity-block>
         <p class="cart__item-text">${{ product.price }}</p>
-        <!-- <p class="cart__item-text">${{ (product.price * product.quantity).toFixed(2) }}</p> -->
-        <p class="cart__item-text">${{ subTotal }}</p>
-
+        <p class="cart__item-text">${{ (product.price * product.quantity).toFixed(2) }}</p>
         <base-button @click="deleteProduct(product.id)" mode="icon">
           <icon-base>
             <deleteIcon></deleteIcon>
           </icon-base>
         </base-button>
       </li>
-      <p>Total quantity: {{totalQuantity}} pcs</p>
-      <p>Total amount: ${{ totalAmount }}</p>
     </ul>
+
+    <div class="cart__totals-block">
+      <span class="cart__title">Total quantity:</span>
+      <p>{{ totalQuantity }}pcs</p>
+    </div>
+    <div class="cart__totals-block">
+      <span class="cart__title">Total amount: </span>
+      <p>${{ totalAmount }}</p>
+    </div>
 
     <!-- <ul class="cart__list">
       <li class="cart__item" v-for="product in products" :key="product.id">
@@ -71,9 +76,6 @@ export default {
   },
 
   computed: {
-    subTotal() {
-      return this.products.reduce((subtotal, product) => (subtotal = product.price * product.quantity), 0).toFixed(2);
-    },
     totalAmount() {
       return this.products.reduce((total, product) => (total += product.price * product.quantity), 0).toFixed(2);
     },
@@ -121,6 +123,13 @@ export default {
 
 .cart__item-text {
   font-size: 14px;
+}
+
+.cart__totals-block {
+  display: flex;
+  gap: 20px;
+  justify-content: flex-end;
+  padding: 15px 20px 0 0;
 }
 
 .cart__actions {

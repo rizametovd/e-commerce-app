@@ -5,7 +5,9 @@ export default createStore({
   state: {
     products: [],
     cart: [],
+    likes: [],
     isCartModalOpen: false,
+    isLikesModalOpen: false,
   },
   getters: {
     categories(state) {
@@ -18,12 +20,29 @@ export default createStore({
       return state.cart.find((productItem) => productItem.id === id);
     },
 
+    like: (state) => (id) => {
+      return state.likes.find((productItem) => productItem.id === id);
+    },
+
     cartTotalProductsQuantity(state) {
       if (state.cart.length === 0) return;
       return state.cart.reduce((totalQuantity, product) => totalQuantity + product.quantity, 0);
     },
+
+    cartTotalLikes(state) {
+      if (state.likes.length === 0) return;
+      return state.likes.length;
+    },
   },
   mutations: {
+    setLikes(state, payload) {
+      state.likes.push(payload.product);
+    },
+
+    unLike(state, payload) {
+      state.likes = state.likes.filter((product) => product.id !== payload.productId);
+    },
+
     setProducts(state, payload) {
       state.products = payload.products;
     },
@@ -36,12 +55,32 @@ export default createStore({
       state.cart = state.cart.filter((product) => product.id !== payload.productId);
     },
 
-    openModal(state) {
-      state.isCartModalOpen = true;
+    openModal(state, payload) {
+      const { type } = payload;
+      switch (type) {
+        case 'cart':
+          state.isCartModalOpen = true;
+          break;
+        case 'likes':
+          state.isLikesModalOpen = true;
+          break;
+        default:
+          state.isCartModalOpen = true;
+      }
     },
 
-    closeModal(state) {
-      state.isCartModalOpen = false;
+    closeModal(state, payload) {
+      const { type } = payload;
+      switch (type) {
+        case 'cart':
+          state.isCartModalOpen = false;
+          break;
+        case 'likes':
+          state.isLikesModalOpen = false;
+          break;
+        default:
+          state.isCartModalOpen = false;
+      }
     },
 
     incrementQuantity(_, payload) {
@@ -66,17 +105,26 @@ export default createStore({
       }
     },
 
+    setLikes({ commit, getters }, product) {
+      const likedProduct = getters.like(product.id);
+      if (likedProduct) {
+        commit('unLike', { productId: product.id });
+        return;
+      }
+      commit('setLikes', { product });
+    },
+
     setProductsToCart({ commit }, product) {
       commit('setProductsToCart', { product });
-      commit('openModal');
+      commit('openModal', {type: 'cart'});
     },
 
-    openModal({ commit }) {
-      commit('openModal');
+    openModal({ commit }, type) {
+      commit('openModal', { type: type });
     },
 
-    closeModal({ commit }) {
-      commit('closeModal');
+    closeModal({ commit }, type) {
+      commit('closeModal', { type });
     },
 
     incrementQuantity({ commit, getters }, productId) {

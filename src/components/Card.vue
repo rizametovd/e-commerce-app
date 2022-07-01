@@ -3,9 +3,8 @@
     <base-card>
       <div class="card__container">
         <div class="card__image-container">
-          <img :src="image" class="card__image" />
-          <button class="card__like-btn">
-            <!-- <button class="card__like-btn card__like-btn_active"> -->
+          <img :src="image" class="card__image" :alt="title" />
+          <button :class="['card__like-btn', isProductLiked]" @click="handleLikeClick">
             <icon-base>
               <like-icon></like-icon>
             </icon-base>
@@ -80,11 +79,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['setProductsToCart', 'openModal']),
-
-    console() {
-      console.log('x:');
-    },
+    ...mapActions(['setProductsToCart', 'openModal', 'setLikes']),
 
     incrementQuantity() {
       this.quantity += 1;
@@ -92,6 +87,18 @@ export default {
 
     decrementQuantity() {
       this.quantity -= 1;
+    },
+
+    handleLikeClick() {
+      const data = {
+        id: this.id,
+        title: this.title,
+        price: this.price,
+        image: this.image,
+        quantity: this.quantity,
+      };
+
+      this.setLikes(data);
     },
 
     handleAddToCartClick() {
@@ -108,11 +115,15 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['isProductAlreadyInCart', 'product']),
+    ...mapGetters(['product', 'like']),
 
     isProductAlreadyInCart() {
       return this.product(this.id) !== undefined;
     },
+
+    isProductLiked() {
+      return this.like(this.id) !== undefined ? 'card__like-btn_active': '';
+    }
   },
 };
 </script>

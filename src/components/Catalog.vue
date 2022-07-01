@@ -1,7 +1,16 @@
 <template>
-  <base-modal :isModalOpen="isCartModalOpen" title="Your cart">
+  <base-modal :isModalOpen="isCartModalOpen" type="cart" title="Your cart">
     <cart :products="cart" v-if="cart.length > 0"></cart>
     <p v-else>Your cart is empty</p>
+    <template #actions>
+      <base-button mode="primary">Continue shopping</base-button>
+    </template>
+  </base-modal>
+
+
+    <base-modal :isModalOpen="isLikesModalOpen" type="likes" title="Your likes">
+
+    <p >Еще не сделано</p>
     <template #actions>
       <base-button mode="primary">Continue shopping</base-button>
     </template>
@@ -37,7 +46,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['fetchProducts']),
+    ...mapActions(['fetchProducts', 'closeModal']),
 
     setActiveCategory(activeCategory) {
       this.activeCategory = activeCategory;
@@ -46,7 +55,7 @@ export default {
 
   computed: {
     ...mapGetters(['categories']),
-    ...mapState(['products', 'isCartModalOpen', 'cart']),
+    ...mapState(['products', 'isCartModalOpen', 'cart', 'likes', 'isLikesModalOpen']),
 
     productList() {
       if (this.activeCategory === 'all') return this.products;

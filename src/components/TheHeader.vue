@@ -2,7 +2,7 @@
   <header>
     <ul>
       <li>
-        <base-button-with-badge>
+        <base-button-with-badge :quantity="cartTotalLikes" @click="openModal('likes')">
           <icon-base>
             <like-icon></like-icon>
           </icon-base>
@@ -10,7 +10,7 @@
       </li>
 
       <li>
-        <base-button-with-badge :quantity="cartTotalProductsQuantity" @click="openCartModal">
+        <base-button-with-badge :quantity="cartTotalProductsQuantity" @click="openModal('cart')">
           <icon-base>
             <cart-icon></cart-icon>
           </icon-base>
@@ -32,13 +32,9 @@ export default {
 
   methods: {
     ...mapActions(['openModal']),
-
-    openCartModal() {
-      this.openModal();
-    },
   },
   computed: {
-    ...mapGetters(['cartTotalProductsQuantity']),
+    ...mapGetters(['cartTotalProductsQuantity', 'cartTotalLikes']),
   },
 };
 </script>

@@ -13,7 +13,7 @@
       </section>
 
       <section class="modal__actions">
-        <base-button @click="closeModal" type="button" mode="primary">Close modal</base-button>
+        <base-button @click="closeModal(type)" type="button" mode="primary">Close modal</base-button>
         <slot name="actions"></slot>
       </section>
     </dialog>
@@ -35,6 +35,10 @@ export default {
       reqquired: true,
       default: false,
     },
+    type: {
+      type: String,
+      required: true,
+    }
   },
 
   methods: {
@@ -64,6 +68,7 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   max-width: 800px;
+
   padding: 40px 20px;
   border-radius: 16px;
   z-index: 2;

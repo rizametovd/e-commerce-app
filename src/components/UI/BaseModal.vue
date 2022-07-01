@@ -63,7 +63,7 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  max-width: 600px;
+  max-width: 800px;
   padding: 0;
   border-radius: 16px;
   z-index: 2;

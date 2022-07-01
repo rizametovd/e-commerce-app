@@ -59,7 +59,7 @@ export default {
 }
 
 .quantity__count {
-  width: 20px;
+  width: 25px;
 }
 
 @media screen and (min-width: 768px) {

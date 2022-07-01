@@ -25,7 +25,7 @@
           <span>Price:</span>
           <p class="cart__item-text">${{ product.price }}</p>
         </div>
-        
+
         <div class="cart__mobile">
           <span>Subtotal:</span>
           <p class="cart__item-text">${{ (product.price * product.quantity).toFixed(2) }}</p>
@@ -38,7 +38,6 @@
             </icon-base>
           </base-button>
         </div>
-        <hr />
       </li>
     </ul>
 
@@ -106,6 +105,7 @@ export default {
 .cart__grid {
   display: grid;
   gap: 15px;
+  border-bottom: 1px solid lightgray;
 }
 
 .cart__mobile {
@@ -116,6 +116,7 @@ export default {
 
 .cart__mobile-action {
   justify-self: start;
+  padding: 0 0 10px;
 }
 
 .cart__mobile > span {
@@ -196,6 +197,7 @@ export default {
 
   .cart__mobile-action {
     justify-self: center;
+    padding: 0;
   }
 }
 </style>

@@ -21,7 +21,7 @@
 
         <h3 class="card__price">${{ price }}</h3>
 
-        <form class="card__form" @submit.prevent="handleAddToCartClick">
+        <form class="card__form" @submit.prevent="handleAddToCartClick" v-if="!isProductAlreadyInCart">
           <quantity-block @decrement="decrementQuantity" @increment="incrementQuantity" :quantity="quantity"></quantity-block>
 
           <button class="card__form-submit-btn">
@@ -31,6 +31,9 @@
             </icon-base>
           </button>
         </form>
+        <transition>
+          <base-button @click="openModal" mode="success" v-if="isProductAlreadyInCart">Already is in your Cart</base-button>
+        </transition>
       </div>
     </base-card>
   </div>
@@ -41,10 +44,11 @@ import IconBase from './UI/IconBase.vue';
 import LikeIcon from './icons/LikeIcon.vue';
 import CartIcon from './icons/CartIcon.vue';
 import BaseCard from './UI/BaseCard.vue';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import QuantityBlock from './UI/QuantityBlock.vue';
+import BaseButton from './UI/BaseButton.vue';
 export default {
-  components: { IconBase, LikeIcon, BaseCard, CartIcon, QuantityBlock },
+  components: { IconBase, LikeIcon, BaseCard, CartIcon, QuantityBlock, BaseButton },
 
   props: {
     image: {
@@ -76,7 +80,11 @@ export default {
   },
 
   methods: {
-    ...mapActions(['setProductsToCart']),
+    ...mapActions(['setProductsToCart', 'openModal']),
+
+    console() {
+      console.log('x:');
+    },
 
     incrementQuantity() {
       this.quantity += 1;
@@ -98,10 +106,30 @@ export default {
       this.setProductsToCart(data);
     },
   },
+
+  computed: {
+    ...mapGetters(['isProductAlreadyInCart', 'product']),
+
+    isProductAlreadyInCart() {
+      return this.product(this.id) !== undefined;
+    },
+  },
 };
 </script>
 
 <style scoped>
+.v-enter-from {
+  opacity: 0;
+}
+
+.v-enter-active {
+  transition: opacity 0.5s linear;
+}
+
+.v-enter-to {
+  opacity: 1;
+}
+
 .card__container {
   display: flex;
   gap: 12px;

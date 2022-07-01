@@ -29,14 +29,7 @@ export default createStore({
     },
 
     setProductsToCart(state, payload) {
-      const product = payload.product;
-
-      const productQuantityChanged = state.cart.find((productItem) => productItem.id === product.id);
-      if (productQuantityChanged) {
-        productQuantityChanged.quantity += product.quantity;
-        return;
-      }
-      state.cart.push(product);
+      state.cart.push(payload.product);
     },
 
     deleteProduct(state, payload) {

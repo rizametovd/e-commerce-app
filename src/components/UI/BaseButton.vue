@@ -37,7 +37,26 @@ export default {
 }
 
 .button__primary {
-    padding: 10px 20px;
+  padding: 10px 20px;
+}
+
+.button__success {
+  align-self: stretch;
+  border: 2px solid transparent;
+  background-color: #5ec343;
+  font-weight: 600;
+  color: #fff;
+  padding: 10px 20px;
+}
+
+.button__success:focus {
+  transition: border 0.1s linear;
+  border: 2px solid #458f31;
+}
+
+.button__success:hover {
+  transition: opacity 0.3s linear;
+  opacity: 0.8;
 }
 
 .button__icon {
@@ -61,7 +80,7 @@ export default {
     background-color: #e2e2e2;
   }
 
-    .button__primary:not(:disabled):hover {
+  .button__primary:not(:disabled):hover {
     transition: background-color 0.15s linear;
     background-color: #e2e2e2;
   }

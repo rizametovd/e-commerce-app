@@ -1,6 +1,10 @@
 <template>
   <transition name="modal">
-    <div @click="closeModal" class="modal__backdrop" v-if="isModalOpen"></div>
+    <div
+      @click="closeModal(type)"
+      class="modal__backdrop"
+      v-if="isModalOpen"
+    ></div>
   </transition>
 
   <transition name="modal">
@@ -13,7 +17,9 @@
       </section>
 
       <section class="modal__actions">
-        <base-button @click="closeModal(type)" type="button" mode="primary">Close modal</base-button>
+        <base-button @click="closeModal(type)" variant="outlined">{{
+          closeButtonText
+        }}</base-button>
         <slot name="actions"></slot>
       </section>
     </dialog>
@@ -21,14 +27,19 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import BaseButton from './BaseButton.vue';
+import { mapActions } from "vuex";
+import BaseButton from "./Buttons/BaseButton.vue";
 export default {
   components: { BaseButton },
   props: {
     title: {
       type: String,
       required: true,
+    },
+    closeButtonText: {
+      type: String,
+      required: false,
+      default: 'Continue shopping'
     },
     isModalOpen: {
       type: Boolean,
@@ -38,11 +49,10 @@ export default {
     type: {
       type: String,
       required: true,
-    }
+    },
   },
-
   methods: {
-    ...mapActions(['closeModal']),
+    ...mapActions(["closeModal"]),
   },
 };
 </script>
@@ -59,6 +69,7 @@ export default {
   overflow: hidden;
   z-index: 1;
 }
+
 .modal {
   display: flex;
   flex-direction: column;
@@ -67,36 +78,43 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  max-width: 800px;
-
+  width: 100%;
   padding: 40px 20px;
   border-radius: 16px;
   z-index: 2;
   border: 1px solid black;
+  box-sizing: border-box;
+  padding: 20px;
 }
-
 .modal__actions {
   display: flex;
   gap: 20px;
   justify-content: flex-end;
 }
-
 .modal-enter-active {
   animation: modal 0.2s ease-out;
 }
-
 .modal-leave-active {
   animation: modal 0.3s ease-in reverse;
 }
-
 @keyframes modal {
   from {
     opacity: 0;
   }
-
   to {
     opacity: 1;
   }
 }
 
+@media screen and (min-width: 768px) {
+  .modal {
+    width: 700px;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .modal {
+    width: 800px;
+  }
+}
 </style>

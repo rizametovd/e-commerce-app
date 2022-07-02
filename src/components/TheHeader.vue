@@ -1,19 +1,21 @@
 <template>
-  <header>
+  <header class="header">
     <ul>
       <li>
-        <base-button-with-badge :quantity="cartTotalLikes" @click="openModal('likesModal')">
-          <icon-base>
-            <like-icon></like-icon>
-          </icon-base>
+        <base-button-with-badge
+          :quantity="totalLikes"
+          @click="openModal('likesModal')"
+        >
+          <like-icon></like-icon>
         </base-button-with-badge>
       </li>
 
       <li>
-        <base-button-with-badge :quantity="cartTotalProductsQuantity" @click="openModal('cartModal')">
-          <icon-base>
-            <cart-icon></cart-icon>
-          </icon-base>
+        <base-button-with-badge
+          :quantity="cartTotalProductsQuantity"
+          @click="openModal('cartModal')"
+        >
+          <cart-icon></cart-icon>
         </base-button-with-badge>
       </li>
     </ul>
@@ -21,26 +23,25 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import CartIcon from './icons/CartIcon.vue';
+import { mapActions, mapGetters } from "vuex";
+import CartIcon from "./icons/CartIcon.vue";
 
-import LikeIcon from './icons/LikeIcon.vue';
-import BaseButtonWithBadge from './UI/BaseButtonWithBadge.vue';
-import IconBase from './UI/IconBase.vue';
+import LikeIcon from "./icons/LikeIcon.vue";
+import BaseButtonWithBadge from "./UI/Buttons/BaseButtonWithBadge.vue";
 export default {
-  components: { IconBase, CartIcon, LikeIcon, BaseButtonWithBadge },
+  components: { CartIcon, LikeIcon, BaseButtonWithBadge },
 
   methods: {
-    ...mapActions(['openModal']),
+    ...mapActions(["openModal"]),
   },
   computed: {
-    ...mapGetters(['cartTotalProductsQuantity', 'cartTotalLikes']),
+    ...mapGetters(["cartTotalProductsQuantity", "totalLikes"]),
   },
 };
 </script>
 
 <style scoped>
-header {
+.header {
   display: grid;
   gap: 20px;
   grid-template-columns: 1fr 1fr;
@@ -57,32 +58,9 @@ ul {
   padding: 0;
 }
 
-li {
-  display: flex;
-  padding: 10px;
-  border-radius: 50%;
-  background-color: #f1f1f1;
-  position: relative;
-}
-button {
-  padding: 0;
-  border: none;
-  cursor: pointer;
-}
-
-.active {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  font-weight: 600;
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  border: 2px solid white;
-  background: #ffa801;
-  border-radius: 50%;
-  width: 16px;
-  height: 16px;
+@media screen and (min-width: 768px) {
+  .header {
+    padding: 0;
+  }
 }
 </style>

@@ -29,7 +29,7 @@ export default createStore({
       return state.cart.reduce((totalQuantity, product) => totalQuantity + product.quantity, 0);
     },
 
-    cartTotalLikes(state) {
+    totalLikes(state) {
       if (state.likes.length === 0) return;
       return state.likes.length;
     },

@@ -1,26 +1,24 @@
 <template>
   <div class="quantity">
-    <base-button @click="$emit('decrement')" :isDisabled="isButtonDisabled" mode="secondary">
-      <icon-base>
-        <minus-icon></minus-icon>
-      </icon-base>
-    </base-button>
+    <base-icon-button @click="$emit('decrement')" :isDisabled="isButtonDisabled" variant="outlined">
+      <minus-icon></minus-icon>
+    </base-icon-button>
+
     <span class="quantity__count">{{ quantity }}</span>
-    <base-button @click="$emit('increment')" mode="secondary">
-      <icon-base>
-        <plus-icon></plus-icon>
-      </icon-base>
-    </base-button>
+
+    <base-icon-button @click="$emit('increment')" variant="outlined">
+      <plus-icon></plus-icon>
+    </base-icon-button>
   </div>
 </template>
 
 <script>
-import BaseButton from './BaseButton.vue';
 import PlusIcon from '../icons/PlusIcon.vue';
 import MinusIcon from '../icons/MinusIcon.vue';
-import IconBase from './IconBase.vue';
+import BaseIconButton from './Buttons/BaseIconButton.vue';
+
 export default {
-  components: { BaseButton, PlusIcon, MinusIcon, IconBase },
+  components: { PlusIcon, MinusIcon, BaseIconButton },
   emits: ['increment', 'decrement'],
   props: {
     quantity: {
@@ -44,28 +42,7 @@ export default {
   gap: 10px;
 }
 
-.quantity__btn {
-  width: 26px;
-  height: 26px;
-  font-size: 20px;
-  background: #ffffff;
-  border: 1px solid #e2e2e2;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.quantity__btn:disabled {
-  cursor: default;
-}
-
 .quantity__count {
   width: 25px;
-}
-
-@media screen and (min-width: 768px) {
-  .quantity__btn:not(:disabled):hover {
-    transition: background-color 0.15s linear;
-    background-color: #e2e2e2;
-  }
 }
 </style>

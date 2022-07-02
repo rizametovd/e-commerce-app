@@ -4,11 +4,20 @@
       <div class="card__container">
         <div class="card__image-container">
           <img :src="image" class="card__image" :alt="title" />
-          <button :class="['card__like-btn', isProductLiked]" @click="handleLikeClick">
-            <icon-base>
+
+          <div class="card__like-btn">
+            <base-icon-button
+              @click="handleLikeClick"
+              variant="contained"
+              iconColor="lightgray"
+              iconHoverColor="#ef2525"
+              iconActiveColor="#ef2525"
+              :isActive="isProductLiked"
+              opacity="0.5"
+            >
               <like-icon></like-icon>
-            </icon-base>
-          </button>
+            </base-icon-button>
+          </div>
         </div>
 
         <h3 class="card__title">{{ title }}</h3>
@@ -20,18 +29,35 @@
 
         <h3 class="card__price">${{ price }}</h3>
 
-        <form class="card__form" @submit.prevent="handleAddToCartClick" v-if="!isProductAlreadyInCart">
-          <quantity-block @decrement="decrementQuantity" @increment="incrementQuantity" :quantity="quantity"></quantity-block>
-
-          <button class="card__form-submit-btn">
-            <span class="card__form-submit-btn-text" type="submit">Add to Cart</span>
-            <icon-base :width="14" :height="14">
-              <cart-icon></cart-icon>
-            </icon-base>
-          </button>
+        <form
+          class="card__form"
+          @submit.prevent="handleAddToCartClick"
+          v-if="!isProductAlreadyInCart"
+        >
+          <quantity-block
+            @decrement="decrementQuantity"
+            @increment="incrementQuantity"
+            :quantity="quantity"
+          ></quantity-block>
+          <base-icon-button
+            variant="contained"
+            type="submit"
+            text="Add to cart"
+            iconColor="lightgray"
+            iconHoverColor="#ffa801"
+          >
+            <cart-icon></cart-icon>
+          </base-icon-button>
         </form>
+
         <transition>
-          <base-button @click="openModal" mode="success" v-if="isProductAlreadyInCart">Already is in your Cart</base-button>
+          <base-button
+            @click="openModal"
+            variant="contained"
+            mode="success"
+            v-if="isProductAlreadyInCart"
+            >Already is in your Cart</base-button
+          >
         </transition>
       </div>
     </base-card>
@@ -39,15 +65,24 @@
 </template>
 
 <script>
-import IconBase from './UI/IconBase.vue';
-import LikeIcon from './icons/LikeIcon.vue';
-import CartIcon from './icons/CartIcon.vue';
-import BaseCard from './UI/BaseCard.vue';
-import { mapActions, mapGetters } from 'vuex';
-import QuantityBlock from './UI/QuantityBlock.vue';
-import BaseButton from './UI/BaseButton.vue';
+import IconBase from "./UI/BaseIcon.vue";
+import LikeIcon from "./icons/LikeIcon.vue";
+import CartIcon from "./icons/CartIcon.vue";
+import BaseCard from "./UI/BaseCard.vue";
+import { mapActions, mapGetters } from "vuex";
+import QuantityBlock from "./UI/QuantityBlock.vue";
+import BaseButton from "./UI/Buttons/BaseButton.vue";
+import BaseIconButton from "./UI/Buttons/BaseIconButton.vue";
 export default {
-  components: { IconBase, LikeIcon, BaseCard, CartIcon, QuantityBlock, BaseButton },
+  components: {
+    IconBase,
+    LikeIcon,
+    BaseCard,
+    CartIcon,
+    QuantityBlock,
+    BaseButton,
+    BaseIconButton,
+  },
 
   props: {
     image: {
@@ -79,7 +114,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['setProductsToCart', 'openModal', 'handleLikes']),
+    ...mapActions(["setProductsToCart", "openModal", "handleLikes"]),
 
     incrementQuantity() {
       this.quantity += 1;
@@ -99,14 +134,14 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['selectedProduct', 'likedProduct']),
+    ...mapGetters(["selectedProduct", "likedProduct"]),
 
     isProductAlreadyInCart() {
       return this.selectedProduct(this.id) !== undefined;
     },
 
     isProductLiked() {
-      return this.likedProduct(this.id) !== undefined ? 'card__like-btn_active': '';
+      return this.likedProduct(this.id) !== undefined;
     },
 
     product() {
@@ -116,8 +151,9 @@ export default {
         price: this.price,
         image: this.image,
         quantity: this.quantity,
+        rating: this.rating,
       };
-    }
+    },
   },
 };
 </script>
@@ -159,29 +195,9 @@ export default {
 }
 
 .card__like-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
   position: absolute;
-  border-radius: 50%;
-  border: 0.5px solid #eaeaea;
-  background-color: white;
   top: 5px;
   right: 5px;
-  padding: 0;
-  cursor: pointer;
-  fill: #e2e2e2;
-}
-
-.card__like-btn-icon {
-  width: 24px;
-  height: 24px;
-}
-
-.card__like-btn_active {
-  fill: #ef2525;
 }
 
 .card__rating {
@@ -209,25 +225,6 @@ export default {
   gap: 47px;
 }
 
-.card__form-submit-btn {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  color: #666666;
-  fill: #e2e2e2;
-}
-
-.card__form-submit-btn-text {
-  color: inherit;
-  font-weight: 600;
-  font-size: 15px;
-  line-height: 20px;
-}
-
 @media screen and (min-width: 768px) {
   .card:hover {
     box-shadow: 0px 21px 44px rgba(0, 0, 0, 0.08);
@@ -237,23 +234,6 @@ export default {
   .card__title:hover {
     transition: color 0.1s linear;
     color: #ffa801;
-  }
-
-  .card__like-btn > svg:hover {
-    transition: fill 0.2s linear;
-    fill: #ef2525;
-  }
-
-  .card__form-btn:not(:disabled):hover {
-    transition: background-color 0.15s linear;
-    background-color: #e2e2e2;
-  }
-
-  .card__form-submit-btn:hover,
-  svg:hover {
-    transition: all 0.15s linear;
-    color: #ffa801;
-    fill: #ffa801;
   }
 }
 </style>

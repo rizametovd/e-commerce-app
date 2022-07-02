@@ -1,6 +1,5 @@
 <template>
   <section class="cart">
-
     <div class="cart__mobile">
       <div class="cart__grid">
         <label class="cart__title">Photo</label>
@@ -18,7 +17,11 @@
 
         <div class="cart__mobile">
           <span>Quantity:</span>
-          <quantity-block :quantity="product.quantity" @increment="incrementQuantity(product.id)" @decrement="decrementQuantity(product.id)"></quantity-block>
+          <quantity-block
+            :quantity="product.quantity"
+            @increment="incrementQuantity(product.id)"
+            @decrement="decrementQuantity(product.id)"
+          ></quantity-block>
         </div>
 
         <div class="cart__mobile">
@@ -28,15 +31,21 @@
 
         <div class="cart__mobile">
           <span>Subtotal:</span>
-          <p class="cart__item-text">${{ (product.price * product.quantity).toFixed(2) }}</p>
+          <p class="cart__item-text">
+            ${{ (product.price * product.quantity).toFixed(2) }}
+          </p>
         </div>
 
         <div class="cart__mobile-action">
-          <base-button @click="deleteProduct(product.id)" mode="icon">
-            <icon-base>
-              <deleteIcon></deleteIcon>
-            </icon-base>
-          </base-button>
+          <base-icon-button
+            @click="deleteProduct(product.id)"
+            variant="contained"
+            iconHoverColor="#ef2525"
+            iconColor="#74747474"
+            opacity="1"
+          >
+            <delete-icon></delete-icon>
+          </base-icon-button>
         </div>
       </li>
     </ul>
@@ -58,14 +67,21 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import DeleteIcon from './icons/DeleteIcon.vue';
-import BaseButton from './UI/BaseButton.vue';
-import IconBase from './UI/IconBase.vue';
-import QuantityBlock from './UI/QuantityBlock.vue';
+import { mapActions } from "vuex";
+import DeleteIcon from "./icons/DeleteIcon.vue";
+import BaseButton from "./UI/Buttons/BaseButton.vue";
+import BaseIconButton from "./UI/Buttons/BaseIconButton.vue";
+import IconBase from "./UI/BaseIcon.vue";
+import QuantityBlock from "./UI/QuantityBlock.vue";
 export default {
-  emits: ['closeModal'],
-  components: { QuantityBlock, BaseButton, IconBase, DeleteIcon },
+  emits: ["closeModal"],
+  components: {
+    QuantityBlock,
+    BaseButton,
+    IconBase,
+    DeleteIcon,
+    BaseIconButton,
+  },
   props: {
     products: {
       type: Array,
@@ -74,16 +90,24 @@ export default {
   },
 
   methods: {
-    ...mapActions(['incrementQuantity', 'decrementQuantity', 'deleteProduct']),
+    ...mapActions(["incrementQuantity", "decrementQuantity", "deleteProduct"]),
   },
 
   computed: {
     totalAmount() {
-      return this.products.reduce((total, product) => (total += product.price * product.quantity), 0).toFixed(2);
+      return this.products
+        .reduce(
+          (total, product) => (total += product.price * product.quantity),
+          0
+        )
+        .toFixed(2);
     },
 
     totalQuantity() {
-      return this.products.reduce((total, product) => (total += product.quantity), 0);
+      return this.products.reduce(
+        (total, product) => (total += product.quantity),
+        0
+      );
     },
   },
 };
@@ -95,10 +119,6 @@ export default {
 }
 
 .cart__title {
-  display: none;
-}
-
-.cart__grid {
   display: none;
 }
 
@@ -173,11 +193,7 @@ export default {
 
   .cart__title {
     display: block;
-   font-weight: 600;
-  }
-
-  .cart__grid {
-    display: grid;
+    font-weight: 600;
   }
 
   .cart__img {

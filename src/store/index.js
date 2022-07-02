@@ -16,11 +16,11 @@ export default createStore({
       return [...new Set(tmp)];
     },
 
-    product: (state) => (id) => {
+    selectedProduct: (state) => (id) => {
       return state.cart.find((productItem) => productItem.id === id);
     },
 
-    like: (state) => (id) => {
+    likedProduct: (state) => (id) => {
       return state.likes.find((productItem) => productItem.id === id);
     },
 
@@ -35,7 +35,7 @@ export default createStore({
     },
   },
   mutations: {
-    setLikes(state, payload) {
+    setLike(state, payload) {
       state.likes.push(payload.product);
     },
 
@@ -58,10 +58,10 @@ export default createStore({
     openModal(state, payload) {
       const { type } = payload;
       switch (type) {
-        case 'cart':
+        case 'cartModal':
           state.isCartModalOpen = true;
           break;
-        case 'likes':
+        case 'likesModal':
           state.isLikesModalOpen = true;
           break;
         default:
@@ -105,18 +105,18 @@ export default createStore({
       }
     },
 
-    setLikes({ commit, getters }, product) {
-      const likedProduct = getters.like(product.id);
+    handleLikes({ commit, getters }, product) {
+      const likedProduct = getters.likedProduct(product.id);
       if (likedProduct) {
         commit('unLike', { productId: product.id });
         return;
       }
-      commit('setLikes', { product });
+      commit('setLike', { product });
     },
 
     setProductsToCart({ commit }, product) {
       commit('setProductsToCart', { product });
-      commit('openModal', {type: 'cart'});
+      commit('openModal', { type: 'cartModal' });
     },
 
     openModal({ commit }, type) {
@@ -128,12 +128,12 @@ export default createStore({
     },
 
     incrementQuantity({ commit, getters }, productId) {
-      const product = getters.product(productId);
+      const product = getters.selectedProduct(productId);
       commit('incrementQuantity', { product });
     },
 
     decrementQuantity({ commit, getters }, productId) {
-      const product = getters.product(productId);
+      const product = getters.selectedProduct(productId);
       commit('decrementQuantity', { product });
     },
 

@@ -79,7 +79,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['setProductsToCart', 'openModal', 'setLikes']),
+    ...mapActions(['setProductsToCart', 'openModal', 'handleLikes']),
 
     incrementQuantity() {
       this.quantity += 1;
@@ -90,39 +90,33 @@ export default {
     },
 
     handleLikeClick() {
-      const data = {
-        id: this.id,
-        title: this.title,
-        price: this.price,
-        image: this.image,
-        quantity: this.quantity,
-      };
-
-      this.setLikes(data);
+      this.handleLikes(this.product);
     },
 
     handleAddToCartClick() {
-      const data = {
-        id: this.id,
-        title: this.title,
-        price: this.price,
-        image: this.image,
-        quantity: this.quantity,
-      };
-
-      this.setProductsToCart(data);
+      this.setProductsToCart(this.product);
     },
   },
 
   computed: {
-    ...mapGetters(['product', 'like']),
+    ...mapGetters(['selectedProduct', 'likedProduct']),
 
     isProductAlreadyInCart() {
-      return this.product(this.id) !== undefined;
+      return this.selectedProduct(this.id) !== undefined;
     },
 
     isProductLiked() {
-      return this.like(this.id) !== undefined ? 'card__like-btn_active': '';
+      return this.likedProduct(this.id) !== undefined ? 'card__like-btn_active': '';
+    },
+
+    product() {
+      return {
+        id: this.id,
+        title: this.title,
+        price: this.price,
+        image: this.image,
+        quantity: this.quantity,
+      };
     }
   },
 };

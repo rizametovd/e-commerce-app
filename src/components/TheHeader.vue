@@ -2,7 +2,7 @@
   <header>
     <ul>
       <li>
-        <base-button-with-badge :quantity="cartTotalLikes" @click="openModal('likes')">
+        <base-button-with-badge :quantity="cartTotalLikes" @click="openModal('likesModal')">
           <icon-base>
             <like-icon></like-icon>
           </icon-base>
@@ -10,7 +10,7 @@
       </li>
 
       <li>
-        <base-button-with-badge :quantity="cartTotalProductsQuantity" @click="openModal('cart')">
+        <base-button-with-badge :quantity="cartTotalProductsQuantity" @click="openModal('cartModal')">
           <icon-base>
             <cart-icon></cart-icon>
           </icon-base>

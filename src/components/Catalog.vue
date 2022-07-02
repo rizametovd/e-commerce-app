@@ -10,7 +10,7 @@
 
     <base-modal :isModalOpen="isLikesModalOpen" type="likes" title="Your likes">
 
-    <p >Еще не сделано</p>
+    <likes :likedProducts="likes"></likes>
     <template #actions>
       <base-button mode="primary">Continue shopping</base-button>
     </template>
@@ -35,9 +35,10 @@ import ProductList from './ProductList.vue';
 import BaseModal from './UI/BaseModal.vue';
 import Cart from './Cart.vue';
 import BaseButton from './UI/BaseButton.vue';
+import Likes from './Likes.vue';
 
 export default {
-  components: { BaseHeading, CategoryTabs, BaseCard, Card, BaseList, ProductList, BaseModal, Cart, BaseButton },
+  components: { BaseHeading, CategoryTabs, BaseCard, Card, BaseList, ProductList, BaseModal, Cart, BaseButton, Likes },
 
   data() {
     return {

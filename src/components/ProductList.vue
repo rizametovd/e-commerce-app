@@ -1,36 +1,24 @@
 <template>
   <div class="products-list">
-    <loader v-if="products.length === 0"></loader>
+    <loader></loader>
+    <!-- <loader v-if="products.length === 0"></loader> -->
   </div>
-  <ul>
+  <!-- <ul>
     <li v-for="product in productsToRender" :key="product.id">
-      <card
-        :image="product.image"
-        :price="product.price"
-        :title="product.title"
-        :rating="product.rating.rate"
-        :id="product.id"
-      ></card>
+      <card :image="product.image" :price="product.price" :title="product.title" :rating="product.rating.rate" :id="product.id"></card>
     </li>
-  </ul>
+  </ul> -->
 
-  <div
-    class="products-list__show-more"
-    v-if="itemsCountToRender < products.length"
-  >
-    <show-more
-      :count="itemsCountToRender"
-      :listLength="products.length"
-      @onShowMoreClick="handleShowMore"
-    ></show-more>
-  </div>
+  <!-- <div class="products-list__show-more" v-if="itemsCountToRender < products.length">
+    <show-more :count="itemsCountToRender" :listLength="products.length" @onShowMoreClick="handleShowMore"></show-more>
+  </div> -->
 </template>
 
 <script>
-import Card from "./Card.vue";
-import Loader from "./UI/Loader.vue";
-import ShowMore from "./ShowMore.vue";
-import { PRODUCTS_LIMIT } from "@/constants/constants";
+import Card from './Card.vue';
+import Loader from './UI/Loader.vue';
+import ShowMore from './ShowMore.vue';
+import { PRODUCTS_LIMIT } from '@/utils/constants';
 
 export default {
   components: { Card, Loader, ShowMore },
@@ -85,8 +73,7 @@ ul {
 
 @media screen and (min-width: 768px) {
   ul {
-    display: grid;
-    gap: 25px;
+    gap: 20px;
     grid-template-columns: repeat(2, 1fr);
     padding: 60px 0;
   }

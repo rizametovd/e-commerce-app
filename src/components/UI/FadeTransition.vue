@@ -5,15 +5,15 @@
 </template>
 
 <style scoped>
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from {
   opacity: 0;
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active {
   transition: opacity 0.3s linear;
 }
 
-.fade-enter-to, .fade-leave-from {
+.fade-enter-to {
   opacity: 1;
 }
 </style>

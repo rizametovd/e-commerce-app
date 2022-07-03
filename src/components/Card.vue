@@ -116,7 +116,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["setProductsToCart", "openModal", "handleLikes"]),
+    ...mapActions(["setProductToCart", "openModal", "handleLikes"]),
 
     incrementQuantity() {
       this.quantity += 1;
@@ -131,7 +131,7 @@ export default {
     },
 
     handleAddToCartClick() {
-      this.setProductsToCart(this.product);
+      this.setProductToCart(this.product);
     },
   },
 
@@ -166,6 +166,7 @@ export default {
   gap: 12px;
   flex-direction: column;
   align-items: flex-start;
+  min-height: 412px;
 }
 .card__image-container {
   align-self: center;

@@ -5,9 +5,9 @@
 </template>
 
 <script>
-import TheFooter from './components/TheFooter.vue';
-import TheHeader from './components/TheHeader.vue';
-import TheMain from './components/TheMain.vue';
+import TheFooter from "./components/TheFooter.vue";
+import TheHeader from "./components/TheHeader.vue";
+import TheMain from "./components/TheMain.vue";
 export default {
   components: {
     TheFooter,
@@ -18,15 +18,15 @@ export default {
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&family=Open+Sans:wght@400;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@700&family=Open+Sans:wght@400;600&display=swap");
 
 * {
   margin: 0;
 }
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif, 'Open Sans';
+  font-family: Avenir, Helvetica, Arial, sans-serif, "Open Sans";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

@@ -36,6 +36,7 @@ import BaseModal from "./UI/BaseModal.vue";
 import Cart from "./Cart.vue";
 import BaseButton from "./UI/Buttons/BaseButton.vue";
 import Likes from "./Likes.vue";
+import { getFromLocalStorage, setToLocalStorage } from "@/utils/helpers";
 
 export default {
   components: {
@@ -57,7 +58,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["fetchProducts", "closeModal"]),
+    ...mapActions(["fetchProducts", "closeModal", "setDataFromLocalStorage"]),
 
     setActiveCategory(activeCategory) {
       this.activeCategory = activeCategory;
@@ -86,7 +87,28 @@ export default {
     },
   },
 
+  watch: {
+    cart: {
+      deep: true,
+
+      handler() {
+        setToLocalStorage("cart", this.cart);
+      },
+    },
+    likes: {
+      deep: true,
+      handler() {
+        setToLocalStorage("likes", this.likes);
+      },
+    },
+  },
+
   mounted() {
+    const localStorageCart = getFromLocalStorage("cart");
+    const localStorageLikes = getFromLocalStorage("likes");
+    this.setDataFromLocalStorage({mutation:"setProductToCart", products:localStorageCart});
+    this.setDataFromLocalStorage({mutation: "setLike", products: localStorageLikes});
+
     this.fetchProducts();
   },
 };

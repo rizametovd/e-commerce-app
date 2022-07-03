@@ -1,4 +1,5 @@
-import { BASE_URL } from '@/constants/constants';
+import { BASE_URL } from '@/utils/constants';
+import { setToLocalStorage } from '@/utils/helpers';
 import { createStore } from 'vuex';
 
 export default createStore({
@@ -47,7 +48,7 @@ export default createStore({
       state.products = payload.products;
     },
 
-    setProductsToCart(state, payload) {
+    setProductToCart(state, payload) {
       state.cart.push(payload.product);
     },
 
@@ -114,9 +115,14 @@ export default createStore({
       commit('setLike', { product });
     },
 
-    setProductsToCart({ commit }, product) {
-      commit('setProductsToCart', { product });
+    setProductToCart({ commit }, product) {
+      commit('setProductToCart', { product });
       commit('openModal', { type: 'cartModal' });
+    },
+
+    setDataFromLocalStorage({ commit }, { mutation, products }) {
+      if (!products) return;
+      products.forEach((product) => commit(mutation, { product }));
     },
 
     openModal({ commit }, type) {

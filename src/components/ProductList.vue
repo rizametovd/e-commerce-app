@@ -1,17 +1,16 @@
 <template>
   <div class="products-list">
-    <loader></loader>
-    <!-- <loader v-if="products.length === 0"></loader> -->
+    <loader v-if="products.length === 0"></loader>
   </div>
-  <!-- <ul>
+  <ul>
     <li v-for="product in productsToRender" :key="product.id">
       <card :image="product.image" :price="product.price" :title="product.title" :rating="product.rating.rate" :id="product.id"></card>
     </li>
-  </ul> -->
+  </ul>
 
-  <!-- <div class="products-list__show-more" v-if="itemsCountToRender < products.length">
+  <div class="products-list__show-more" v-if="itemsCountToRender < products.length">
     <show-more :count="itemsCountToRender" :listLength="products.length" @onShowMoreClick="handleShowMore"></show-more>
-  </div> -->
+  </div>
 </template>
 
 <script>

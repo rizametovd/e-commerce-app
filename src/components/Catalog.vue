@@ -17,7 +17,7 @@
     <category-tabs
       :items="categories"
       @onCategoryClick="setActiveCategory"
-      v-if="products.length > 0"
+      v-if="isTabsVisible"
     ></category-tabs>
   </div>
 
@@ -30,7 +30,6 @@ import BaseHeading from "./UI/BaseHeading.vue";
 import CategoryTabs from "./CategoryTabs.vue";
 import BaseCard from "./UI/BaseCard.vue";
 import Card from "./Card.vue";
-import BaseList from "./UI/BaseList.vue";
 import { mapActions, mapGetters, mapState } from "vuex";
 import ProductList from "./ProductList.vue";
 import BaseModal from "./UI/BaseModal.vue";
@@ -44,7 +43,6 @@ export default {
     CategoryTabs,
     BaseCard,
     Card,
-    BaseList,
     ProductList,
     BaseModal,
     Cart,
@@ -81,6 +79,10 @@ export default {
       return this.products.filter(
         (product) => product.category === this.activeCategory
       );
+    },
+
+    isTabsVisible() {
+      return this.products.length > 0;
     },
   },
 

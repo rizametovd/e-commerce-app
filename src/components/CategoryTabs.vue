@@ -44,6 +44,7 @@ export default {
   padding: 10px 14px;
   background-color: #fcf7eb;
   border-radius: 6px;
+  cursor: pointer;
 }
 
 .menuList__item_active {
@@ -62,7 +63,6 @@ export default {
     color: #858585;
     line-height: 22px;
     position: relative;
-    cursor: pointer;
     padding: 0;
     background-color: transparent;
     padding: 0;

@@ -50,6 +50,7 @@ export default {
   justify-content: center;
   font-size: 10px;
   font-weight: 600;
+  color: #222222;
   position: absolute;
   top: -7px;
   right: -7px;

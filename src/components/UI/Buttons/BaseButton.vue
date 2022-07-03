@@ -1,9 +1,5 @@
 <template>
-  <button
-    :class="['button', variant, mode]"
-    type="submit"
-    :disabled="isDisabled"
-  >
+  <button :class="['button', variant, mode]" type="submit" :disabled="isDisabled">
     <slot> </slot>
   </button>
 </template>
@@ -23,7 +19,7 @@ export default {
     type: {
       type: String,
       required: false,
-      default: "button",
+      default: 'button',
     },
     mode: {
       type: String,
@@ -38,6 +34,7 @@ export default {
   align-self: stretch;
   background: transparent;
   border: 1px solid #e2e2e2;
+  color: #222222;
   border-radius: 6px;
   cursor: pointer;
   padding: 10px 15px;
@@ -55,7 +52,13 @@ export default {
   color: #fff;
 }
 
-.contained.success:hover {
+.contained.primary {
+  border: 1px solid transparent;
+  background-color: #ffa801;
+  color: #fff;
+}
+
+.contained:hover {
   transition: opacity 0.3s linear;
   opacity: 0.75;
 }

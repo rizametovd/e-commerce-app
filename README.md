@@ -1,22 +1,39 @@
-# e-commerce-app
+# Интернет-магазин
 
-Пэт проект. В процессе. Весь базовый функционал работает.
-деплой: https://polite-beijinho-ecade0.netlify.app
+Пэт проект интернет-магазин на Vue.
 
-## Project setup
-```
+## Функционал
+
+- Карточки можно лайкать и дизлайкать, а так же управлять лайками в соотвествующем попапе
+- Реализованы табы по категориям товаров
+- Товары можно добавлять в корзину
+- Содержимым корзины можно управлять в попапе
+- Реализована пагинация по клику на кнопку Show more
+
+## Деплой
+
+https://polite-beijinho-ecade0.netlify.app
+
+## Стек
+
+- Vue 3
+- Vuex
+- API: [fakestoreapi.com](https://fakestoreapi.com/)
+
+## Установка
+
+Для запуска на локальной машине необходимо:</br>
+
+1. Установить npm зависимости:</br>
+
+```sh
 npm install
 ```
 
-### Compiles and hot-reloads for development
-```
+2. Запустить в режиме разработки:</br>
+
+```sh
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Если все прошло успешно, проект будет запущен на `http://localhost:8080`

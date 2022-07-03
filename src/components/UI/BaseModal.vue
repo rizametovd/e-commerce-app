@@ -1,13 +1,9 @@
 <template>
-  <transition name="modal">
-    <div
-      @click="closeModal(type)"
-      class="modal__backdrop"
-      v-if="isModalOpen"
-    ></div>
-  </transition>
+  <fade-transition>
+    <div @click="closeModal(type)" class="modal__backdrop" v-if="isModalOpen"></div>
+  </fade-transition>
 
-  <transition name="modal">
+  <fade-transition>
     <dialog class="modal" open v-if="isModalOpen">
       <h2>
         {{ title }}
@@ -17,20 +13,19 @@
       </section>
 
       <section class="modal__actions">
-        <base-button @click="closeModal(type)" variant="outlined">{{
-          closeButtonText
-        }}</base-button>
+        <base-button @click="closeModal(type)" variant="outlined">{{ closeButtonText }}</base-button>
         <slot name="actions"></slot>
       </section>
     </dialog>
-  </transition>
+  </fade-transition>
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import BaseButton from "./Buttons/BaseButton.vue";
+import { mapActions } from 'vuex';
+import BaseButton from './Buttons/BaseButton.vue';
+import FadeTransition from './FadeTransition.vue';
 export default {
-  components: { BaseButton },
+  components: { BaseButton, FadeTransition },
   props: {
     title: {
       type: String,
@@ -39,7 +34,7 @@ export default {
     closeButtonText: {
       type: String,
       required: false,
-      default: 'Continue shopping'
+      default: 'Continue shopping',
     },
     isModalOpen: {
       type: Boolean,
@@ -52,7 +47,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["closeModal"]),
+    ...mapActions(['closeModal']),
   },
 };
 </script>
@@ -90,20 +85,6 @@ export default {
   display: flex;
   gap: 20px;
   justify-content: flex-end;
-}
-.modal-enter-active {
-  animation: modal 0.2s ease-out;
-}
-.modal-leave-active {
-  animation: modal 0.3s ease-in reverse;
-}
-@keyframes modal {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }
 
 @media screen and (min-width: 768px) {

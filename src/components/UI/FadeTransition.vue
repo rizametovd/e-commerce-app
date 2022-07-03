@@ -1,19 +1,19 @@
 <template>
-  <transition>
+  <transition name="fade">
     <slot></slot>
   </transition>
 </template>
 
 <style scoped>
-.v-enter-from, .v-leave-to {
+.fade-enter-from, .fade-leave-to {
   opacity: 0;
 }
 
-.v-enter-active, .v-leave-active {
+.fade-enter-active, .fade-leave-active {
   transition: opacity 0.3s linear;
 }
 
-.v-enter-to, .v-leave-from {
+.fade-enter-to, .fade-leave-from {
   opacity: 1;
 }
 </style>

@@ -50,7 +50,7 @@
           </base-icon-button>
         </form>
 
-        <transition>
+        <fade-transition>
           <base-button
             @click="openModal"
             variant="contained"
@@ -58,7 +58,7 @@
             v-if="isProductAlreadyInCart"
             >Already is in your Cart</base-button
           >
-        </transition>
+        </fade-transition>
       </div>
     </base-card>
   </div>
@@ -73,6 +73,7 @@ import { mapActions, mapGetters } from "vuex";
 import QuantityBlock from "./UI/QuantityBlock.vue";
 import BaseButton from "./UI/Buttons/BaseButton.vue";
 import BaseIconButton from "./UI/Buttons/BaseIconButton.vue";
+import FadeTransition from "./UI/FadeTransition.vue";
 export default {
   components: {
     IconBase,
@@ -82,6 +83,7 @@ export default {
     QuantityBlock,
     BaseButton,
     BaseIconButton,
+    FadeTransition,
   },
 
   props: {
@@ -159,18 +161,6 @@ export default {
 </script>
 
 <style scoped>
-.v-enter-from {
-  opacity: 0;
-}
-
-.v-enter-active {
-  transition: opacity 0.5s linear;
-}
-
-.v-enter-to {
-  opacity: 1;
-}
-
 .card__container {
   display: flex;
   gap: 12px;

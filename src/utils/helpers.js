@@ -5,3 +5,9 @@ export const setToLocalStorage = (key, value) => {
 export const getFromLocalStorage = (key) => {
   return JSON.parse(localStorage.getItem(key));
 };
+
+export const wait = async (ms) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+};

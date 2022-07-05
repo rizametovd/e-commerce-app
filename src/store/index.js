@@ -1,6 +1,11 @@
-import { BASE_URL } from '@/utils/constants';
-import { setToLocalStorage } from '@/utils/helpers';
+import { wait } from '@/utils/helpers';
 import { createStore } from 'vuex';
+
+const FETCH_ATTEMPTS_COUNT = 3;
+const FETCH_DELAY_REQUEST_MS = 3000;
+const BASE_URL = 'https://fakestoreapi.com/products';
+const FETCH_ERROR_MESSAGE = "Something went wrong. I'll try to fetch data again in";
+const SERVER_ERROR_MESSAGE = 'We are sorry. Server is temporarily down. Please try again later';
 
 export default createStore({
   state: {
@@ -9,6 +14,18 @@ export default createStore({
     likes: [],
     isCartModalOpen: false,
     isLikesModalOpen: false,
+    error: {
+      isError: false,
+      message: null,
+      errorCode: null,
+      type: null,
+      timeout: null,
+    },
+    isLoading: false,
+    serverStatus: {
+      isDown: false,
+      message: null,
+    },
   },
   getters: {
     categories(state) {
@@ -36,29 +53,36 @@ export default createStore({
     },
   },
   mutations: {
-    setLike(state, payload) {
-      state.likes.push(payload.product);
+    setIsLoading(state, isLoading) {
+      state.isLoading = isLoading;
     },
 
-    unLike(state, payload) {
-      state.likes = state.likes.filter((product) => product.id !== payload.productId);
+    setServerStatus(state, serverStatus) {
+      state.serverStatus = serverStatus;
     },
 
-    setProducts(state, payload) {
-      state.products = payload.products;
+    setLike(state, product) {
+      state.likes.push(product);
     },
 
-    setProductToCart(state, payload) {
-      state.cart.push(payload.product);
+    unLike(state, productId) {
+      state.likes = state.likes.filter((product) => product.id !== productId);
     },
 
-    deleteProduct(state, payload) {
-      state.cart = state.cart.filter((product) => product.id !== payload.productId);
+    setProducts(state, products) {
+      state.products = products;
     },
 
-    openModal(state, payload) {
-      const { type } = payload;
-      switch (type) {
+    setProductToCart(state, product) {
+      state.cart.push(product);
+    },
+
+    deleteProduct(state, productId) {
+      state.cart = state.cart.filter((product) => product.id !== productId);
+    },
+
+    openModal(state, modalType) {
+      switch (modalType) {
         case 'cartModal':
           state.isCartModalOpen = true;
           break;
@@ -70,9 +94,8 @@ export default createStore({
       }
     },
 
-    closeModal(state, payload) {
-      const { type } = payload;
-      switch (type) {
+    closeModal(state, modalType) {
+      switch (modalType) {
         case 'cart':
           state.isCartModalOpen = false;
           break;
@@ -84,67 +107,94 @@ export default createStore({
       }
     },
 
-    incrementQuantity(_, payload) {
-      payload.product.quantity++;
+    incrementQuantity(_, product) {
+      product.quantity++;
     },
 
-    decrementQuantity(_, payload) {
-      payload.product.quantity--;
+    decrementQuantity(_, product) {
+      product.quantity--;
+    },
+
+    setError(state, error) {
+      state.error = error;
     },
   },
+
   actions: {
-    async fetchProducts({ commit }) {
+    async fetchProducts({ commit, dispatch }, attempt = 1) {
       try {
+        commit('setIsLoading', true);
+
         const response = await fetch(BASE_URL);
 
-        if (!response.ok) throw new Error('Something went wrong');
+        if (!response.ok) {
+          await wait(1000);
+          throw new Error(FETCH_ERROR_MESSAGE, { cause: { status: response.status } });
+        }
 
         const products = await response.json();
-        commit('setProducts', { products });
-      } catch (error) {
-        console.log('error:', error);
+        commit('setProducts', products);
+      } catch (e) {
+        commit('setIsLoading', false);
+
+        if (attempt <= FETCH_ATTEMPTS_COUNT) {
+          commit('setError', {
+            isError: true,
+            message: e.message,
+            errorCode: e.cause.status,
+            timeout: attempt * (FETCH_DELAY_REQUEST_MS / 1000),
+          });
+
+          await wait(attempt * FETCH_DELAY_REQUEST_MS);
+          return dispatch('fetchProducts', attempt + 1);
+        }
+
+        commit('setServerStatus', { isDown: true, message: SERVER_ERROR_MESSAGE });
+      } finally {
+        commit('setIsLoading', false);
       }
     },
 
     handleLikes({ commit, getters }, product) {
       const likedProduct = getters.likedProduct(product.id);
       if (likedProduct) {
-        commit('unLike', { productId: product.id });
+        commit('unLike', product.id);
         return;
       }
-      commit('setLike', { product });
+      commit('setLike', product);
     },
 
     setProductToCart({ commit }, product) {
-      commit('setProductToCart', { product });
-      commit('openModal', { type: 'cartModal' });
+      commit('setProductToCart', product);
+      commit('openModal', 'cartModal');
     },
 
     setDataFromLocalStorage({ commit }, { mutation, products }) {
       if (!products) return;
-      products.forEach((product) => commit(mutation, { product }));
+
+      products.forEach((product) => commit(mutation, product));
     },
 
     openModal({ commit }, type) {
-      commit('openModal', { type: type });
+      commit('openModal', type);
     },
 
     closeModal({ commit }, type) {
-      commit('closeModal', { type });
+      commit('closeModal', type);
     },
 
     incrementQuantity({ commit, getters }, productId) {
       const product = getters.selectedProduct(productId);
-      commit('incrementQuantity', { product });
+      commit('incrementQuantity', product);
     },
 
     decrementQuantity({ commit, getters }, productId) {
       const product = getters.selectedProduct(productId);
-      commit('decrementQuantity', { product });
+      commit('decrementQuantity', product);
     },
 
     deleteProduct({ commit }, productId) {
-      commit('deleteProduct', { productId });
+      commit('deleteProduct', productId);
     },
   },
   modules: {},

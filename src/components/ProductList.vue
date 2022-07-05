@@ -1,7 +1,8 @@
 <template>
-  <div class="products-list">
+  <!-- <div class="products-list">
     <loader v-if="products.length === 0"></loader>
-  </div>
+  </div> -->
+
   <ul>
     <li v-for="product in productsToRender" :key="product.id">
       <card :image="product.image" :price="product.price" :title="product.title" :rating="product.rating.rate" :id="product.id"></card>
@@ -17,7 +18,8 @@
 import Card from './Card.vue';
 import Loader from './UI/Loader.vue';
 import ShowMore from './ShowMore.vue';
-import { PRODUCTS_LIMIT } from '@/utils/constants';
+
+const PRODUCTS_LIMIT = 4;
 
 export default {
   components: { Card, Loader, ShowMore },
@@ -63,7 +65,7 @@ ul {
   display: grid;
   gap: 25px;
   list-style: none;
-  padding: 40px 0;
+  padding: 0;
 }
 
 .products-list__show-more {
@@ -74,7 +76,7 @@ ul {
   ul {
     gap: 20px;
     grid-template-columns: repeat(2, 1fr);
-    padding: 60px 0;
+    padding: 0;
   }
 }
 

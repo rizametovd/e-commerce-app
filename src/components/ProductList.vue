@@ -1,10 +1,6 @@
 <template>
-  <!-- <div class="products-list">
-    <loader v-if="products.length === 0"></loader>
-  </div> -->
-
-  <ul>
-    <li v-for="product in productsToRender" :key="product.id">
+  <ul class="products-list">
+    <li class="products-list__item" v-for="product in productsToRender" :key="product.id">
       <card :image="product.image" :price="product.price" :title="product.title" :rating="product.rating.rate" :id="product.id"></card>
     </li>
   </ul>
@@ -58,10 +54,6 @@ export default {
 
 <style scoped>
 .products-list {
-  position: relative;
-}
-
-ul {
   display: grid;
   gap: 25px;
   list-style: none;
@@ -73,7 +65,7 @@ ul {
 }
 
 @media screen and (min-width: 768px) {
-  ul {
+  .products-list {
     gap: 20px;
     grid-template-columns: repeat(2, 1fr);
     padding: 0;
@@ -81,13 +73,13 @@ ul {
 }
 
 @media screen and (min-width: 1024px) {
-  ul {
+  .products-list {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media screen and (min-width: 1280px) {
-  ul {
+  .products-list {
     grid-template-columns: repeat(4, 1fr);
   }
 }

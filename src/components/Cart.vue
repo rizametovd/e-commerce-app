@@ -51,18 +51,18 @@
     </ul>
 
     <div class="cart__totals-block">
-      <span class="cart__title">Total quantity:</span>
+      <span class="cart__totals-block-title">Total quantity:</span>
       <p>{{ totalQuantity }} pcs</p>
     </div>
     <div class="cart__totals-block">
-      <span class="cart__title">Total amount: </span>
+      <span class="cart__totals-block-title">Total amount: </span>
       <p>${{ totalAmount }}</p>
     </div>
 
-    <div class="cart__actions">
-      <!-- <button @click="$emit('closeModal')">Continue shopping</button> -->
-      <!-- <button @click="closeModal">Checkout</button> -->
-    </div>
+    <!-- <div class="cart__actions">
+      <button @click="$emit('closeModal')">Continue shopping</button>
+      <button @click="closeModal">Checkout</button>
+    </div> -->
   </section>
 </template>
 
@@ -166,13 +166,18 @@ export default {
   display: flex;
   gap: 20px;
   justify-content: flex-end;
-  padding: 15px 20px 0 0;
+  padding: 15px 0 0;
 }
 
 .cart__actions {
   display: flex;
   justify-content: flex-end;
   gap: 20px;
+}
+
+.cart__totals-block-title {
+  display: block;
+  font-weight: 600;
 }
 
 @media screen and (min-width: 768px) {
@@ -214,6 +219,10 @@ export default {
   .cart__mobile-action {
     justify-self: center;
     padding: 0;
+  }
+
+  .cart__totals-block {
+    padding: 15px 20px 0 0;
   }
 }
 </style>

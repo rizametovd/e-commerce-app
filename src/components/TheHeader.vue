@@ -1,5 +1,7 @@
 <template>
   <header class="header">
+    <router-link to="/" class="header__logo">Logo</router-link>
+
     <ul>
       <li>
         <base-button-with-badge
@@ -43,17 +45,24 @@ export default {
 <style scoped>
 .header {
   display: grid;
+  align-items: center;
   gap: 20px;
   grid-template-columns: 1fr 1fr;
   padding: 0 20px;
 }
 
+.header__logo {
+  justify-self: start;
+  font-weight: 600;
+  font-size: 48px;
+  color: lightgray;
+  text-decoration: none;
+}
+
 ul {
   display: flex;
-  justify-content: flex-end;
   gap: 25px;
-  align-items: center;
-  grid-column-start: 2;
+  justify-self: end;
   list-style: none;
   padding: 0;
 }

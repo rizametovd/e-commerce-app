@@ -1,9 +1,11 @@
 <template>
   <base-modal :isModalOpen="isCartModalOpen" type="cart" title="Your cart">
-    <cart :products="cart" v-if="cart.length > 0"></cart>
+    <cart :products="cart" v-if="isCartNotEmpty"></cart>
     <p v-else>Your cart is empty</p>
     <template #actions>
-      <base-button variant="outlined">Checkout (пока не работает)</base-button>
+      <router-link to="/checkout" v-if="isCartNotEmpty">
+        <base-button variant="contained" mode="success" @click="closeModal('cart')">Checkout</base-button>
+      </router-link>
     </template>
   </base-modal>
 
@@ -101,37 +103,60 @@ export default {
     isTabsVisible() {
       return this.products.length > 0;
     },
+
+    isCartNotEmpty() {
+      return this.cart.length > 0
+    }
+
+    // isNoProducts() {
+    //   return this.products.length === 0;
+    // },
+
+    // isCartEmpty() {
+    //   return this.cart.length === 0;
+    // },
+
+    // isNoLikes() {
+    //   return this.likes.length === 0;
+    // },
   },
 
-  watch: {
-    cart: {
-      deep: true,
-
-      handler() {
-        setToLocalStorage('cart', this.cart);
-      },
-    },
-    likes: {
-      deep: true,
-      handler() {
-        setToLocalStorage('likes', this.likes);
-      },
-    },
-  },
+  // watch: {
+  //   cart: {
+  //     deep: true,
+  //     handler() {
+  //       setToLocalStorage('cart', this.cart);
+  //     },
+  //   },
+  //   likes: {
+  //     deep: true,
+  //     handler() {
+  //       setToLocalStorage('likes', this.likes);
+  //     },
+  //   },
+  // },
 
   mounted() {
-    const localStorageCart = getFromLocalStorage('cart');
-    const localStorageLikes = getFromLocalStorage('likes');
-    this.setDataFromLocalStorage({
-      mutation: 'setProductToCart',
-      products: localStorageCart,
-    });
-    this.setDataFromLocalStorage({
-      mutation: 'setLike',
-      products: localStorageLikes,
-    });
+    // const localStorageCart = getFromLocalStorage('cart');
+    // const localStorageLikes = getFromLocalStorage('likes');
 
-    this.fetchProducts();
+    // if (localStorageCart && this.isCartEmpty) {
+    //   this.setDataFromLocalStorage({
+    //     mutation: 'setProductToCart',
+    //     products: localStorageCart,
+    //   });
+    // }
+
+    // if (localStorageLikes && this.isNoLikes) {
+    //   this.setDataFromLocalStorage({
+    //     mutation: 'setLike',
+    //     products: localStorageLikes,
+    //   });
+    // }
+
+    // if (this.$route.fullPath === '/' && this.isNoProducts) {
+    //   this.fetchProducts();
+    // }
   },
 };
 </script>

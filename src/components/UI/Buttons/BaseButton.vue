@@ -1,5 +1,5 @@
 <template>
-  <button :class="['button', variant, mode]" type="submit" :disabled="isDisabled">
+  <button :class="['button', variant, mode]" :type="type" :disabled="isDisabled">
     <slot> </slot>
   </button>
 </template>

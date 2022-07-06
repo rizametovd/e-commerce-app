@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <base-card>
+    <base-card :isFullWidth="true">
       <div class="card__container">
         <div class="card__image-container">
           <img :src="image" class="card__image" :alt="title" />
@@ -161,6 +161,7 @@ export default {
 </script>
 
 <style scoped>
+
 .card__container {
   display: flex;
   gap: 12px;
@@ -171,7 +172,7 @@ export default {
 .card__image-container {
   align-self: center;
   position: relative;
-  width: 270px;
+  width: 266px;
 }
 
 .card__image {

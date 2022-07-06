@@ -21,6 +21,7 @@
 Если после третьего дополнительного запроса возвращается ошибка,
 то рендерится сообщение о проблемах на сервере.
 ```
+* Определение города и страны с использованием Geolocation API на странице оформления заказа
 
 ## Деплой
 
@@ -29,8 +30,10 @@ https://polite-beijinho-ecade0.netlify.app
 ## Стек
 
 - Vue 3
+- Vue Router
 - Vuex
-- API: [fakestoreapi.com](https://fakestoreapi.com/)
+- API товаров: [fakestoreapi.com](https://fakestoreapi.com/)
+- API геокодера: [BigDataCloud](https://www.bigdatacloud.com/docs/api/free-reverse-geocode-to-city-api)
 
 ## Установка
 

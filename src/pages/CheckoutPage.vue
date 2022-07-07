@@ -1,25 +1,34 @@
 <template>
   <div class="checkout">
     <h1 class="checkout__heading">Checkout</h1>
-    <div v-if="cart.length > 0">
-      <base-card :isFullWidth="false">
-        <cart :products="cart"></cart>
-      </base-card>
-    </div>
-    <h2 v-else class="checkout__heading_secondary">Cart is empty. Nothing to render</h2>
 
-    <div class="checkout__location">
-      <h3 class="checkout__subheading">Delivery location</h3>
-      <div class="checkout__location-actions">
+    <div>
+      <h2 v-if="cart.length === 0" class="checkout__heading_secondary">Cart is empty. Nothing to render</h2>
 
-        <input v-model="location" placeholder="Enter your city and country" />
-        <base-icon-button @click="getLocation" variant="outlined">
-          <my-location-icon></my-location-icon>
-        </base-icon-button>
+      <div v-else>
+        <div>
+          <base-card :isFullWidth="false">
+            <cart :products="cart" :delivery="delivery"></cart>
+            
+          </base-card>
+        </div>
 
+        <div style="padding: 40px 0">
+          <delivery @onSelectDeliveryOption="test"></delivery>
+        </div>
+
+        <div class="checkout__location">
+          <h3 class="checkout__subheading">Delivery location</h3>
+          <div class="checkout__location-actions">
+            <input v-model="location" placeholder="Enter your city and country" />
+            <base-icon-button @click="getLocation" variant="outlined">
+              <my-location-icon></my-location-icon>
+            </base-icon-button>
+          </div>
+        </div>
+        Здесь будет форма для контактных данных
       </div>
     </div>
-    Здесь будет форма для контактных данных
   </div>
 </template>
 
@@ -31,8 +40,11 @@ import { getFromLocalStorage } from '@/utils/helpers';
 import { getLocationData } from '@/utils/geoCoding';
 import BaseIconButton from '@/components/UI/Buttons/BaseIconButton.vue';
 import MyLocationIcon from '@/components/icons/MyLocationIcon.vue';
+import BaseSelect from '@/components/UI/BaseSelect.vue';
+import Delivery from '@/components/Delivery.vue';
+
 export default {
-  components: { Cart, BaseCard, MyLocationIcon, BaseIconButton },
+  components: { Cart, BaseCard, MyLocationIcon, BaseIconButton, BaseSelect, Delivery },
   computed: {
     ...mapState(['cart']),
   },
@@ -40,10 +52,15 @@ export default {
   data() {
     return {
       location: null,
+      delivery: null,
     };
   },
 
   methods: {
+    test(deliveryOption) {
+      this.delivery = deliveryOption
+    },
+
     async getLocation() {
       try {
         const { countryName, city } = await getLocationData();

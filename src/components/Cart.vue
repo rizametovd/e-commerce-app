@@ -17,11 +17,7 @@
 
         <div class="cart__mobile">
           <span>Quantity:</span>
-          <quantity-block
-            :quantity="product.quantity"
-            @increment="incrementQuantity(product.id)"
-            @decrement="decrementQuantity(product.id)"
-          ></quantity-block>
+          <quantity-block :quantity="product.quantity" @increment="incrementQuantity(product.id)" @decrement="decrementQuantity(product.id)"></quantity-block>
         </div>
 
         <div class="cart__mobile">
@@ -31,19 +27,11 @@
 
         <div class="cart__mobile">
           <span>Subtotal:</span>
-          <p class="cart__item-text">
-            ${{ (product.price * product.quantity).toFixed(2) }}
-          </p>
+          <p class="cart__item-text">${{ (product.price * product.quantity).toFixed(2) }}</p>
         </div>
 
         <div class="cart__mobile-action">
-          <base-icon-button
-            @click="deleteProduct(product.id)"
-            variant="contained"
-            iconHoverColor="#ef2525"
-            iconColor="#74747474"
-            opacity="1"
-          >
+          <base-icon-button @click="deleteProduct(product.id)" variant="contained" iconHoverColor="#ef2525" iconColor="#74747474" opacity="1">
             <delete-icon></delete-icon>
           </base-icon-button>
         </div>
@@ -59,6 +47,16 @@
       <p>${{ totalAmount }}</p>
     </div>
 
+    <div class="cart__totals-block" v-if="delivery">
+      <span class="cart__totals-block-title">Delivery price:</span>
+      <p>{{ !isFreeDelivery ? '$' : '' }}{{ deliveryPrice }}</p>
+    </div>
+
+    <div class="cart__totals-block" v-if="delivery">
+      <span class="cart__totals-block-title">Total:</span>
+      <p>${{ total }}</p>
+    </div>
+
     <!-- <div class="cart__actions">
       <button @click="$emit('closeModal')">Continue shopping</button>
       <button @click="closeModal">Checkout</button>
@@ -67,14 +65,14 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import DeleteIcon from "./icons/DeleteIcon.vue";
-import BaseButton from "./UI/Buttons/BaseButton.vue";
-import BaseIconButton from "./UI/Buttons/BaseIconButton.vue";
-import IconBase from "./UI/BaseIcon.vue";
-import QuantityBlock from "./UI/QuantityBlock.vue";
+import { mapActions } from 'vuex';
+import DeleteIcon from './icons/DeleteIcon.vue';
+import BaseButton from './UI/Buttons/BaseButton.vue';
+import BaseIconButton from './UI/Buttons/BaseIconButton.vue';
+import IconBase from './UI/BaseIcon.vue';
+import QuantityBlock from './UI/QuantityBlock.vue';
 export default {
-  emits: ["closeModal"],
+  emits: ['closeModal'],
   components: {
     QuantityBlock,
     BaseButton,
@@ -87,27 +85,37 @@ export default {
       type: Array,
       required: true,
     },
+    delivery: {
+      type: Object,
+      required: false,
+      default: null,
+    },
   },
 
   methods: {
-    ...mapActions(["incrementQuantity", "decrementQuantity", "deleteProduct"]),
+    ...mapActions(['incrementQuantity', 'decrementQuantity', 'deleteProduct']),
   },
 
   computed: {
     totalAmount() {
-      return this.products
-        .reduce(
-          (total, product) => (total += product.price * product.quantity),
-          0
-        )
-        .toFixed(2);
+      return +this.products.reduce((total, product) => (total += product.price * product.quantity), 0).toFixed(2);
     },
 
     totalQuantity() {
-      return this.products.reduce(
-        (total, product) => (total += product.quantity),
-        0
-      );
+      return this.products.reduce((total, product) => (total += product.quantity), 0);
+    },
+
+    isFreeDelivery() {
+      return this.delivery.price === 0;
+    },
+
+    deliveryPrice() {
+      if (!this.delivery) return;
+      return this.isFreeDelivery ? 'Free' : this.delivery.price;
+    },
+
+    total() {
+      return this.isFreeDelivery ? this.totalAmount : (this.deliveryPrice + this.totalAmount).toFixed(2);
     },
   },
 };

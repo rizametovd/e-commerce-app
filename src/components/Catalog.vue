@@ -1,5 +1,5 @@
 <template>
-  <base-modal :isModalOpen="isCartModalOpen" type="cart" title="Your cart">
+  <!-- <base-modal :isModalOpen="isCartModalOpen" type="cart" title="Your cart">
     <cart :products="cart" v-if="isCartNotEmpty"></cart>
     <p v-else>Your cart is empty</p>
     <template #actions>
@@ -12,7 +12,7 @@
   <base-modal :isModalOpen="isLikesModalOpen" type="likes" title="Your likes">
     <likes :likedProducts="likes" v-if="likes.length > 0"></likes>
     <p v-else>No likes yet</p>
-  </base-modal>
+  </base-modal> -->
 
   <div class="catalog">
     <div class="catalog__header">
@@ -104,9 +104,9 @@ export default {
       return this.products.length > 0;
     },
 
-    isCartNotEmpty() {
-      return this.cart.length > 0
-    }
+    // isCartNotEmpty() {
+    //   return this.cart.length > 0
+    // }
 
     // isNoProducts() {
     //   return this.products.length === 0;

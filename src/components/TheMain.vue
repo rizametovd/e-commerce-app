@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main class="main">
 
     <base-modal :isModalOpen="isCartModalOpen" type="cart" title="Your cart">
     <cart :products="cart" v-if="isCartNotEmpty"></cart>
@@ -95,4 +95,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.main {
+  padding: 20px 0 40px;
+}
+</style>

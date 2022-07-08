@@ -167,7 +167,8 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 30px;
-  padding: 20px 0;
+  padding: 0;
+  /* padding: 20px 0; */
 }
 
 .catalog__header {

@@ -2,8 +2,8 @@
   <div class="select">
     <ul class="select__list">
       <li v-for="option in options" :key="option.id">
-        <button type="button" :class="['select__list-item-button', option.type === isActiveOption && 'active']" @click="select(option)">
-          <span>{{ option.type }}</span>
+        <button type="button" :class="['select__list-item-button', option.name === isActiveOption && 'active']" @click="select(option)">
+          <span>{{ option.name }}</span>
         </button>
       </li>
     </ul>
@@ -28,7 +28,7 @@ export default {
 
   methods: {
     select(option) {
-      this.isActiveOption = option.type;
+      this.isActiveOption = option.name;
       this.$emit('onSelectClick', option);
     },
   },
@@ -55,6 +55,7 @@ export default {
   border-radius: 8px;
   cursor: pointer;
   background-color: transparent;
+  color: #222222;
 }
 
 .select__list-item-button:hover:not(.active) {

@@ -61,7 +61,7 @@ export default {
 }
 
 .products-list__show-more {
-  padding: 20px 0 40px;
+  padding: 20px 0 0;
 }
 
 @media screen and (min-width: 768px) {

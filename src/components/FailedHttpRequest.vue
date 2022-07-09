@@ -1,11 +1,13 @@
 <template>
   <div class="failed-http-request">
     <fade-transition :duration="2">
-      <h2 v-if="serverIsDown">{{ serverErrorMessage }}</h2>
+      <base-heading variant="h2" v-if="serverIsDown">{{
+        serverErrorMessage
+      }}</base-heading>
     </fade-transition>
 
     <div class="failed-http-request__timer" v-if="!isFetching">
-      <h2>{{ errorMessage }}</h2>
+      <base-heading variant="h3">{{ errorMessage }}</base-heading>
       <count-down-timer
         :timeout="timeout"
         @onTimerEnd="onFetchRequest"
@@ -19,7 +21,7 @@
       v-if="isFetching && !serverIsDown"
       class="failed-http-request__sending-request"
     >
-      <h2>Sending new request...</h2>
+      <base-heading variant="h3">Sending new request...</base-heading>
       <loader></loader>
     </div>
   </div>
@@ -27,11 +29,12 @@
 
 <script>
 import CountDownTimer from "./CountDownTimer.vue";
+import BaseHeading from "./UI/BaseHeading.vue";
 import FadeTransition from "./UI/FadeTransition.vue";
 import Loader from "./UI/Loader.vue";
 
 export default {
-  components: { CountDownTimer, Loader, FadeTransition },
+  components: { CountDownTimer, Loader, FadeTransition, BaseHeading },
   props: {
     errorMessage: {
       type: String,

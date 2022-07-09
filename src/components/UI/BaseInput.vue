@@ -1,22 +1,31 @@
 <template>
   <div class="base-input">
-    <label for="input" class="base-input__label">{{ label }}</label>
+    <label for="input" class="base-input__label"
+      >{{ label
+      }}<span class="base-input__label-required" v-if="required">*</span></label
+    >
     <input
-
       id="input"
       :placeholder="placeholder"
       :type="type"
-      class="base-input__input"
+      :class="['base-input__input', error ? 'base-input__input_error' : '']"
       :name="name"
-       @input="$emit('update:modelValue', $event.target.value)"
-       :value="modelValue"
+      @input="$emit('update:modelValue', $event.target.value)"
+      :value="modelValue"
+      :required="required"
+
     />
+    <fade-transition>
+      <span class="base-input__error" v-if="error">{{ error }}</span>
+    </fade-transition>
   </div>
 </template>
 
 <script>
+import FadeTransition from "./FadeTransition.vue";
 export default {
-  emits: ['update:modelValue'],
+  components: { FadeTransition },
+  emits: ["update:modelValue"],
   props: {
     label: {
       type: String,
@@ -34,7 +43,19 @@ export default {
       type: String,
       required: false,
     },
-    modelValue: {}
+    modelValue: {
+      type: [null, String],
+      required: true,
+    },
+
+    error: {
+      type: String,
+      required: false,
+    },
+    required: {
+      type: Boolean,
+      required: true,
+    },
   },
 };
 </script>
@@ -44,6 +65,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  height: 90px;
 }
 
 .base-input__label {
@@ -54,6 +76,10 @@ export default {
   color: #333333;
 }
 
+.base-input__label-required {
+  color: #ef2525;
+}
+
 .base-input__input {
   font-size: 16px;
   line-height: 20px;
@@ -61,10 +87,22 @@ export default {
   padding: 10px 20px;
   border-radius: 10px;
   border: 1px solid lightgray;
+  outline: 2px solid transparent;
+}
+
+.base-input__input_error {
+  transition: outline 0.3s ease-in;
+  outline: 2px solid #ef2525;
 }
 
 .base-input__input::placeholder {
   font-size: 14px;
   color: lightgray;
+}
+
+.base-input__error {
+  align-self: flex-start;
+  font-size: 14px;
+  color: #ef2525;
 }
 </style>

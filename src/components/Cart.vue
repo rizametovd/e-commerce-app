@@ -12,7 +12,7 @@
 
     <ul class="cart__list">
       <li class="cart__grid" v-for="product in products" :key="product.id">
-        <img :src="product.image" class="cart__img" />
+        <img :src="product.image" class="cart__img" :alt="product.title" />
         <p class="cart__item-title cart__item-text">{{ product.title }}</p>
 
         <div class="cart__mobile">
@@ -56,11 +56,6 @@
       <span class="cart__totals-block-title">Total:</span>
       <p>${{ total }}</p>
     </div>
-
-    <!-- <div class="cart__actions">
-      <button @click="$emit('closeModal')">Continue shopping</button>
-      <button @click="closeModal">Checkout</button>
-    </div> -->
   </section>
 </template>
 

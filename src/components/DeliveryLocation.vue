@@ -1,10 +1,11 @@
 <template>
   <div class="delivery-location">
-    <h3 class="delivery-location__title" v-if="isLocationVisible">
-      <span>Your location is:</span> {{ location }}
-    </h3>
+    <base-heading variant="h3" v-if="isLocationVisible">
+      <span class="delivery-location__title">Your location is:</span>
+      {{ location }}
+    </base-heading>
     <div v-if="!isSelected" class="delivery-location__confirm-block">
-      <h3>Is that correct?</h3>
+      <base-heading variant="h3">Is that correct?</base-heading>
       <div class="delivery-location__actions">
         <base-button variant="outlined" @click="confirm(false)">No</base-button>
         <base-button variant="contained" mode="success" @click="confirm(true)"
@@ -23,9 +24,10 @@
 import MyLocationIcon from "./icons/MyLocationIcon.vue";
 import BaseIconButton from "./UI/Buttons/BaseIconButton.vue";
 import BaseButton from "./UI/Buttons/BaseButton.vue";
+import BaseHeading from "./UI/BaseHeading.vue";
 export default {
   emits: ["onConfirmLocationClick"],
-  components: { BaseIconButton, MyLocationIcon, BaseButton },
+  components: { BaseIconButton, MyLocationIcon, BaseButton, BaseHeading },
   props: {
     location: {
       type: String,
@@ -74,16 +76,13 @@ export default {
 }
 
 .delivery-location__title {
-  font-size: 24px;
-}
-
-.delivery-location__title > span {
   color: lightgray;
 }
 
 .delivery-location__confirm-block {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 20px;
 }
 

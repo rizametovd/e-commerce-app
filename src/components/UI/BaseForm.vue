@@ -1,5 +1,5 @@
 <template>
-  <form autocomplete="off" class="form">
+  <form autocomplete="off" class="form" novalidate>
     <slot></slot>
   </form>
 </template>

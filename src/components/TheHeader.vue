@@ -1,6 +1,9 @@
 <template>
   <header class="header">
+    <base-heading variant="h1" class="header__logo">
     <router-link to="/" class="header__logo">Logo</router-link>
+    </base-heading>
+    
 
     <ul>
       <li>
@@ -29,9 +32,10 @@ import { mapActions, mapGetters } from "vuex";
 import CartIcon from "./icons/CartIcon.vue";
 
 import LikeIcon from "./icons/LikeIcon.vue";
+import BaseHeading from './UI/BaseHeading.vue';
 import BaseButtonWithBadge from "./UI/Buttons/BaseButtonWithBadge.vue";
 export default {
-  components: { CartIcon, LikeIcon, BaseButtonWithBadge },
+  components: { CartIcon, LikeIcon, BaseButtonWithBadge, BaseHeading },
 
   methods: {
     ...mapActions(["openModal"]),
@@ -53,8 +57,6 @@ export default {
 
 .header__logo {
   justify-self: start;
-  font-weight: 600;
-  font-size: 48px;
   color: lightgray;
   text-decoration: none;
 }

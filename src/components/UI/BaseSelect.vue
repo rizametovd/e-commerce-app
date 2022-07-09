@@ -2,7 +2,14 @@
   <div class="select">
     <ul class="select__list">
       <li v-for="option in options" :key="option.id">
-        <button type="button" :class="['select__list-item-button', option.name === isActiveOption && 'active']" @click="select(option)">
+        <button
+          type="button"
+          :class="[
+            'select__list-item-button',
+            option.name === isActiveOption && 'active',
+          ]"
+          @click="select(option)"
+        >
           <span>{{ option.name }}</span>
         </button>
       </li>
@@ -12,7 +19,7 @@
 
 <script>
 export default {
-  emits: ['onSelectClick'],
+  emits: ["onSelectClick"],
   props: {
     options: {
       type: Array,
@@ -29,7 +36,7 @@ export default {
   methods: {
     select(option) {
       this.isActiveOption = option.name;
-      this.$emit('onSelectClick', option);
+      this.$emit("onSelectClick", option);
     },
   },
 };
@@ -65,9 +72,5 @@ export default {
 
 .active {
   border: 2px solid #ffa801;
-}
-
-.select__list-text {
-  font-size: 16px;
 }
 </style>

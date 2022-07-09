@@ -1,4 +1,4 @@
-import { wait } from '@/utils/helpers';
+import { clearLocalStorare, wait } from '@/utils/helpers';
 import { createStore } from 'vuex';
 
 const FETCH_ATTEMPTS_COUNT = 3;
@@ -79,6 +79,10 @@ export default createStore({
 
     deleteProduct(state, productId) {
       state.cart = state.cart.filter((product) => product.id !== productId);
+    },
+
+    clearCart(state) {
+      state.cart = [];
     },
 
     openModal(state, modalType) {
@@ -173,6 +177,11 @@ export default createStore({
       if (!products) return;
 
       products.forEach((product) => commit(mutation, product));
+    },
+
+    clearCart({commit}) {
+      commit('clearCart');
+      clearLocalStorare('cart')
     },
 
     openModal({ commit }, type) {

@@ -1,24 +1,25 @@
 <template>
   <footer class="footer">
     <hr />
-    <h6>The Footer</h6>
+    <base-heading variant="h1" class="footer__title">The Footer</base-heading>
   </footer>
 </template>
 
 <script>
-export default {};
+import BaseHeading from "./UI/BaseHeading.vue";
+export default {
+  components: { BaseHeading },
+};
 </script>
 
 <style scoped>
-h6 {
+.footer__title {
   display: flex;
   justify-content: center;
   align-items: center;
   color: lightgray;
   justify-self: center;
   align-self: center;
-  font-weight: 600;
-  font-size: 48px;
   height: 100%;
 }
 

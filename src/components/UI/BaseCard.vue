@@ -11,6 +11,7 @@ export default {
       type: Boolean,
       required: false,
     },
+    elHeight: {},
   },
 };
 </script>
@@ -23,6 +24,9 @@ export default {
   border: 1px solid #fbfbfb;
   box-shadow: 0px 5px 22px rgba(0, 0, 0, 0.1);
   border-radius: 16px;
+
+  height: v-bind(elHeight + "px");
+  transition: "all 3s ease-in-out";
 }
 
 .base__card_full-width {

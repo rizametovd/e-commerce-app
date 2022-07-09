@@ -1,7 +1,6 @@
 <template>
   <div class="checkout">
-    <h1 class="checkout__heading">Checkout</h1>
-
+    <base-heading variant="h1">Checkout</base-heading>
     <base-placeholder v-if="cart.length === 0"></base-placeholder>
 
     <div class="checkout__content" v-if="cart.length > 0">
@@ -14,17 +13,19 @@
           @onSelectDeliveryOption="setDeliveryOption"
         ></choose-delivery>
 
-        <delivery-location
-          v-if="delivery?.type === 'delivery'"
-          :location="location"
-          @onConfirmLocationClick="confirmLocation"
-        ></delivery-location>
-
+        <fade-transition>
+          <delivery-location
+            v-if="delivery?.type === 'delivery'"
+            :location="location"
+            @onConfirmLocationClick="confirmLocation"
+          ></delivery-location>
+        </fade-transition>
       </base-card>
 
-      <checkout-form 
-      :delivery="delivery"
-      :location="confirmedLocation"
+      <checkout-form
+        :delivery="delivery"
+        :location="confirmedLocation"
+        :cart="cart"
       ></checkout-form>
     </div>
   </div>
@@ -34,7 +35,6 @@
 import Cart from "@/components/Cart.vue";
 import { mapActions, mapState } from "vuex";
 import BaseCard from "@/components/UI/BaseCard.vue";
-// import { getFromLocalStorage } from "@/utils/helpers";
 import { getLocationData } from "@/utils/geoCoding";
 import BaseIconButton from "@/components/UI/Buttons/BaseIconButton.vue";
 import MyLocationIcon from "@/components/icons/MyLocationIcon.vue";
@@ -44,6 +44,9 @@ import ChooseDelivery from "@/components/ChooseDelivery.vue";
 import CheckoutForm from "@/components/CheckoutForm.vue";
 import BaseInput from "@/components/UI/BaseInput.vue";
 import DeliveryLocation from "@/components/DeliveryLocation.vue";
+import CheckoutSuccessPage from "./CheckoutSuccessPage.vue";
+import BaseHeading from "@/components/UI/BaseHeading.vue";
+import FadeTransition from "@/components/UI/FadeTransition.vue";
 
 export default {
   components: {
@@ -57,6 +60,9 @@ export default {
     BaseInput,
     DeliveryLocation,
     BasePlaceholder,
+    CheckoutSuccessPage,
+    BaseHeading,
+    FadeTransition,
   },
   computed: {
     ...mapState(["cart"]),
@@ -73,7 +79,7 @@ export default {
   methods: {
     async setDeliveryOption(deliveryOption) {
       if (deliveryOption.type === "delivery") {
-        this.location = ''; 
+        this.location = "";
         await this.getLocation();
       }
       this.delivery = deliveryOption;
@@ -81,9 +87,8 @@ export default {
 
     async getLocation() {
       try {
-
         const { countryName, city } = await getLocationData();
-        
+
         this.location = `${city}, ${countryName}`;
       } catch (error) {
         console.log(error);
@@ -92,40 +97,18 @@ export default {
 
     confirmLocation(isConfirmed) {
       if (!isConfirmed) {
-        this.confirmedLocation = '' ;
+        this.confirmedLocation = "";
         return;
       }
-       this.confirmedLocation = this.location;
-    }
+      this.confirmedLocation = this.location;
+    },
   },
 
   watch: {
     delivery() {
-      this.confirmedLocation = null 
-    }
-  }
-  // methods: {
-  //   ...mapActions(["setDataFromLocalStorage"]),
-  // },
-
-  // mounted() {
-  //   const localStorageCart = getFromLocalStorage("cart");
-  //   const localStorageLikes = getFromLocalStorage("likes");
-
-  //   if (localStorageCart) {
-  //     this.setDataFromLocalStorage({
-  //       mutation: "setProductToCart",
-  //       products: localStorageCart,
-  //     });
-  //   }
-
-  //   if (localStorageLikes) {
-  //     this.setDataFromLocalStorage({
-  //       mutation: "setLike",
-  //       products: localStorageLikes,
-  //     });
-  //   }
-  // },
+      this.confirmedLocation = null;
+    },
+  },
 };
 </script>
 
@@ -143,25 +126,4 @@ export default {
   flex-direction: column;
   gap: 40px;
 }
-
-.checkout__heading {
-  font-size: 40px;
-  line-height: 42px;
-}
-
-/* .checkout__subheading {
-  font-size: 24px;
-} */
-
-/* .checkout__location {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.checkout__location-actions {
-  align-self: center;
-  display: flex;
-  gap: 10px;
-} */
 </style>

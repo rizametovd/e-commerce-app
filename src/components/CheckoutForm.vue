@@ -12,8 +12,9 @@
                 :type="input.type"
                 :name="input.name"
                 :required="input.required"
-                v-model.trim="userInput[input.name]"
                 :error="formError[input?.name]"
+                :value="userInput[input.name]"
+                :handleChange="handleChange"
               ></base-input>
             </li>
           </ul>
@@ -111,33 +112,55 @@ export default {
       userInput: {
         name: "",
         phone: "",
-        email: "",
-        location: "",
-        address: "",
         comment: "",
-      },
-      formError: {
-        name: "",
-        phone: "",
-        email: "",
         location: "",
+        email: "",
         address: "",
-        comment: "",
       },
+      formError: {},
     };
   },
 
   methods: {
     ...mapActions(["clearCart"]),
 
+    handleChange(e) {
+      const field = e.target.name;
+      const value = e.target.value;
+
+      this.clearValidation(field);
+
+      this.userInput = {
+        ...this.userInput,
+        [field]: value,
+      };
+    },
+
+    clearValidation(field) {
+      if (field) {
+        this.formError = {
+          ...this.formError,
+          [field]: "",
+        };
+        return;
+      }
+      this.formError = {};
+    },
+
     validateForm() {
       let isFormValid = true;
+      const isNameInputValid = this.userInput.name.trim().length > 2;
+      const isPhoneValid =
+        this.userInput.phone.trim().length >= 10 &&
+        this.userInput.phone.trim().length <= 20;
 
-      if (!this.userInput.name || !this.userInput.phone) {
+      if (!isNameInputValid || !isPhoneValid) {
         this.formError = {
-          name: this.userInput.name ? '' : 'This field cannot be empty',
-          phone: this.userInput.phone ? '' : 'Please provide your phone number'
-        }
+          name: isNameInputValid
+            ? ""
+            : "Name cannot be less or equal than 2 letters",
+          phone: isPhoneValid ? "" : "Phone number digits range is 10-20",
+        };
 
         isFormValid = false;
       }
@@ -147,9 +170,26 @@ export default {
 
     submitForm() {
       if (!this.validateForm()) return;
-    
+
+      console.log("order:", {
+        id: 1,
+        customer: {
+          name: this.userInput.name,
+          phone: this.userInput.phone,
+          email: this.userInput.email,
+          comment: this.userInput.comment,
+        },
+        products: this.cart,
+        delivery: {
+          ...this.delivery,
+          region: this.userInput.location,
+          address: this.userInput.address,
+        },
+      });
+
       this.$router.push("/checkout/success");
       this.clearCart();
+      this.userInput = {};
     },
   },
 
@@ -177,14 +217,6 @@ export default {
         };
       },
     },
-
-    userInput: {
-      deep: true,
-      handler(val) {
-       console.log('val:', val) 
-      }
-      
-    }
   },
 };
 </script>

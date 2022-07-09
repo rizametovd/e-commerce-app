@@ -1,6 +1,10 @@
 <template>
   <div class="quantity">
-    <base-icon-button @click="$emit('decrement')" :isDisabled="isButtonDisabled" variant="outlined">
+    <base-icon-button
+      @click="$emit('decrement')"
+      :isDisabled="isButtonDisabled"
+      variant="outlined"
+    >
       <minus-icon></minus-icon>
     </base-icon-button>
 
@@ -13,13 +17,13 @@
 </template>
 
 <script>
-import PlusIcon from '../icons/PlusIcon.vue';
-import MinusIcon from '../icons/MinusIcon.vue';
-import BaseIconButton from './Buttons/BaseIconButton.vue';
+import PlusIcon from "../icons/PlusIcon.vue";
+import MinusIcon from "../icons/MinusIcon.vue";
+import BaseIconButton from "./Buttons/BaseIconButton.vue";
 
 export default {
   components: { PlusIcon, MinusIcon, BaseIconButton },
-  emits: ['increment', 'decrement'],
+  emits: ["increment", "decrement"],
   props: {
     quantity: {
       type: Number,

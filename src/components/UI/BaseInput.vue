@@ -10,10 +10,9 @@
       :type="type"
       :class="['base-input__input', error ? 'base-input__input_error' : '']"
       :name="name"
-      @input="$emit('update:modelValue', $event.target.value)"
-      :value="modelValue"
+      :value="value"
+      @input="handleChange"
       :required="required"
-
     />
     <fade-transition>
       <span class="base-input__error" v-if="error">{{ error }}</span>
@@ -25,7 +24,6 @@
 import FadeTransition from "./FadeTransition.vue";
 export default {
   components: { FadeTransition },
-  emits: ["update:modelValue"],
   props: {
     label: {
       type: String,
@@ -43,17 +41,17 @@ export default {
       type: String,
       required: false,
     },
-    modelValue: {
-      type: [null, String],
-      required: true,
-    },
-
     error: {
       type: String,
       required: false,
     },
     required: {
       type: Boolean,
+      required: true,
+    },
+    value: {},
+    handleChange: {
+      type: Function,
       required: true,
     },
   },

@@ -54,6 +54,7 @@ export default {
 
 <style scoped>
 .button {
+  font-family: "Open Sans";
   display: block;
   padding: 0;
   background-color: transparent;

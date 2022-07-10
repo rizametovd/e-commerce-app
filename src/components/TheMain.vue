@@ -1,24 +1,33 @@
 <template>
   <main class="main">
-    <base-modal :isModalOpen="isCartModalOpen" type="cart" title="Your cart">
-      <cart :products="cart" v-if="isCartNotEmpty"></cart>
-      <p v-else>Your cart is empty</p>
-      <template #actions>
-        <router-link to="/checkout" v-if="isCartNotEmpty">
-          <base-button
-            variant="contained"
-            mode="success"
-            @click="closeModal('cart')"
-            >Checkout</base-button
-          >
-        </router-link>
-      </template>
-    </base-modal>
+    <teleport to="body">
+      <base-modal :isModalOpen="isCartModalOpen" type="cart" title="Your cart">
+        <cart :products="cart" v-if="isCartNotEmpty"></cart>
+        <p v-else>Your cart is empty</p>
+        <template #actions>
+          <router-link to="/checkout" v-if="isCartNotEmpty">
+            <base-button
+              variant="contained"
+              mode="success"
+              @click="closeModal('cart')"
+              >Checkout</base-button
+            >
+          </router-link>
+        </template>
+      </base-modal>
+    </teleport>
 
-    <base-modal :isModalOpen="isLikesModalOpen" type="likes" title="Your likes">
-      <likes :likedProducts="likes" v-if="likes.length > 0"></likes>
-      <p v-else>No likes yet</p>
-    </base-modal>
+    <teleport to="body">
+      <base-modal
+        :isModalOpen="isLikesModalOpen"
+        type="likes"
+        title="Your likes"
+      >
+        <likes :likedProducts="likes" v-if="likes.length > 0"></likes>
+        <p v-else>No likes yet</p>
+      </base-modal>
+    </teleport>
+
     <router-view></router-view>
   </main>
 </template>

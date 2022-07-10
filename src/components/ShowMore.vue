@@ -6,6 +6,9 @@
 
 <script>
 import BaseButton from "./UI/Buttons/BaseButton.vue";
+
+const PRODUCTS_LIMIT = 4;
+
 export default {
   components: { BaseButton },
   props: {
@@ -29,7 +32,7 @@ export default {
     loadMore() {
       if (this.count > this.listLength) return;
 
-      this.itemsCountToShow += this.count;
+      this.itemsCountToShow += PRODUCTS_LIMIT;
       this.$emit("onShowMoreClick", this.itemsCountToShow);
     },
   },

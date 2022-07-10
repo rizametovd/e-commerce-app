@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import CheckoutPage from '../pages/CheckoutPage.vue';
 import CheckoutSuccessPage from '../pages/CheckoutSuccessPage.vue';
 import HomePage from '../pages/HomePage.vue';
+import NotFoundPage from '../pages/NotFoundPage.vue';
 
 const routes = [
   {
@@ -16,6 +17,10 @@ const routes = [
     path: '/checkout/success',
     component: CheckoutSuccessPage,
   },
+  {
+    path:'/:notFound(.*)',
+    component: NotFoundPage
+  }
 ];
 
 const router = createRouter({

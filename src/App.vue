@@ -25,12 +25,15 @@ export default {
   margin: 0;
 }
 
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif, "Open Sans";
+body {
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #222222;
+}
+
+#app {
   min-width: 320px;
   max-width: 1280px;
   margin: 0 auto;

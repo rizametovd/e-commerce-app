@@ -10,7 +10,7 @@
           ]"
           @click="select(option)"
         >
-          <span>{{ option.name }}</span>
+          <span class="select__list-item-text">{{ option.name }}</span>
         </button>
       </li>
     </ul>
@@ -63,6 +63,10 @@ export default {
   cursor: pointer;
   background-color: transparent;
   color: #222222;
+}
+
+.select__list-item-text {
+  font-family: "Open Sans";
 }
 
 .select__list-item-button:hover:not(.active) {

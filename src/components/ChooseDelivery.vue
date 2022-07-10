@@ -9,7 +9,6 @@
 <script>
 import BaseHeading from './UI/BaseHeading.vue';
 import BaseSelect from './UI/BaseSelect.vue';
-import FadeTransition from './UI/FadeTransition.vue';
 
 const DELIVERY_OPTIONS = [
   {

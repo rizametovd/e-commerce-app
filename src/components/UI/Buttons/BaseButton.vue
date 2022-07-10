@@ -31,6 +31,7 @@ export default {
 
 <style scoped>
 .button {
+  font-family: "Open Sans";
   align-self: stretch;
   background: transparent;
   border: 1px solid #e2e2e2;

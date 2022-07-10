@@ -1,24 +1,42 @@
 <template>
-  <ul class="products-list">
-    <li class="products-list__item" v-for="product in productsToRender" :key="product.id">
-      <card :image="product.image" :price="product.price" :title="product.title" :rating="product.rating.rate" :id="product.id"></card>
+  <fade-transition-group class="products-list">
+    <li
+      class="products-list__item"
+      v-for="product in productsToRender"
+      :key="product.id"
+    >
+      <card
+        :image="product.image"
+        :price="product.price"
+        :title="product.title"
+        :rating="product.rating.rate"
+        :id="product.id"
+      ></card>
     </li>
-  </ul>
+  </fade-transition-group>
 
-  <div class="products-list__show-more" v-if="itemsCountToRender < products.length">
-    <show-more :count="itemsCountToRender" :listLength="products.length" @onShowMoreClick="handleShowMore"></show-more>
+  <div
+    class="products-list__show-more"
+    v-if="itemsCountToRender < products.length"
+  >
+    <show-more
+      :count="itemsCountToRender"
+      :listLength="products.length"
+      @onShowMoreClick="handleShowMore"
+    ></show-more>
   </div>
 </template>
 
 <script>
-import Card from './Card.vue';
-import Loader from './UI/Loader.vue';
-import ShowMore from './ShowMore.vue';
+import Card from "./Card.vue";
+import Loader from "./UI/Loader.vue";
+import ShowMore from "./ShowMore.vue";
+import FadeTransitionGroup from "./UI/FadeTransitionGroup.vue";
 
 const PRODUCTS_LIMIT = 4;
 
 export default {
-  components: { Card, Loader, ShowMore },
+  components: { Card, Loader, ShowMore, FadeTransitionGroup },
   props: {
     products: {
       type: Array,

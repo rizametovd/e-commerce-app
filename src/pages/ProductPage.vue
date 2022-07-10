@@ -12,7 +12,6 @@
       <div>
         <star-rating :rating="currentProduct.rating.rate"></star-rating>
       </div>
-      <base-divider></base-divider>
       <div class="product-page__actions">
         <base-heading variant="h2">${{ currentProduct.price }}</base-heading>
         <div class="product-page__actions-buy">
@@ -38,7 +37,6 @@
           >
         </div>
       </div>
-      <base-divider></base-divider>
       <div class="product-page__description">
         <base-heading variant="h3">Description</base-heading>
         <p>

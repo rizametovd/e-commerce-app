@@ -58,7 +58,6 @@ import { mapActions, mapGetters, mapState } from "vuex";
 import BaseDivider from "@/components/UI/BaseDivider.vue";
 import FadeTransition from "@/components/UI/FadeTransition.vue";
 import StarRating from "@/components/StarRating.vue";
-import LikeIcon from "@/components/icons/LikeIcon.vue";
 import BaseIcon from "@/components/UI/BaseIcon.vue";
 
 export default {
@@ -70,7 +69,6 @@ export default {
     BaseDivider,
     FadeTransition,
     StarRating,
-    LikeIcon,
     BaseIcon,
   },
 

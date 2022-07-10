@@ -3,7 +3,12 @@
     <base-card :isFullWidth="true">
       <div class="card__container">
         <div class="card__image-container">
-          <img :src="image" class="card__image" :alt="title" />
+          <img
+            :src="image"
+            class="card__image"
+            :alt="title"
+            @click="$router.push(`product/${id}`)"
+          />
 
           <div class="card__like-btn">
             <base-icon-button
@@ -20,7 +25,12 @@
           </div>
         </div>
 
-        <h3 class="card__title">{{ title }}</h3>
+        <base-heading
+          variant="h4"
+          class="card__title"
+          @click="$router.push(`product/${id}`)"
+          >{{ title }}</base-heading
+        >
 
         <div class="card__rating">
           <img src="../assets/star-icon.svg" />
@@ -29,11 +39,7 @@
 
         <h3 class="card__price">${{ price }}</h3>
 
-        <form
-          class="card__form"
-          @submit.prevent="handleAddToCartClick"
-          v-if="!isProductAlreadyInCart"
-        >
+        <div class="card__actions" v-if="!isProductAlreadyInCart">
           <quantity-block
             @decrement="decrementQuantity"
             @increment="incrementQuantity"
@@ -41,14 +47,14 @@
           ></quantity-block>
           <base-icon-button
             variant="contained"
-            type="submit"
             text="Add to cart"
             iconColor="lightgray"
             iconHoverColor="#ffa801"
+            @click="handleAddToCartClick"
           >
             <cart-icon></cart-icon>
           </base-icon-button>
-        </form>
+        </div>
 
         <fade-transition>
           <base-button
@@ -74,6 +80,7 @@ import QuantityBlock from "./UI/QuantityBlock.vue";
 import BaseButton from "./UI/Buttons/BaseButton.vue";
 import BaseIconButton from "./UI/Buttons/BaseIconButton.vue";
 import FadeTransition from "./UI/FadeTransition.vue";
+import BaseHeading from "./UI/BaseHeading.vue";
 export default {
   components: {
     IconBase,
@@ -84,6 +91,7 @@ export default {
     BaseButton,
     BaseIconButton,
     FadeTransition,
+    BaseHeading,
   },
 
   props: {
@@ -161,7 +169,6 @@ export default {
 </script>
 
 <style scoped>
-
 .card__container {
   display: flex;
   gap: 12px;
@@ -180,10 +187,12 @@ export default {
   width: 100%;
   height: 235px;
   object-fit: contain;
+  cursor: pointer;
 }
 
 .card__title {
   min-height: 43px;
+  cursor: pointer;
 }
 
 .card__like-btn {
@@ -210,7 +219,7 @@ export default {
   line-height: 30px;
 }
 
-.card__form {
+.card__actions {
   width: 100%;
   display: flex;
   justify-content: space-between;

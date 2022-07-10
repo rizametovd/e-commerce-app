@@ -34,6 +34,10 @@ export default createStore({
       return [...new Set(tmp)];
     },
 
+    product: (state) => (id) => {
+      return state.products.find((productItem) => productItem.id === id);
+    },
+
     selectedProduct: (state) => (id) => {
       return state.cart.find((productItem) => productItem.id === id);
     },

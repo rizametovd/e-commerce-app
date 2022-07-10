@@ -2,12 +2,17 @@ import { createRouter, createWebHistory } from 'vue-router';
 import CheckoutPage from '../pages/CheckoutPage.vue';
 import CheckoutSuccessPage from '../pages/CheckoutSuccessPage.vue';
 import HomePage from '../pages/HomePage.vue';
+import ProductPage from '../pages/ProductPage.vue';
 import NotFoundPage from '../pages/NotFoundPage.vue';
 
 const routes = [
   {
     path: '/',
     component: HomePage,
+  },
+  {
+    path: '/product/:id',
+    component: ProductPage,
   },
   {
     path: '/checkout',
@@ -18,9 +23,9 @@ const routes = [
     component: CheckoutSuccessPage,
   },
   {
-    path:'/:notFound(.*)',
-    component: NotFoundPage
-  }
+    path: '/:notFound(.*)',
+    component: NotFoundPage,
+  },
 ];
 
 const router = createRouter({

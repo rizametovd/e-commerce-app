@@ -104,7 +104,11 @@ export default {
       });
     }
 
-    if (this.$route.fullPath === "/" && this.isNoProducts) {
+    // if (this.$route.fullPath === "/" && this.isNoProducts) {
+    //   this.fetchProducts();
+    // }
+
+        if (this.isNoProducts) {
       this.fetchProducts();
     }
   },

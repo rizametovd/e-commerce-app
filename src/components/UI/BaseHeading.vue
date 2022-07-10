@@ -36,4 +36,11 @@ h3 {
   font-size: 28px;
   line-height: 36px;
 }
+
+h4 {
+    font-family: 'Nunito';
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 26px;
+}
 </style>

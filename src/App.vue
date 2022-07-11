@@ -38,7 +38,7 @@ body {
   max-width: 1280px;
   margin: 0 auto;
   display: grid;
-  grid-template-rows: 130px minmax(calc(100vh - 260px), auto) 130px;
+  grid-template-rows: 120px minmax(calc(100vh - 240px), auto) 120px;
   padding: 0 10px;
   box-sizing: border-box;
 }

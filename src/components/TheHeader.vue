@@ -1,16 +1,15 @@
 <template>
   <header class="header">
-    <base-heading variant="h1" class="header__logo">
-      <router-link
-        to="/"
-        :class="[
-          'header__logo',
-          isHomepage ? 'header__logo-disabled' : 'header__logo_active',
-        ]"
-        disabled="true"
-        >Logo</router-link
-      >
-    </base-heading>
+    <router-link
+      to="/"
+      :class="[
+        'header__logo',
+        isHomepage ? 'header__logo-disabled' : 'header__logo_active',
+      ]"
+      disabled="true"
+    >
+      <img src="@/assets/logo.svg" class="header__logo" />
+    </router-link>
 
     <ul>
       <li>
@@ -63,10 +62,11 @@ export default {
   align-items: center;
   gap: 20px;
   grid-template-columns: 1fr 1fr;
-  padding: 0 20px;
+  padding: 0 10px;
 }
 
 .header__logo {
+  width: 110px;
   justify-self: start;
   color: lightgray;
   text-decoration: none;
@@ -74,7 +74,7 @@ export default {
 
 ul {
   display: flex;
-  gap: 25px;
+  gap: 14px;
   justify-self: end;
   list-style: none;
   padding: 0;
@@ -89,13 +89,21 @@ ul {
 }
 
 .header__logo_active:hover {
-  opacity: 0.7;
+  opacity: 0.6;
   transition: opacity 0.3s ease-in;
 }
 
 @media screen and (min-width: 768px) {
   .header {
     padding: 0;
+  }
+
+  .header__logo {
+    width: 160px;
+  }
+
+  ul {
+    gap: 25px;
   }
 }
 </style>

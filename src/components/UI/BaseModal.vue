@@ -1,6 +1,10 @@
 <template>
   <fade-transition>
-    <div @click="closeModal(type)" class="modal__backdrop" v-if="isModalOpen"></div>
+    <div
+      @click="closeModal(type)"
+      class="modal__backdrop"
+      v-if="isModalOpen"
+    ></div>
   </fade-transition>
 
   <fade-transition>
@@ -13,7 +17,9 @@
       </section>
 
       <section class="modal__actions">
-        <base-button @click="closeModal(type)" variant="outlined">{{ closeButtonText }}</base-button>
+        <base-button @click="closeModal(type)" variant="outlined">{{
+          closeButtonText
+        }}</base-button>
         <slot name="actions"></slot>
       </section>
     </dialog>
@@ -21,9 +27,9 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import BaseButton from './Buttons/BaseButton.vue';
-import FadeTransition from './FadeTransition.vue';
+import { mapActions } from "vuex";
+import BaseButton from "./Buttons/BaseButton.vue";
+import FadeTransition from "./FadeTransition.vue";
 export default {
   components: { BaseButton, FadeTransition },
   props: {
@@ -34,7 +40,7 @@ export default {
     closeButtonText: {
       type: String,
       required: false,
-      default: 'Continue shopping',
+      default: "Continue shopping",
     },
     isModalOpen: {
       type: Boolean,
@@ -47,7 +53,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['closeModal']),
+    ...mapActions(["closeModal"]),
   },
 };
 </script>
@@ -62,25 +68,28 @@ export default {
   background: rgba(0, 0, 0, 0.8);
   box-shadow: none;
   overflow: hidden;
-  z-index: 1;
+  z-index: 2;
 }
 
 .modal {
   display: flex;
   flex-direction: column;
   gap: 30px;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 100%;
   padding: 40px 20px;
   border-radius: 16px;
-  z-index: 2;
+  z-index: 3;
   border: 1px solid black;
   box-sizing: border-box;
   padding: 20px;
+  max-height: calc(100vh - 20px);
+  overflow: scroll;
 }
+
 .modal__actions {
   display: flex;
   gap: 20px;

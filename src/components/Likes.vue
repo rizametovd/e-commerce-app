@@ -9,19 +9,19 @@
         :src="likedProduct.image"
         :alt="likedProduct.title"
         class="likes__image"
-        @click="onTitleClick(likedProduct.id)"
+        @click="onClick(likedProduct.id)"
       />
       <div class="likes__product-info">
         <span
           class="likes__product-info-title"
-          @click="onTitleClick(likedProduct.id)"
+          @click="onClick(likedProduct.id)"
           >{{ likedProduct.title }}</span
         >
 
         <div class="likes__product-info-container">
           <div class="likes__rating">
             <img src="../assets/star-icon.svg" />
-            <p class="card__rating-text">{{ likedProduct.rating }}</p>
+            <p class="card__rating-text">{{ likedProduct.rating.rate }}</p>
           </div>
           <span class="likes__price"
             ><strong>${{ likedProduct.price }}</strong></span
@@ -48,7 +48,7 @@ import BaseButton from "./UI/Buttons/BaseButton.vue";
 import BaseIconButton from "./UI/Buttons/BaseIconButton.vue";
 import IconBase from "./UI/BaseIcon.vue";
 export default {
-  emits: ["onTitleClick"],
+  emits: ["onClick"],
   components: { BaseButton, IconBase, DeleteIcon, BaseIconButton },
   props: {
     likedProducts: {
@@ -60,8 +60,9 @@ export default {
   methods: {
     ...mapActions(["handleLikes"]),
 
-    onTitleClick(id) {
-      this.$emit("onTitleClick", id);
+    onClick(id) {
+      this.$router.push(`/product/${id}`);
+      this.$emit("onClick", "likes");
     },
   },
 };
@@ -101,7 +102,7 @@ export default {
 
 .likes__product-info-title:hover {
   transition: color 0.1s linear;
-  color: #ffa801;
+  color: #ed8939;
 }
 
 .likes__product-info-container {
@@ -116,6 +117,11 @@ export default {
   width: 40px;
   height: 40px;
   object-fit: contain;
+}
+
+.likes__image:hover {
+  opacity: 0.7;
+  transition: opacity 0.2s linear;
 }
 
 .likes__rating {

@@ -165,6 +165,7 @@ export default createStore({
 
     handleLikes({ commit, getters }, product) {
       const likedProduct = getters.likedProduct(product.id);
+
       if (likedProduct) {
         commit('unLike', product.id);
         return;
@@ -183,9 +184,9 @@ export default createStore({
       products.forEach((product) => commit(mutation, product));
     },
 
-    clearCart({commit}) {
+    clearCart({ commit }) {
       commit('clearCart');
-      clearLocalStorare('cart')
+      clearLocalStorare('cart');
     },
 
     openModal({ commit }, type) {

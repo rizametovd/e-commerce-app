@@ -9,7 +9,7 @@
         :image="product.image"
         :price="product.price"
         :title="product.title"
-        :rating="product.rating.rate"
+        :rating="product.rating"
         :id="product.id"
       ></card>
     </li>

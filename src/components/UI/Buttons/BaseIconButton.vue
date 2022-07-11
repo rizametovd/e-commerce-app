@@ -107,7 +107,7 @@ export default {
 .container {
   display: flex;
   gap: 10px;
-  align-items: stretch;
+  align-items: center;
   color: inherit;
 }
 

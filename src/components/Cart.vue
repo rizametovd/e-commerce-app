@@ -12,12 +12,26 @@
 
     <ul class="cart__list">
       <li class="cart__grid" v-for="product in products" :key="product.id">
-        <img :src="product.image" class="cart__img" :alt="product.title" />
-        <p class="cart__item-title cart__item-text">{{ product.title }}</p>
+        <img
+          :src="product.image"
+          class="cart__img"
+          :alt="product.title"
+          @click="onClick(product.id)"
+        />
+        <p
+          class="cart__item-title cart__item-text"
+          @click="onClick(product.id)"
+        >
+          {{ product.title }}
+        </p>
 
         <div class="cart__mobile">
           <span>Quantity:</span>
-          <quantity-block :quantity="product.quantity" @increment="incrementQuantity(product.id)" @decrement="decrementQuantity(product.id)"></quantity-block>
+          <quantity-block
+            :quantity="product.quantity"
+            @increment="incrementQuantity(product.id)"
+            @decrement="decrementQuantity(product.id)"
+          ></quantity-block>
         </div>
 
         <div class="cart__mobile">
@@ -27,11 +41,19 @@
 
         <div class="cart__mobile">
           <span>Subtotal:</span>
-          <p class="cart__item-text">${{ (product.price * product.quantity).toFixed(2) }}</p>
+          <p class="cart__item-text">
+            ${{ (product.price * product.quantity).toFixed(2) }}
+          </p>
         </div>
 
         <div class="cart__mobile-action">
-          <base-icon-button @click="deleteProduct(product.id)" variant="contained" iconHoverColor="#ef2525" iconColor="#74747474" opacity="1">
+          <base-icon-button
+            @click="deleteProduct(product.id)"
+            variant="contained"
+            iconHoverColor="#ef2525"
+            iconColor="#74747474"
+            opacity="1"
+          >
             <delete-icon></delete-icon>
           </base-icon-button>
         </div>
@@ -49,7 +71,7 @@
 
     <div class="cart__totals-block" v-if="delivery">
       <span class="cart__totals-block-title">Delivery price:</span>
-      <p>{{ !isFreeDelivery ? '$' : '' }}{{ deliveryPrice }}</p>
+      <p>{{ !isFreeDelivery ? "$" : "" }}{{ deliveryPrice }}</p>
     </div>
 
     <div class="cart__totals-block" v-if="delivery">
@@ -60,14 +82,14 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import DeleteIcon from './icons/DeleteIcon.vue';
-import BaseButton from './UI/Buttons/BaseButton.vue';
-import BaseIconButton from './UI/Buttons/BaseIconButton.vue';
-import IconBase from './UI/BaseIcon.vue';
-import QuantityBlock from './UI/QuantityBlock.vue';
+import { mapActions } from "vuex";
+import DeleteIcon from "./icons/DeleteIcon.vue";
+import BaseButton from "./UI/Buttons/BaseButton.vue";
+import BaseIconButton from "./UI/Buttons/BaseIconButton.vue";
+import IconBase from "./UI/BaseIcon.vue";
+import QuantityBlock from "./UI/QuantityBlock.vue";
 export default {
-  emits: ['closeModal'],
+  emits: ["onClick"],
   components: {
     QuantityBlock,
     BaseButton,
@@ -88,16 +110,29 @@ export default {
   },
 
   methods: {
-    ...mapActions(['incrementQuantity', 'decrementQuantity', 'deleteProduct']),
+    ...mapActions(["incrementQuantity", "decrementQuantity", "deleteProduct"]),
+
+    onClick(id) {
+      this.$router.push(`/product/${id}`);
+      this.$emit("onClick", "cart");
+    },
   },
 
   computed: {
     totalAmount() {
-      return +this.products.reduce((total, product) => (total += product.price * product.quantity), 0).toFixed(2);
+      return +this.products
+        .reduce(
+          (total, product) => (total += product.price * product.quantity),
+          0
+        )
+        .toFixed(2);
     },
 
     totalQuantity() {
-      return this.products.reduce((total, product) => (total += product.quantity), 0);
+      return this.products.reduce(
+        (total, product) => (total += product.quantity),
+        0
+      );
     },
 
     isFreeDelivery() {
@@ -106,11 +141,13 @@ export default {
 
     deliveryPrice() {
       if (!this.delivery) return;
-      return this.isFreeDelivery ? 'Free' : this.delivery.price;
+      return this.isFreeDelivery ? "Free" : this.delivery.price;
     },
 
     total() {
-      return this.isFreeDelivery ? this.totalAmount : (this.deliveryPrice + this.totalAmount).toFixed(2);
+      return this.isFreeDelivery
+        ? this.totalAmount
+        : (this.deliveryPrice + this.totalAmount).toFixed(2);
     },
   },
 };
@@ -158,7 +195,13 @@ export default {
 }
 
 .cart__item-title {
+  cursor: pointer;
   justify-self: start;
+}
+
+.cart__item-title:hover {
+  transition: color 0.1s linear;
+  color: #ed8939;
 }
 
 .cart__item-text {
@@ -205,10 +248,16 @@ export default {
   }
 
   .cart__img {
+    cursor: pointer;
     display: block;
     width: 100%;
     height: 40px;
     object-fit: contain;
+  }
+
+  .cart__img:hover {
+    opacity: 0.7;
+    transition: opacity 0.2s linear;
   }
 
   .cart__mobile {

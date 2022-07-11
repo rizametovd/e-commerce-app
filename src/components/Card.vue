@@ -34,7 +34,7 @@
 
         <div class="card__rating">
           <img src="../assets/star-icon.svg" />
-          <p class="card__rating-text">{{ rating }}</p>
+          <p class="card__rating-text">{{ rating.rate }}</p>
         </div>
 
         <h3 class="card__price">${{ price }}</h3>
@@ -108,7 +108,7 @@ export default {
       required: true,
     },
     rating: {
-      type: Number,
+      type: [Object, Number],
       required: true,
     },
     id: {

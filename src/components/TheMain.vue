@@ -2,7 +2,11 @@
   <main class="main">
     <teleport to="body">
       <base-modal :isModalOpen="isCartModalOpen" type="cart" title="Your cart">
-        <cart :products="cart" v-if="isCartNotEmpty"></cart>
+        <cart
+          :products="cart"
+          v-if="isCartNotEmpty"
+          @onClick="closeModal('cart')"
+        ></cart>
         <p v-else>Your cart is empty</p>
         <template #actions>
           <router-link to="/checkout" v-if="isCartNotEmpty">
@@ -23,11 +27,11 @@
         type="likes"
         title="Your likes"
       >
-        <likes 
-        :likedProducts="likes"
-         v-if="likes.length > 0"
-         @onTitleClick="goToProductPage"
-         ></likes>
+        <likes
+          :likedProducts="likes"
+          v-if="likes.length > 0"
+          @onClick="closeModal('likes')"
+        ></likes>
         <p v-else>No likes yet</p>
       </base-modal>
     </teleport>
@@ -73,11 +77,6 @@ export default {
 
   methods: {
     ...mapActions(["setDataFromLocalStorage", "fetchProducts", "closeModal"]),
-
-    goToProductPage(id) {
-      this.$router.push(`/product/${id}`);
-      this.closeModal('likes')
-    }
   },
 
   watch: {
@@ -117,7 +116,7 @@ export default {
     //   this.fetchProducts();
     // }
 
-        if (this.isNoProducts) {
+    if (this.isNoProducts) {
       this.fetchProducts();
     }
   },

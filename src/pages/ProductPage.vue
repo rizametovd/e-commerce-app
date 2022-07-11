@@ -1,58 +1,69 @@
 <template>
-<div class="product-page">
-<loader v-if="isLoading"></loader>
-  <base-card class="product-page__card" v-else>
-    <img
-      :src="currentProduct.image"
-      :alt="currentProduct.title"
-      class="product-page__card-image"
-    />
-    <div class="product-page__card-content">
-      <base-heading variant="h1" class="product-page__card-title"
-        >{{ currentProduct.title }}
-      </base-heading>
+  <div class="product-page">
+    <loader v-if="isLoading"></loader>
+    <base-card class="product-page__card" v-else>
+      <img
+        :src="currentProduct.image"
+        :alt="currentProduct.title"
+        class="product-page__card-image"
+      />
+      <div class="product-page__card-content">
+        <base-heading variant="h1" class="product-page__card-title"
+          >{{ currentProduct.title }}
+        </base-heading>
 
-      <base-divider></base-divider>
-      <div>
-        <star-rating :rating="currentProduct.rating.rate"></star-rating>
-      </div>
-      <div class="product-page__card-actions">
-        <base-heading variant="h2">${{ currentProduct.price }}</base-heading>
-        <div class="product-page__card-actions-buy">
-          <quantity-block
-            @decrement="decrementQuantity"
-            @increment="incrementQuantity"
-            :quantity="quantity"
-          ></quantity-block>
-          <base-button
-            variant="contained"
-            mode="success"
-            @click="handleAddToCartClick"
-            v-if="!isProductAlreadyInCart"
-            >Add to cart</base-button
-          >
+        <base-divider></base-divider>
+        <div class="product-page__card-rating">
+          <star-rating :rating="currentProduct.rating.rate"></star-rating>
 
-          <base-button
-            @click="openModal"
+          <base-icon-button
+            @click="handleLikeClick"
             variant="contained"
-            mode="success"
-            v-else
-            >Already is in your Cart</base-button
+            :text="addToWishlistBtnText"
+            iconColor="lightgray"
+            iconHoverColor="#ef2525"
+            iconActiveColor="#ef2525"
+            :isActive="isProductLiked"
+            opacity="0.5"
+            :class="likeClass"
           >
+            <like-icon></like-icon>
+          </base-icon-button>
+        </div>
+        <div class="product-page__card-actions">
+          <base-heading variant="h2">${{ currentProduct.price }}</base-heading>
+          <div class="product-page__card-actions-buy">
+            <quantity-block
+              @decrement="decrementQuantity"
+              @increment="incrementQuantity"
+              :quantity="quantity"
+            ></quantity-block>
+            <base-button
+              variant="contained"
+              mode="success"
+              @click="handleAddToCartClick"
+              v-if="!isProductAlreadyInCart"
+              >Add to cart</base-button
+            >
+
+            <base-button
+              @click="openModal"
+              variant="contained"
+              mode="success"
+              v-else
+              >Already is in your Cart</base-button
+            >
+          </div>
+        </div>
+        <div class="product-page__card-description">
+          <base-heading variant="h3">Description</base-heading>
+          <p>
+            {{ currentProduct.description }}
+          </p>
         </div>
       </div>
-      <div class="product-page__card-description">
-        <base-heading variant="h3">Description</base-heading>
-        <p>
-          {{ currentProduct.description }}
-        </p>
-      </div>
-    </div>
-  </base-card>
-
-
-</div>
-  
+    </base-card>
+  </div>
 </template>
 
 <script>
@@ -66,6 +77,8 @@ import FadeTransition from "@/components/UI/FadeTransition.vue";
 import StarRating from "@/components/StarRating.vue";
 import BaseIcon from "@/components/UI/BaseIcon.vue";
 import Loader from "@/components/UI/Loader.vue";
+import BaseIconButton from "@/components/UI/Buttons/BaseIconButton.vue";
+import LikeIcon from "@/components/icons/LikeIcon.vue";
 
 export default {
   components: {
@@ -78,6 +91,8 @@ export default {
     StarRating,
     BaseIcon,
     Loader,
+    BaseIconButton,
+    LikeIcon,
   },
 
   data() {
@@ -87,7 +102,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["product", "selectedProduct"]),
+    ...mapGetters(["product", "selectedProduct", "likedProduct"]),
     ...mapState(["isLoading"]),
 
     currentProduct() {
@@ -98,13 +113,32 @@ export default {
       };
     },
 
+    isProductLiked() {
+      return this.likedProduct(this.currentProduct.id) !== undefined;
+    },
+
+    addToWishlistBtnText() {
+      return this.isProductLiked ? "Added to wishlist" : "Add to wishlist";
+    },
+
     isProductAlreadyInCart() {
       return this.selectedProduct(+this.$route.params.id) !== undefined;
+    },
+
+    likeClass() {
+      return [
+        "product-page__card-like",
+        this.isProductLiked && "product-page__card-like_active",
+      ];
     },
   },
 
   methods: {
-    ...mapActions(["setProductToCart", "openModal"]),
+    ...mapActions(["setProductToCart", "openModal", "handleLikes"]),
+
+    handleLikeClick() {
+      this.handleLikes(this.currentProduct);
+    },
 
     handleAddToCartClick() {
       this.setProductToCart(this.currentProduct);
@@ -124,7 +158,6 @@ export default {
 <style scoped>
 .product-page {
   position: relative;
-
 }
 .product-page__card {
   display: grid;
@@ -134,6 +167,27 @@ export default {
 .product-page__card-title {
   font-size: 28px;
   line-height: 34px;
+}
+
+.product-page__card-rating {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.product-page__card-like {
+  display: flex;
+  align-items: center;
+}
+
+.product-page__card-like_active {
+  color: #ef2525;
+}
+
+.product-page__card-like:hover {
+  color: #ef2525;
+  fill: #ef2525;
 }
 
 .product-page__card-image {

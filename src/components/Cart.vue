@@ -197,6 +197,7 @@ export default {
 .cart__item-title {
   cursor: pointer;
   justify-self: start;
+  text-align: left;
 }
 
 .cart__item-title:hover {

@@ -1,5 +1,14 @@
 <template>
-  <div class="product-page">
+  <failed-http-request
+    :errorCode="error.errorCode"
+    :errorMessage="error.message"
+    :timeout="error.timeout"
+    :serverIsDown="serverStatus.isDown"
+    :serverErrorMessage="serverStatus.message"
+    v-if="error?.isError && !isLoading"
+  ></failed-http-request>
+
+  <div class="product-page" v-else>
     <loader v-if="isLoading"></loader>
     <base-card class="product-page__card" v-else>
       <img
@@ -79,6 +88,7 @@ import BaseIcon from "@/components/UI/BaseIcon.vue";
 import Loader from "@/components/UI/Loader.vue";
 import BaseIconButton from "@/components/UI/Buttons/BaseIconButton.vue";
 import LikeIcon from "@/components/icons/LikeIcon.vue";
+import FailedHttpRequest from "@/components/FailedHttpRequest.vue";
 
 export default {
   components: {
@@ -93,6 +103,7 @@ export default {
     Loader,
     BaseIconButton,
     LikeIcon,
+    FailedHttpRequest,
   },
 
   data() {
@@ -103,7 +114,7 @@ export default {
 
   computed: {
     ...mapGetters(["product", "selectedProduct", "likedProduct"]),
-    ...mapState(["isLoading"]),
+    ...mapState(["error", "isLoading", "serverStatus"]),
 
     currentProduct() {
       const product = this.product(+this.$route.params.id);
@@ -165,6 +176,7 @@ export default {
 }
 
 .product-page__card-title {
+  text-align: left;
   font-size: 28px;
   line-height: 34px;
 }
@@ -225,7 +237,7 @@ export default {
 
 @media screen and (min-width: 768px) {
   .product-page__card {
-    padding-top: 30px;
+    padding: 30px;
     grid-template-columns: 1fr 1fr;
     gap: 24px;
   }

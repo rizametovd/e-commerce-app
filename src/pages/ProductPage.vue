@@ -1,12 +1,14 @@
 <template>
-  <base-card class="product-page">
+<div class="product-page">
+<loader v-if="isLoading"></loader>
+  <base-card class="product-page__card" v-else>
     <img
       :src="currentProduct.image"
       :alt="currentProduct.title"
-      class="product-page__image"
+      class="product-page__card-image"
     />
-    <div class="product-page__content">
-      <base-heading variant="h1" class="product-page__title"
+    <div class="product-page__card-content">
+      <base-heading variant="h1" class="product-page__card-title"
         >{{ currentProduct.title }}
       </base-heading>
 
@@ -14,9 +16,9 @@
       <div>
         <star-rating :rating="currentProduct.rating.rate"></star-rating>
       </div>
-      <div class="product-page__actions">
+      <div class="product-page__card-actions">
         <base-heading variant="h2">${{ currentProduct.price }}</base-heading>
-        <div class="product-page__actions-buy">
+        <div class="product-page__card-actions-buy">
           <quantity-block
             @decrement="decrementQuantity"
             @increment="incrementQuantity"
@@ -39,7 +41,7 @@
           >
         </div>
       </div>
-      <div class="product-page__description">
+      <div class="product-page__card-description">
         <base-heading variant="h3">Description</base-heading>
         <p>
           {{ currentProduct.description }}
@@ -47,6 +49,10 @@
       </div>
     </div>
   </base-card>
+
+
+</div>
+  
 </template>
 
 <script>
@@ -59,6 +65,7 @@ import BaseDivider from "@/components/UI/BaseDivider.vue";
 import FadeTransition from "@/components/UI/FadeTransition.vue";
 import StarRating from "@/components/StarRating.vue";
 import BaseIcon from "@/components/UI/BaseIcon.vue";
+import Loader from "@/components/UI/Loader.vue";
 
 export default {
   components: {
@@ -70,6 +77,7 @@ export default {
     FadeTransition,
     StarRating,
     BaseIcon,
+    Loader,
   },
 
   data() {
@@ -80,6 +88,7 @@ export default {
 
   computed: {
     ...mapGetters(["product", "selectedProduct"]),
+    ...mapState(["isLoading"]),
 
     currentProduct() {
       const product = this.product(+this.$route.params.id);
@@ -114,42 +123,46 @@ export default {
 
 <style scoped>
 .product-page {
+  position: relative;
+
+}
+.product-page__card {
   display: grid;
   gap: 20px;
 }
 
-.product-page__title {
+.product-page__card-title {
   font-size: 28px;
   line-height: 34px;
 }
 
-.product-page__image {
+.product-page__card-image {
   display: block;
   width: 100%;
 }
 
-.product-page__content {
+.product-page__card-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 24px;
 }
 
-.product-page__actions {
+.product-page__card-actions {
   display: flex;
   flex-direction: column;
   gap: 20px;
   align-items: center;
 }
 
-.product-page__actions-buy {
+.product-page__card-actions-buy {
   display: flex;
   flex-direction: column;
   gap: 20px;
   align-items: center;
 }
 
-.product-page__description {
+.product-page__card-description {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -157,32 +170,32 @@ export default {
 }
 
 @media screen and (min-width: 768px) {
-  .product-page {
+  .product-page__card {
     padding-top: 30px;
     grid-template-columns: 1fr 1fr;
     gap: 24px;
   }
 
-  .product-page__content {
+  .product-page__card-content {
     align-items: flex-start;
   }
 
-  .product-page__title {
+  .product-page__card-title {
     font-size: 36px;
     line-height: 40px;
   }
 
-  .product-page__actions {
+  .product-page__card-actions {
     align-items: flex-start;
   }
 
-  .product-page__actions-buy {
+  .product-page__card-actions-buy {
     flex-direction: row;
   }
 }
 
 @media screen and (min-width: 1024px) {
-  .product-page__image {
+  .product-page__card-image {
     max-width: 600px;
     max-height: 600px;
     object-fit: contain;

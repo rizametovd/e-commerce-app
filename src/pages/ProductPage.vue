@@ -6,7 +6,9 @@
       class="product-page__image"
     />
     <div class="product-page__content">
-      <base-heading variant="h1">{{ currentProduct.title }}</base-heading>
+      <base-heading variant="h1" class="product-page__title"
+        >{{ currentProduct.title }}
+      </base-heading>
 
       <base-divider></base-divider>
       <div>
@@ -113,37 +115,77 @@ export default {
 <style scoped>
 .product-page {
   display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 20px;
+}
+
+.product-page__title {
+  font-size: 28px;
+  line-height: 34px;
 }
 
 .product-page__image {
   display: block;
-  width: 600px;
-  height: 600px;
-  object-fit: contain;
+  width: 100%;
 }
 
 .product-page__content {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 24px;
 }
 
 .product-page__actions {
   display: flex;
-  gap: 40px;
+  flex-direction: column;
+  gap: 20px;
   align-items: center;
 }
 
 .product-page__actions-buy {
   display: flex;
+  flex-direction: column;
   gap: 20px;
   align-items: center;
 }
 
 .product-page__description {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
   text-align: left;
+}
+
+@media screen and (min-width: 768px) {
+  .product-page {
+    padding-top: 30px;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .product-page__content {
+    align-items: flex-start;
+  }
+
+  .product-page__title {
+    font-size: 36px;
+    line-height: 40px;
+  }
+
+  .product-page__actions {
+    align-items: flex-start;
+  }
+
+  .product-page__actions-buy {
+    flex-direction: row;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .product-page__image {
+    max-width: 600px;
+    max-height: 600px;
+    object-fit: contain;
+  }
 }
 </style>

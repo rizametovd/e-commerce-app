@@ -23,7 +23,11 @@
         type="likes"
         title="Your likes"
       >
-        <likes :likedProducts="likes" v-if="likes.length > 0"></likes>
+        <likes 
+        :likedProducts="likes"
+         v-if="likes.length > 0"
+         @onTitleClick="goToProductPage"
+         ></likes>
         <p v-else>No likes yet</p>
       </base-modal>
     </teleport>
@@ -69,6 +73,11 @@ export default {
 
   methods: {
     ...mapActions(["setDataFromLocalStorage", "fetchProducts", "closeModal"]),
+
+    goToProductPage(id) {
+      this.$router.push(`/product/${id}`);
+      this.closeModal('likes')
+    }
   },
 
   watch: {

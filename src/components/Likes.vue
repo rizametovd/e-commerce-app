@@ -1,9 +1,23 @@
 <template>
   <ul class="likes">
-    <li v-for="likedProduct in likedProducts" :key="likedProduct.id" class="likes__item">
-      <img :src="likedProduct.image" :alt="likedProduct.image" class="likes__image" />
+    <li
+      v-for="likedProduct in likedProducts"
+      :key="likedProduct.id"
+      class="likes__item"
+    >
+      <img
+        :src="likedProduct.image"
+        :alt="likedProduct.title"
+        class="likes__image"
+        @click="onTitleClick(likedProduct.id)"
+      />
       <div class="likes__product-info">
-        <span class="likes__product-info-title">{{ likedProduct.title }}</span>
+        <span
+          class="likes__product-info-title"
+          @click="onTitleClick(likedProduct.id)"
+          >{{ likedProduct.title }}</span
+        >
+
         <div class="likes__product-info-container">
           <div class="likes__rating">
             <img src="../assets/star-icon.svg" />
@@ -14,7 +28,13 @@
           >
         </div>
       </div>
-      <base-icon-button @click="handleLikes(likedProduct)" variant="contained" iconHoverColor="#ef2525" iconColor="#74747474" opacity="1">
+      <base-icon-button
+        @click="handleLikes(likedProduct)"
+        variant="contained"
+        iconHoverColor="#ef2525"
+        iconColor="#74747474"
+        opacity="1"
+      >
         <delete-icon></delete-icon>
       </base-icon-button>
     </li>
@@ -22,12 +42,13 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import DeleteIcon from './icons/DeleteIcon.vue';
-import BaseButton from './UI/Buttons/BaseButton.vue';
-import BaseIconButton from './UI/Buttons/BaseIconButton.vue';
-import IconBase from './UI/BaseIcon.vue';
+import { mapActions } from "vuex";
+import DeleteIcon from "./icons/DeleteIcon.vue";
+import BaseButton from "./UI/Buttons/BaseButton.vue";
+import BaseIconButton from "./UI/Buttons/BaseIconButton.vue";
+import IconBase from "./UI/BaseIcon.vue";
 export default {
+  emits: ["onTitleClick"],
   components: { BaseButton, IconBase, DeleteIcon, BaseIconButton },
   props: {
     likedProducts: {
@@ -37,7 +58,11 @@ export default {
   },
 
   methods: {
-    ...mapActions(['handleLikes']),
+    ...mapActions(["handleLikes"]),
+
+    onTitleClick(id) {
+      this.$emit("onTitleClick", id);
+    },
   },
 };
 </script>
@@ -70,6 +95,15 @@ export default {
   gap: 5px;
 }
 
+.likes__product-info-title {
+  cursor: pointer;
+}
+
+.likes__product-info-title:hover {
+  transition: color 0.1s linear;
+  color: #ffa801;
+}
+
 .likes__product-info-container {
   display: flex;
   gap: 10px;
@@ -78,6 +112,7 @@ export default {
 }
 
 .likes__image {
+  cursor: pointer;
   width: 40px;
   height: 40px;
   object-fit: contain;

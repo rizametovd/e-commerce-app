@@ -118,7 +118,7 @@ export default {
     },
 
     addToWishlistBtnText() {
-      return this.isProductLiked ? "Added to wishlist" : "Add to wishlist";
+      return this.isProductLiked ? "In your wishlist" : "Add to wishlist";
     },
 
     isProductAlreadyInCart() {

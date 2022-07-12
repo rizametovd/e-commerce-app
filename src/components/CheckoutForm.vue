@@ -1,6 +1,6 @@
 <template>
   <fade-transition>
-    <base-card v-if="delivery">
+    <base-card>
       <base-heading variant="h2">Your personal data</base-heading>
       <div class="checkout-form">
         <base-form @submit.prevent="submitForm">

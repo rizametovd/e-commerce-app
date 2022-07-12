@@ -15,16 +15,18 @@
 
         <fade-transition>
           <delivery-location
-            v-if="location && delivery?.type === 'delivery'"
+            v-if="isGeoApiLocationAllowed && delivery?.type === 'delivery'"
             :location="location"
             @onConfirmLocationClick="confirmLocation"
           ></delivery-location>
         </fade-transition>
       </base-card>
+
       <checkout-form
         :delivery="delivery"
         :location="confirmedLocation"
         :cart="cart"
+        v-if="delivery"
       ></checkout-form>
     </div>
   </div>
@@ -72,22 +74,24 @@ export default {
       location: null,
       delivery: null,
       confirmedLocation: null,
+      isGeoApiLocationAllowed: false,
     };
   },
 
   methods: {
     async setDeliveryOption(deliveryOption) {
+      this.delivery = deliveryOption;
       if (deliveryOption.type === "delivery") {
         this.location = "";
         await this.getLocation();
       }
-      this.delivery = deliveryOption;
     },
 
     async getLocation() {
       try {
         const { countryName, city } = await getLocationData();
 
+        this.isGeoApiLocationAllowed = true;
         this.location = `${city}, ${countryName}`;
       } catch (error) {
         console.log(error);

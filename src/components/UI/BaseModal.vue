@@ -87,7 +87,7 @@ export default {
   box-sizing: border-box;
   padding: 20px;
   max-height: calc(100vh - 20px);
-  overflow: scroll;
+  overflow-y: auto;
 }
 
 .modal__actions {

@@ -15,13 +15,12 @@
 
         <fade-transition>
           <delivery-location
-            v-if="delivery?.type === 'delivery'"
+            v-if="location && delivery?.type === 'delivery'"
             :location="location"
             @onConfirmLocationClick="confirmLocation"
           ></delivery-location>
         </fade-transition>
       </base-card>
-
       <checkout-form
         :delivery="delivery"
         :location="confirmedLocation"
@@ -33,7 +32,7 @@
 
 <script>
 import Cart from "@/components/Cart.vue";
-import { mapActions, mapState } from "vuex";
+import { mapState } from "vuex";
 import BaseCard from "@/components/UI/BaseCard.vue";
 import { getLocationData } from "@/utils/geoCoding";
 import BaseIconButton from "@/components/UI/Buttons/BaseIconButton.vue";

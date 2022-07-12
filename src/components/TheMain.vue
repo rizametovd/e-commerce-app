@@ -2,7 +2,11 @@
   <main class="main">
     <teleport to="body">
       <base-modal :isModalOpen="isCartModalOpen" type="cart" title="Your cart">
-        <cart :products="cart" v-if="isCartNotEmpty" @onClick="closeModal('cart')"></cart>
+        <cart
+          :products="cart"
+          v-if="isCartNotEmpty"
+          @onClick="closeModal('cart')"
+        ></cart>
         <p v-else>Your cart is empty</p>
         <template #actions>
           <router-link to="/checkout" v-if="isCartNotEmpty">
@@ -23,16 +27,20 @@
         type="likes"
         title="Your likes"
       >
-        <likes 
-        :likedProducts="likes"
-         v-if="likes.length > 0"
-         @onClick="closeModal('likes')"
-         ></likes>
+        <likes
+          :likedProducts="likes"
+          v-if="likes.length > 0"
+          @onClick="closeModal('likes')"
+        ></likes>
         <p v-else>No likes yet</p>
       </base-modal>
     </teleport>
 
-    <router-view></router-view>
+    <router-view v-slot="{ Component }">
+      <fade-transition>
+        <component :is="Component" />
+      </fade-transition>
+    </router-view>
   </main>
 </template>
 
@@ -108,11 +116,7 @@ export default {
       });
     }
 
-    // if (this.$route.fullPath === "/" && this.isNoProducts) {
-    //   this.fetchProducts();
-    // }
-
-        if (this.isNoProducts) {
+    if (this.isNoProducts) {
       this.fetchProducts();
     }
   },

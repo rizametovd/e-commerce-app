@@ -14,7 +14,7 @@ const fetchLocationData = async (latitude, longitude) => {
 
     return await res.json();
   } catch (error) {
-    console.log('geoCoding error:', error);
+    console.log('fetchLocationData:', error);
   }
 };
 
@@ -25,6 +25,6 @@ export const getLocationData = async () => {
       return await fetchLocationData(data.latitude, data.longitude);
     }
   } catch (error) {
-    console.log(error);
+    console.log('getLocationData:', error);
   }
 };

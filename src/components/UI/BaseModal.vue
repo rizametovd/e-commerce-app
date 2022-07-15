@@ -1,7 +1,7 @@
 <template>
   <fade-transition>
     <div
-      @click="closeModal(type)"
+      @click="store.dispatch('closeModal', type)"
       class="modal__backdrop"
       v-if="isModalOpen"
     ></div>
@@ -17,45 +17,44 @@
       </section>
 
       <section class="modal__actions">
-        <base-button @click="closeModal(type)" variant="outlined">{{
-          closeButtonText
-        }}</base-button>
+        <base-button
+          @click="store.dispatch('closeModal', type)"
+          variant="outlined"
+          >{{ closeButtonText }}</base-button
+        >
         <slot name="actions"></slot>
       </section>
     </dialog>
   </fade-transition>
 </template>
 
-<script>
-import { mapActions } from "vuex";
+<script setup>
+import { useStore } from "vuex";
 import BaseButton from "./Buttons/BaseButton.vue";
 import FadeTransition from "./FadeTransition.vue";
-export default {
-  components: { BaseButton, FadeTransition },
-  props: {
-    title: {
-      type: String,
-      required: true,
-    },
-    closeButtonText: {
-      type: String,
-      required: false,
-      default: "Continue shopping",
-    },
-    isModalOpen: {
-      type: Boolean,
-      reqquired: true,
-      default: false,
-    },
-    type: {
-      type: String,
-      required: true,
-    },
+
+const props = defineProps({
+  title: {
+    type: String,
+    required: true,
   },
-  methods: {
-    ...mapActions(["closeModal"]),
+  closeButtonText: {
+    type: String,
+    required: false,
+    default: "Continue shopping",
   },
-};
+  isModalOpen: {
+    type: Boolean,
+    reqquired: true,
+    default: false,
+  },
+  type: {
+    type: String,
+    required: true,
+  },
+});
+
+const store = useStore();
 </script>
 
 <style scoped>

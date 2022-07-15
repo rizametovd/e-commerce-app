@@ -7,7 +7,7 @@
             :src="image"
             class="card__image"
             :alt="title"
-            @click="$router.push(`product/${id}`)"
+            @click="router.push(`product/${id}`)"
           />
 
           <div class="card__like-btn">
@@ -28,7 +28,7 @@
         <base-heading
           variant="h4"
           class="card__title"
-          @click="$router.push(`product/${id}`)"
+          @click="router.push(`product/${id}`)"
           >{{ title }}</base-heading
         >
 
@@ -58,7 +58,7 @@
 
         <fade-transition>
           <base-button
-            @click="openModal"
+            @click="store.dispatch('openModal', 'cartModal')"
             variant="contained"
             mode="success"
             v-if="isProductAlreadyInCart"
@@ -70,101 +70,79 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import IconBase from "./UI/BaseIcon.vue";
 import LikeIcon from "./icons/LikeIcon.vue";
 import CartIcon from "./icons/CartIcon.vue";
 import BaseCard from "./UI/BaseCard.vue";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, useStore } from "vuex";
 import QuantityBlock from "./UI/QuantityBlock.vue";
 import BaseButton from "./UI/Buttons/BaseButton.vue";
 import BaseIconButton from "./UI/Buttons/BaseIconButton.vue";
 import FadeTransition from "./UI/FadeTransition.vue";
 import BaseHeading from "./UI/BaseHeading.vue";
-export default {
-  components: {
-    IconBase,
-    LikeIcon,
-    BaseCard,
-    CartIcon,
-    QuantityBlock,
-    BaseButton,
-    BaseIconButton,
-    FadeTransition,
-    BaseHeading,
+import { ref } from "@vue/reactivity";
+import { computed } from "@vue/runtime-core";
+import { useRouter } from "vue-router";
+
+const props = defineProps({
+  image: {
+    type: String,
+    required: true,
   },
-
-  props: {
-    image: {
-      type: String,
-      required: true,
-    },
-    price: {
-      type: Number,
-      required: true,
-    },
-    title: {
-      type: String,
-      required: true,
-    },
-    rating: {
-      type: [Object, Number],
-      required: true,
-    },
-    id: {
-      type: Number,
-      required: true,
-    },
+  price: {
+    type: Number,
+    required: true,
   },
-
-  data() {
-    return {
-      quantity: 1,
-    };
+  title: {
+    type: String,
+    required: true,
   },
-
-  methods: {
-    ...mapActions(["setProductToCart", "openModal", "handleLikes"]),
-
-    incrementQuantity() {
-      this.quantity += 1;
-    },
-
-    decrementQuantity() {
-      this.quantity -= 1;
-    },
-
-    handleLikeClick() {
-      this.handleLikes(this.product);
-    },
-
-    handleAddToCartClick() {
-      this.setProductToCart(this.product);
-    },
+  rating: {
+    type: [Object, Number],
+    required: true,
   },
-
-  computed: {
-    ...mapGetters(["selectedProduct", "likedProduct"]),
-
-    isProductAlreadyInCart() {
-      return this.selectedProduct(this.id) !== undefined;
-    },
-
-    isProductLiked() {
-      return this.likedProduct(this.id) !== undefined;
-    },
-
-    product() {
-      return {
-        id: this.id,
-        title: this.title,
-        price: this.price,
-        image: this.image,
-        quantity: this.quantity,
-        rating: this.rating,
-      };
-    },
+  id: {
+    type: Number,
+    required: true,
   },
+});
+const store = useStore();
+const router = useRouter();
+let quantity = ref(1);
+
+const product = computed(() => {
+  return {
+    id: props.id,
+    title: props.title,
+    price: props.price,
+    image: props.image,
+    quantity,
+    rating: props.rating,
+  };
+});
+
+const isProductAlreadyInCart = computed(
+  () => store.getters.selectedProduct(props.id) !== undefined
+);
+const isProductLiked = computed(
+  () => store.getters.likedProduct(props.id) !== undefined
+);
+
+const incrementQuantity = () => {
+  quantity.value += 1;
+};
+
+const decrementQuantity = () => {
+  quantity.value -= 1;
+};
+
+const handleLikeClick = () => {
+  store.dispatch("handleLikes", product.value);
+};
+
+const handleAddToCartClick = () => {
+  store.dispatch("setProductToCart", product.value);
 };
 </script>
 

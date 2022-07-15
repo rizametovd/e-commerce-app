@@ -21,13 +21,12 @@
 </template>
 
 <script>
-import MyLocationIcon from "./icons/MyLocationIcon.vue";
 import BaseIconButton from "./UI/Buttons/BaseIconButton.vue";
 import BaseButton from "./UI/Buttons/BaseButton.vue";
 import BaseHeading from "./UI/BaseHeading.vue";
 export default {
   emits: ["onConfirmLocationClick"],
-  components: { BaseIconButton, MyLocationIcon, BaseButton, BaseHeading },
+  components: { BaseIconButton, BaseButton, BaseHeading },
   props: {
     location: {
       type: String,

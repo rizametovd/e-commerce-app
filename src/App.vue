@@ -4,17 +4,18 @@
   <the-footer></the-footer>
 </template>
 
-<script>
+<script setup>
 import TheFooter from "./components/TheFooter.vue";
 import TheHeader from "./components/TheHeader.vue";
 import TheMain from "./components/TheMain.vue";
-export default {
-  components: {
-    TheFooter,
-    TheHeader,
-    TheMain,
-  },
-};
+
+// export default {
+//   components: {
+//     TheFooter,
+//     TheHeader,
+//     TheMain,
+//   },
+// };
 </script>
 
 <style>

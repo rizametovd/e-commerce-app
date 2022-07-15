@@ -13,17 +13,15 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import CountDownTimer from "@/components/CountDownTimer.vue";
 import BaseHeading from "@/components/UI/BaseHeading.vue";
-export default {
-  components: { CountDownTimer, BaseHeading },
+import { useRouter } from "vue-router";
 
-  methods: {
-    redirectToHomepage() {
-      this.$router.push("/");
-    },
-  },
+const router = useRouter();
+
+const redirectToHomepage = () => {
+  router.push("/");
 };
 </script>
 

@@ -5,11 +5,8 @@
   </footer>
 </template>
 
-<script>
+<script setup>
 import BaseHeading from "./UI/BaseHeading.vue";
-export default {
-  components: { BaseHeading },
-};
 </script>
 
 <style scoped>

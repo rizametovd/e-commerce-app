@@ -20,42 +20,40 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import FadeTransition from "./FadeTransition.vue";
-export default {
-  components: { FadeTransition },
-  props: {
-    label: {
-      type: String,
-      required: false,
-    },
-    placeholder: {
-      type: String,
-      required: true,
-    },
-    type: {
-      type: String,
-      required: true,
-    },
-    name: {
-      type: String,
-      required: false,
-    },
-    error: {
-      type: String,
-      required: false,
-    },
-    required: {
-      type: Boolean,
-      required: true,
-    },
-    value: {},
-    handleChange: {
-      type: Function,
-      required: true,
-    },
+
+const props = defineProps({
+  label: {
+    type: String,
+    required: false,
   },
-};
+  placeholder: {
+    type: String,
+    required: true,
+  },
+  type: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: false,
+  },
+  error: {
+    type: String,
+    required: false,
+  },
+  required: {
+    type: Boolean,
+    required: true,
+  },
+  value: {},
+  handleChange: {
+    type: Function,
+    required: true,
+  },
+});
 </script>
 
 <style>

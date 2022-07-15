@@ -1,11 +1,11 @@
 <template>
   <div class="checkout">
     <base-heading variant="h1">Checkout</base-heading>
-    <base-placeholder v-if="cart.length === 0"></base-placeholder>
+    <base-placeholder v-if="store.getters.cart.length === 0"></base-placeholder>
 
-    <div class="checkout__content" v-if="cart.length > 0">
+    <div class="checkout__content" v-if="store.getters.cart.length > 0">
       <base-card>
-        <cart :products="cart" :delivery="delivery"></cart>
+        <cart :products="store.getters.cart" :delivery="delivery"></cart>
       </base-card>
 
       <base-card class="checkout__content">
@@ -25,20 +25,19 @@
       <checkout-form
         :delivery="delivery"
         :location="confirmedLocation"
-        :cart="cart"
+        :cart="store.getters.cart"
         v-if="delivery"
       ></checkout-form>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import Cart from "@/components/Cart.vue";
-import { mapState } from "vuex";
+import { mapState, useStore } from "vuex";
 import BaseCard from "@/components/UI/BaseCard.vue";
 import { getLocationData } from "@/utils/geoCoding";
 import BaseIconButton from "@/components/UI/Buttons/BaseIconButton.vue";
-import MyLocationIcon from "@/components/icons/MyLocationIcon.vue";
 import BaseSelect from "@/components/UI/BaseSelect.vue";
 import BasePlaceholder from "@/components/UI/BasePlaceholder.vue";
 import ChooseDelivery from "@/components/ChooseDelivery.vue";
@@ -48,71 +47,50 @@ import DeliveryLocation from "@/components/DeliveryLocation.vue";
 import CheckoutSuccessPage from "./CheckoutSuccessPage.vue";
 import BaseHeading from "@/components/UI/BaseHeading.vue";
 import FadeTransition from "@/components/UI/FadeTransition.vue";
+import { reactive, ref } from "@vue/reactivity";
+import { watch } from "@vue/runtime-core";
 
-export default {
-  components: {
-    Cart,
-    BaseCard,
-    MyLocationIcon,
-    BaseIconButton,
-    BaseSelect,
-    ChooseDelivery,
-    CheckoutForm,
-    BaseInput,
-    DeliveryLocation,
-    BasePlaceholder,
-    CheckoutSuccessPage,
-    BaseHeading,
-    FadeTransition,
-  },
-  computed: {
-    ...mapState(["cart"]),
-  },
+const store = useStore();
 
-  data() {
-    return {
-      location: null,
-      delivery: null,
-      confirmedLocation: null,
-      isGeoApiLocationAllowed: false,
-    };
-  },
+const location = ref(null);
+const delivery = reactive({});
+const confirmedLocation = ref(null);
+const isGeoApiLocationAllowed = ref(false);
 
-  methods: {
-    async setDeliveryOption(deliveryOption) {
-      this.delivery = deliveryOption;
-      if (deliveryOption.type === "delivery") {
-        this.location = "";
-        await this.getLocation();
-      }
-    },
-
-    async getLocation() {
-      try {
-        const { countryName, city } = await getLocationData();
-
-        this.isGeoApiLocationAllowed = true;
-        this.location = `${city}, ${countryName}`;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-
-    confirmLocation(isConfirmed) {
-      if (!isConfirmed) {
-        this.confirmedLocation = "";
-        return;
-      }
-      this.confirmedLocation = this.location;
-    },
-  },
-
-  watch: {
-    delivery() {
-      this.confirmedLocation = null;
-    },
-  },
+const setDeliveryOption = async (deliveryOption) => {
+  delivery.price = deliveryOption.price;
+  delivery.type = deliveryOption.type;
+  delivery.id = deliveryOption.id;
+  delivery.name = deliveryOption.name;
+  if (deliveryOption.type === "delivery") {
+    location.value = "";
+    await getLocation();
+  }
 };
+
+const getLocation = async () => {
+  try {
+    const { countryName, city } = await getLocationData();
+
+    isGeoApiLocationAllowed.value = true;
+    location.value = `${city}, ${countryName}`;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const confirmLocation = async (isConfirmed) => {
+  if (!isConfirmed) {
+    confirmedLocation.value = "";
+    return;
+  }
+
+  confirmedLocation.value = location.value;
+};
+
+watch(delivery, () => {
+  confirmedLocation.value = null;
+});
 </script>
 
 <style scoped>

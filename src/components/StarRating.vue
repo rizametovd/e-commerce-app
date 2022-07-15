@@ -20,28 +20,23 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import BaseIcon from "./UI/BaseIcon.vue";
 import StarIcon from "@/components/icons/StarIcon.vue";
-export default {
-  components: { BaseIcon, StarIcon },
-  props: {
-    rating: {
-      type: Number,
-      required: true,
-    },
-    starLimit: {
-      type: Number,
-      default: 5,
-    },
-  },
+import { computed } from "@vue/runtime-core";
 
-  computed: {
-    ratingWidth() {
-      return (this.rating * 100) / this.starLimit;
-    },
+const props = defineProps({
+  rating: {
+    type: Number,
+    required: true,
   },
-};
+  starLimit: {
+    type: Number,
+    default: 5,
+  },
+});
+
+const ratingWidth = computed(() => (props.rating * 100) / props.starLimit);
 </script>
 
 <style scoped>

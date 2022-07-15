@@ -15,45 +15,41 @@
       <li>
         <base-button-with-badge
           :quantity="totalLikes"
-          @click="openModal('likesModal')"
+          @click="store.dispatch('openModal', 'likesModal')"
         >
-          <like-icon></like-icon>
+          <LikeIcon />
         </base-button-with-badge>
       </li>
 
       <li>
-        <base-button-with-badge
+        <BaseButtonWithBadge
           :quantity="cartTotalProductsQuantity"
-          @click="openModal('cartModal')"
+          @click="store.dispatch('openModal', 'cartModal')"
         >
-          <cart-icon></cart-icon>
-        </base-button-with-badge>
+          <CartIcon />
+        </BaseButtonWithBadge>
       </li>
     </ul>
   </header>
 </template>
 
-<script>
-import { mapActions, mapGetters } from "vuex";
+<script setup>
+import { computed } from "@vue/runtime-core";
+import { useRoute } from "vue-router";
+import { useStore } from "vuex";
+
 import CartIcon from "./icons/CartIcon.vue";
-
 import LikeIcon from "./icons/LikeIcon.vue";
-import BaseHeading from "./UI/BaseHeading.vue";
 import BaseButtonWithBadge from "./UI/Buttons/BaseButtonWithBadge.vue";
-export default {
-  components: { CartIcon, LikeIcon, BaseButtonWithBadge, BaseHeading },
 
-  methods: {
-    ...mapActions(["openModal"]),
-  },
-  computed: {
-    ...mapGetters(["cartTotalProductsQuantity", "totalLikes"]),
+const store = useStore();
+const route = useRoute();
 
-    isHomepage() {
-      return this.$route.fullPath === "/";
-    },
-  },
-};
+const cartTotalProductsQuantity = computed(
+  () => store.getters.cartTotalProductsQuantity
+);
+const totalLikes = computed(() => store.getters.totalLikes);
+const isHomepage = computed(() => route.fullPath === "/");
 </script>
 
 <style scoped>

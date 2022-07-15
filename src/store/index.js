@@ -28,6 +28,38 @@ export default createStore({
     },
   },
   getters: {
+    serverStatus(state) {
+      return state.serverStatus
+    },
+
+    error(state) {
+      return state.error
+    },
+
+    isCartModalOpen(state) {
+      return state.isCartModalOpen
+    },
+
+    isLikesModalOpen(state) {
+      return state.isLikesModalOpen
+    },
+
+    cart(state) {
+      return state.cart;
+    },
+
+    likes(state) {
+      return state.likes
+    },
+
+    products(state) {
+      return state.products
+    },
+
+    isLoading(state) {
+      return state.isLoading
+    },
+
     categories(state) {
       const tmp = state.products.map((product) => product.category);
       tmp.unshift('all');
@@ -35,7 +67,7 @@ export default createStore({
     },
 
     product: (state) => (id) => {
-      return state.products.find((productItem) => productItem.id === id);
+      return state.products.find((productItem) => productItem.id === +id);
     },
 
     selectedProduct: (state) => (id) => {

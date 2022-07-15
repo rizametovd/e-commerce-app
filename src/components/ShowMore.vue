@@ -1,41 +1,31 @@
 <template>
-  <base-button variant="contained" mode="primary" @click="loadMore"
-    >Show more</base-button
-  >
+  <base-button variant="contained" mode="primary" @click="loadMore">Show more</base-button>
 </template>
 
-<script>
-import BaseButton from "./UI/Buttons/BaseButton.vue";
+<script setup>
+import { ref } from '@vue/reactivity';
+import BaseButton from './UI/Buttons/BaseButton.vue';
 
 const PRODUCTS_LIMIT = 4;
-
-export default {
-  components: { BaseButton },
-  props: {
-    count: {
-      type: Number,
-      required: true,
-    },
-    listLength: {
-      type: Number,
-      required: true,
-    },
+const emit = defineEmits(['onShowMoreClick']);
+const props = defineProps({
+  count: {
+    type: Number,
+    required: true,
   },
-
-  data() {
-    return {
-      itemsCountToShow: this.count,
-    };
+  listLength: {
+    type: Number,
+    required: true,
   },
+});
 
-  methods: {
-    loadMore() {
-      if (this.count > this.listLength) return;
+let itemsCountToShow = ref(props.count);
 
-      this.itemsCountToShow += PRODUCTS_LIMIT;
-      this.$emit("onShowMoreClick", this.itemsCountToShow);
-    },
-  },
+const loadMore = () => {
+  if (props.count > props.listLength) return;
+
+  itemsCountToShow.value += PRODUCTS_LIMIT;
+  emit('onShowMoreClick', itemsCountToShow.value);
 };
 </script>
 

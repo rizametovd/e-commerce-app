@@ -2,11 +2,8 @@
   <base-heading variant="h2" class="placeholder">Cart is empty. Nothing to render</base-heading>
 </template>
 
-<script>
+<script setup>
 import BaseHeading from './BaseHeading.vue';
-export default {
-  components: { BaseHeading },
-};
 </script>
 
 <style scoped>

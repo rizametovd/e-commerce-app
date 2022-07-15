@@ -4,7 +4,7 @@
       <div class="catalog__header-container">
         <base-heading variant="h2">Catalog</base-heading>
         <category-tabs
-          :items="categories"
+          :items="store.getters.categories"
           @onCategoryClick="setActiveCategory"
           v-if="isTabsVisible"
         ></category-tabs>
@@ -15,18 +15,18 @@
 
     <fade-transition>
       <failed-http-request
-        :errorCode="error.errorCode"
-        :errorMessage="error.message"
-        :timeout="error.timeout"
-        :serverIsDown="serverStatus.isDown"
-        :serverErrorMessage="serverStatus.message"
-        v-if="error?.isError && !isLoading"
+        :errorCode="store.getters.error.errorCode"
+        :errorMessage="store.getters.error.message"
+        :timeout="store.getters.error.timeout"
+        :serverIsDown="store.getters.serverStatus.isDown"
+        :serverErrorMessage="store.getters.serverStatus.message"
+        v-if="store.getters.error?.isError && !store.getters.isLoading"
       ></failed-http-request>
     </fade-transition>
 
     <div class="catalog__loader">
       <fade-transition>
-        <loader v-if="isLoading"></loader>
+        <loader v-if="store.getters.isLoading"></loader>
       </fade-transition>
     </div>
 
@@ -34,12 +34,12 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import BaseHeading from "./UI/BaseHeading.vue";
 import CategoryTabs from "./CategoryTabs.vue";
 import BaseCard from "./UI/BaseCard.vue";
 import Card from "./Card.vue";
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapGetters, mapState, useStore } from "vuex";
 import ProductList from "./ProductList.vue";
 import BaseModal from "./UI/BaseModal.vue";
 import Cart from "./Cart.vue";
@@ -48,62 +48,24 @@ import FailedHttpRequest from "./FailedHttpRequest.vue";
 import Likes from "./Likes.vue";
 import Loader from "./UI/Loader.vue";
 import FadeTransition from "./UI/FadeTransition.vue";
+import { ref } from "@vue/reactivity";
+import { computed } from "@vue/runtime-core";
 
-export default {
-  components: {
-    BaseHeading,
-    CategoryTabs,
-    BaseCard,
-    Card,
-    ProductList,
-    BaseModal,
-    Cart,
-    BaseButton,
-    Likes,
-    FailedHttpRequest,
-    Loader,
-    FadeTransition,
-  },
+const store = useStore();
+const activeCategory = ref("all");
 
-  data() {
-    return {
-      activeCategory: "all",
-    };
-  },
-
-  methods: {
-    ...mapActions(["fetchProducts", "closeModal", "setDataFromLocalStorage"]),
-
-    setActiveCategory(activeCategory) {
-      this.activeCategory = activeCategory;
-    },
-  },
-
-  computed: {
-    ...mapGetters(["categories"]),
-    ...mapState([
-      "products",
-      "isCartModalOpen",
-      "cart",
-      "likes",
-      "isLikesModalOpen",
-      "error",
-      "isLoading",
-      "serverStatus",
-    ]),
-
-    productList() {
-      if (this.activeCategory === "all") return this.products;
-      return this.products.filter(
-        (product) => product.category === this.activeCategory
-      );
-    },
-
-    isTabsVisible() {
-      return this.products.length > 0;
-    },
-  },
+const setActiveCategory = (selectedCategory) => {
+  activeCategory.value = selectedCategory;
 };
+
+const isTabsVisible = computed(() => store.getters.products.length > 0);
+
+const productList = computed(() => {
+
+  if (activeCategory.value === "all") return store.getters.products;
+
+  return store.getters.products.filter((product) => product.category === activeCategory.value);
+});
 </script>
 
 <style scoped>

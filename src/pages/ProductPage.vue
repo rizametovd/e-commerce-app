@@ -1,12 +1,12 @@
 <template>
-  <failed-http-request
+  <FailedHttpRequest
     :errorCode="error.errorCode"
     :errorMessage="error.message"
     :timeout="error.timeout"
     :serverIsDown="serverStatus.isDown"
     :serverErrorMessage="serverStatus.message"
     v-if="error?.isError && !isLoading"
-  ></failed-http-request>
+  />
 
   <div class="product-page" v-else>
     <loader v-if="isLoading"></loader>
@@ -17,9 +17,9 @@
         class="product-page__card-image"
       />
       <div class="product-page__card-content">
-        <base-heading variant="h1" class="product-page__card-title"
+        <BaseHeading variant="h1" class="product-page__card-title"
           >{{ currentProduct.title }}
-        </base-heading>
+        </BaseHeading>
 
         <base-divider></base-divider>
         <div class="product-page__card-rating">
@@ -75,12 +75,12 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import BaseHeading from "@/components/UI/BaseHeading.vue";
 import QuantityBlock from "@/components/UI/QuantityBlock.vue";
 import BaseButton from "@/components/UI/Buttons/BaseButton.vue";
 import BaseCard from "@/components/UI/BaseCard.vue";
-import { mapActions, mapGetters, mapState } from "vuex";
+import { useStore } from "vuex";
 import BaseDivider from "@/components/UI/BaseDivider.vue";
 import FadeTransition from "@/components/UI/FadeTransition.vue";
 import StarRating from "@/components/StarRating.vue";
@@ -89,80 +89,63 @@ import Loader from "@/components/UI/Loader.vue";
 import BaseIconButton from "@/components/UI/Buttons/BaseIconButton.vue";
 import LikeIcon from "@/components/icons/LikeIcon.vue";
 import FailedHttpRequest from "@/components/FailedHttpRequest.vue";
+import { ref } from "@vue/reactivity";
+import { computed } from "@vue/runtime-core";
+import { useRoute } from "vue-router";
 
-export default {
-  components: {
-    BaseHeading,
-    QuantityBlock,
-    BaseButton,
-    BaseCard,
-    BaseDivider,
-    FadeTransition,
-    StarRating,
-    BaseIcon,
-    Loader,
-    BaseIconButton,
-    LikeIcon,
-    FailedHttpRequest,
-  },
+const store = useStore();
+const route = useRoute();
 
-  data() {
-    return {
-      quantity: 1,
-    };
-  },
+const quantity = ref(1);
 
-  computed: {
-    ...mapGetters(["product", "selectedProduct", "likedProduct"]),
-    ...mapState(["error", "isLoading", "serverStatus"]),
+const currentProduct = computed(() => {
+  const product = store.getters.product(route.params.id);
+  console.log('product:', product)
+  return {
+    ...product,
+    quantity: quantity.value,
+  };
+});
 
-    currentProduct() {
-      const product = this.product(+this.$route.params.id);
-      return {
-        ...product,
-        quantity: this.quantity,
-      };
-    },
 
-    isProductLiked() {
-      return this.likedProduct(this.currentProduct.id) !== undefined;
-    },
+console.log('currentProduct:', currentProduct.value)
 
-    addToWishlistBtnText() {
-      return this.isProductLiked ? "In your wishlist" : "Add to wishlist";
-    },
+const isProductLiked = computed(() => store.getters.likedProduct(currentProduct.value.id) !== undefined);
 
-    isProductAlreadyInCart() {
-      return this.selectedProduct(+this.$route.params.id) !== undefined;
-    },
+const addToWishlistBtnText = computed(() =>
+  isProductLiked.value ? "In your wishlist" : "Add to wishlist"
+);
 
-    likeClass() {
-      return [
-        "product-page__card-like",
-        this.isProductLiked && "product-page__card-like_active",
-      ];
-    },
-  },
+const isProductAlreadyInCart = computed(
+  () => store.getters.selectedProduct(route.params.id) !== undefined
+);
 
-  methods: {
-    ...mapActions(["setProductToCart", "openModal", "handleLikes"]),
 
-    handleLikeClick() {
-      this.handleLikes(this.currentProduct);
-    },
+const isLoading = computed(() => store.getters.isLoading)
+const error = computed(() => store.getters.error)
+const serverStatus = computed(() => store.getters.serverStatus)
 
-    handleAddToCartClick() {
-      this.setProductToCart(this.currentProduct);
-    },
 
-    incrementQuantity() {
-      this.quantity += 1;
-    },
 
-    decrementQuantity() {
-      this.quantity -= 1;
-    },
-  },
+const likeClass = computed(() => [
+  "product-page__card-like",
+  isProductLiked.value && "product-page__card-like_active",
+]);
+
+const handleLikeClick = () => {
+  store.dispatch("handleLikes", currentProduct.value);
+};
+
+const handleAddToCartClick = () => {
+  store.dispatch("setProductToCart", currentProduct.value);
+};
+
+const incrementQuantity = () => {
+  quantity.value += 1;
+};
+
+const decrementQuantity = () => {
+  quantity.value -= 1;
 };
 </script>
 

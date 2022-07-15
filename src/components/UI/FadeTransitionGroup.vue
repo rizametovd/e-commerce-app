@@ -4,16 +4,16 @@
   </transition-group>
 </template>
 
-<script>
-export default {
-  props: {
-    duration: {
-      type: Number,
-      required: false,
-      default: 0.3,
-    },
+<script setup>
+
+const props = defineProps({
+  duration: {
+    type: Number,
+    required: false,
+    default: 0.3,
   },
-};
+});
+
 </script>
 
 <style>
@@ -22,7 +22,7 @@ export default {
 }
 
 .list-enter-active {
-  transition: opacity v-bind(duration + "s") ease;
+  transition: opacity v-bind(duration + 's') ease;
 }
 
 .list-enter-to {

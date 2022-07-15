@@ -2,10 +2,6 @@
   <hr />
 </template>
 
-<script>
-export default {};
-</script>
-
 <style scoped>
 hr {
   border: 0;

@@ -1,11 +1,15 @@
 <template>
   <main class="main">
     <teleport to="body">
-      <base-modal :isModalOpen="isCartModalOpen" type="cart" title="Your cart">
+      <base-modal
+        :isModalOpen="store.getters.isCartModalOpen"
+        type="cart"
+        title="Your cart"
+      >
         <cart
-          :products="cart"
+          :products="store.getters.cart"
           v-if="isCartNotEmpty"
-          @onClick="closeModal('cart')"
+          @onClick="store.dispatch('closeModal', 'cart')"
         ></cart>
         <p v-else>Your cart is empty</p>
         <template #actions>
@@ -13,7 +17,7 @@
             <base-button
               variant="contained"
               mode="success"
-              @click="closeModal('cart')"
+              @click="store.dispatch('closeModal', 'cart')"
               >Checkout</base-button
             >
           </router-link>
@@ -23,14 +27,14 @@
 
     <teleport to="body">
       <base-modal
-        :isModalOpen="isLikesModalOpen"
+        :isModalOpen="store.getters.isLikesModalOpen"
         type="likes"
         title="Your likes"
       >
         <likes
-          :likedProducts="likes"
-          v-if="likes.length > 0"
-          @onClick="closeModal('likes')"
+          :likedProducts="store.getters.likes"
+          v-if="store.getters.likes.length > 0"
+          @onClick="store.dispatch('closeModal', 'likes')"
         ></likes>
         <p v-else>No likes yet</p>
       </base-modal>
@@ -44,83 +48,131 @@
   </main>
 </template>
 
-<script>
+<script setup>
 import { getFromLocalStorage, setToLocalStorage } from "@/utils/helpers";
-import { mapActions, mapState } from "vuex";
+import { useStore } from "vuex";
 import BaseModal from "./UI/BaseModal.vue";
 import Cart from "./Cart.vue";
 import BaseButton from "./UI/Buttons/BaseButton.vue";
 import Likes from "./Likes.vue";
 import FadeTransition from "./UI/FadeTransition.vue";
-export default {
-  components: { BaseModal, Cart, BaseButton, Likes, FadeTransition },
-  computed: {
-    ...mapState([
-      "cart",
-      "likes",
-      "products",
-      "isLikesModalOpen",
-      "isCartModalOpen",
-    ]),
-    isCartEmpty() {
-      return this.cart.length === 0;
-    },
+import { computed, onMounted, watch } from "@vue/runtime-core";
 
-    isNoLikes() {
-      return this.likes.length === 0;
-    },
+const store = useStore();
 
-    isNoProducts() {
-      return this.products.length === 0;
-    },
+const isCartEmpty = computed(() => store.getters.cart.length === 0);
+const isNoLikes = computed(() => store.getters.likes.length === 0);
+const isNoProducts = computed(() => store.getters.products.length === 0);
+const isCartNotEmpty = computed(() => store.getters.cart.length > 0);
 
-    isCartNotEmpty() {
-      return this.cart.length > 0;
-    },
+watch(
+  () => store.getters.cart,
+  () => {
+    setToLocalStorage("cart", store.getters.cart);
   },
+  { deep: true }
+);
 
-  methods: {
-    ...mapActions(["setDataFromLocalStorage", "fetchProducts", "closeModal"]),
+watch(
+  () => store.getters.likes,
+  () => {
+    setToLocalStorage("likes", store.getters.likes);
   },
+  { deep: true }
+);
 
-  watch: {
-    cart: {
-      deep: true,
-      handler() {
-        setToLocalStorage("cart", this.cart);
-      },
-    },
-    likes: {
-      deep: true,
-      handler() {
-        setToLocalStorage("likes", this.likes);
-      },
-    },
-  },
+onMounted(() => {
+  const localStorageCart = getFromLocalStorage("cart");
+  const localStorageLikes = getFromLocalStorage("likes");
 
-  mounted() {
-    const localStorageCart = getFromLocalStorage("cart");
-    const localStorageLikes = getFromLocalStorage("likes");
+  if (localStorageCart && isCartEmpty) {
+    store.dispatch("setDataFromLocalStorage", {
+      mutation: "setProductToCart",
+      products: localStorageCart,
+    });
+  }
 
-    if (localStorageCart && this.isCartEmpty) {
-      this.setDataFromLocalStorage({
-        mutation: "setProductToCart",
-        products: localStorageCart,
-      });
-    }
+  if (localStorageLikes && isNoLikes) {
+    store.dispatch("setDataFromLocalStorage", {
+      mutation: "setLike",
+      products: localStorageLikes,
+    });
+  }
 
-    if (localStorageLikes && this.isNoLikes) {
-      this.setDataFromLocalStorage({
-        mutation: "setLike",
-        products: localStorageLikes,
-      });
-    }
+  if (isNoProducts) {
+    store.dispatch("fetchProducts");
+  }
+});
 
-    if (this.isNoProducts) {
-      this.fetchProducts();
-    }
-  },
-};
+// export default {
+//   components: { BaseModal, Cart, BaseButton, Likes, FadeTransition },
+//   computed: {
+//     ...mapState([
+//       "cart",
+//       "likes",
+//       "products",
+//       "isLikesModalOpen",
+//       "isCartModalOpen",
+//     ]),
+//     isCartEmpty() {
+//       return this.cart.length === 0;
+//     },
+
+//     isNoLikes() {
+//       return this.likes.length === 0;
+//     },
+
+//     isNoProducts() {
+//       return this.products.length === 0;
+//     },
+
+//     isCartNotEmpty() {
+//       return this.cart.length > 0;
+//     },
+//   },
+
+//   methods: {
+//     ...mapActions(["setDataFromLocalStorage", "fetchProducts", "closeModal"]),
+//   },
+
+//   watch: {
+//     cart: {
+//       deep: true,
+//       handler() {
+//         setToLocalStorage("cart", this.cart);
+//       },
+//     },
+//     likes: {
+//       deep: true,
+//       handler() {
+//         setToLocalStorage("likes", this.likes);
+//       },
+//     },
+//   },
+
+//   mounted() {
+//     const localStorageCart = getFromLocalStorage("cart");
+//     const localStorageLikes = getFromLocalStorage("likes");
+
+//     if (localStorageCart && this.isCartEmpty) {
+//       this.setDataFromLocalStorage({
+//         mutation: "setProductToCart",
+//         products: localStorageCart,
+//       });
+//     }
+
+//     if (localStorageLikes && this.isNoLikes) {
+//       this.setDataFromLocalStorage({
+//         mutation: "setLike",
+//         products: localStorageLikes,
+//       });
+//     }
+
+//     if (this.isNoProducts) {
+//       this.fetchProducts();
+//     }
+//   },
+// };
 </script>
 
 <style scoped>

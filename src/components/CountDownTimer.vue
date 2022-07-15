@@ -26,7 +26,9 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from "@vue/reactivity";
+import { computed, watch } from "@vue/runtime-core";
 const FULL_DASH_ARRAY = 283;
 const TIMER_COLOR = {
   base: {
@@ -38,64 +40,52 @@ const TIMER_COLOR = {
   },
 };
 
-export default {
-  emits: ["onTimerEnd"],
-  props: {
-    timeout: {
-      type: Number,
-      required: true,
-    },
+const emit = defineEmits(["onTimerEnd"]);
+const props = defineProps({
+  timeout: {
+    type: Number,
+    required: true,
   },
+});
 
-  data() {
-    return {
-      timer: null,
-      attempt: 1,
-    };
-  },
+const timer = ref(null);
 
-  methods: {
-    countDown(sec) {
-      this.timer = sec;
-      let interval = setInterval(() => {
-        this.timer--;
+const countDown = (sec) => {
+  timer.value = sec;
+  let interval = setInterval(() => {
+    timer.value--;
 
-        if (this.timer === 0) {
-          this.$emit("onTimerEnd");
-          clearInterval(interval);
-          return;
-        }
-      }, 1000);
-    },
-  },
-
-  computed: {
-    circleDasharray() {
-      return `${(this.timeFraction * FULL_DASH_ARRAY).toFixed(0)} 283`;
-    },
-
-    timeFraction() {
-      const rawTimeFraction = this.timer / this.timeout;
-      return rawTimeFraction - (1 / this.timeout) * (1 - rawTimeFraction);
-    },
-
-    remainingPathColor() {
-      const { base, alert } = TIMER_COLOR;
-
-      if (this.timer <= alert.threshold) return alert.color;
-      return base.color;
-    },
-  },
-
-  watch: {
-    timeout: {
-      immediate: true,
-      handler() {
-        this.countDown(this.timeout);
-      },
-    },
-  },
+    if (timer.value === 0) {
+      emit("onTimerEnd");
+      clearInterval(interval);
+      return;
+    }
+  }, 1000);
 };
+
+const circleDasharray = computed(
+  () => `${(timeFraction.value * FULL_DASH_ARRAY).toFixed(0)} 283`
+);
+
+const timeFraction = computed(() => {
+  const rawTimeFraction = timer.value / props.timeout;
+  return rawTimeFraction - (1 / props.timeout) * (1 - rawTimeFraction);
+});
+
+const remainingPathColor = computed(() => {
+  const { base, alert } = TIMER_COLOR;
+
+  if (timer.value <= alert.threshold) return alert.color;
+  return base.color;
+});
+
+watch(
+  () => props.timeout,
+  () => {
+    countDown(props.timeout);
+  },
+  { immediate: true }
+);
 </script>
 
 <style scoped>

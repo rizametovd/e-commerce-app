@@ -29,7 +29,7 @@
         </div>
       </div>
       <base-icon-button
-        @click="handleLikes(likedProduct)"
+        @click="store.dispatch('handleLikes', likedProduct)"
         variant="contained"
         iconHoverColor="#ef2525"
         iconColor="#74747474"
@@ -41,30 +41,27 @@
   </ul>
 </template>
 
-<script>
-import { mapActions } from "vuex";
+<script setup>
+import { useStore } from "vuex";
 import DeleteIcon from "./icons/DeleteIcon.vue";
 import BaseButton from "./UI/Buttons/BaseButton.vue";
 import BaseIconButton from "./UI/Buttons/BaseIconButton.vue";
 import IconBase from "./UI/BaseIcon.vue";
-export default {
-  emits: ["onClick"],
-  components: { BaseButton, IconBase, DeleteIcon, BaseIconButton },
-  props: {
-    likedProducts: {
-      type: Array,
-      required: true,
-    },
-  },
+import { useRouter } from "vue-router";
 
-  methods: {
-    ...mapActions(["handleLikes"]),
-
-    onClick(id) {
-      this.$router.push(`/product/${id}`);
-      this.$emit("onClick", "likes");
-    },
+const emit = defineEmits(["onClick"]);
+const props = defineProps({
+  likedProducts: {
+    type: Array,
+    required: true,
   },
+});
+const store = useStore();
+const router = useRouter();
+
+const onClick = (id) => {
+  router.push(`/product/${id}`);
+  emit("onClick", "likes");
 };
 </script>
 

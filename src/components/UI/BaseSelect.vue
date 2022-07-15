@@ -17,28 +17,21 @@
   </div>
 </template>
 
-<script>
-export default {
-  emits: ["onSelectClick"],
-  props: {
-    options: {
-      type: Array,
-      required: true,
-    },
+<script setup>
+import { ref } from "@vue/reactivity";
+const emit = defineEmits(["onSelectClick"]);
+const props = defineProps({
+  options: {
+    type: Array,
+    required: true,
   },
+});
 
-  data() {
-    return {
-      isActiveOption: null,
-    };
-  },
+const isActiveOption = ref(null);
 
-  methods: {
-    select(option) {
-      this.isActiveOption = option.name;
-      this.$emit("onSelectClick", option);
-    },
-  },
+const select = (option) => {
+  isActiveOption.value = option.name;
+  emit("onSelectClick", option);
 };
 </script>
 

@@ -1,32 +1,34 @@
 <template>
-  <button :class="['button', variant, mode]" :type="type" :disabled="isDisabled">
+  <button
+    :class="['button', variant, mode]"
+    :type="type"
+    :disabled="isDisabled"
+  >
     <slot> </slot>
   </button>
 </template>
 
-<script>
-export default {
-  props: {
-    isDisabled: {
-      tyle: Boolean,
-      required: false,
-      default: false,
-    },
-    variant: {
-      type: String,
-      required: false,
-    },
-    type: {
-      type: String,
-      required: false,
-      default: 'button',
-    },
-    mode: {
-      type: String,
-      required: false,
-    },
+<script setup>
+const props = defineProps({
+  isDisabled: {
+    tyle: Boolean,
+    required: false,
+    default: false,
   },
-};
+  variant: {
+    type: String,
+    required: false,
+  },
+  type: {
+    type: String,
+    required: false,
+    default: "button",
+  },
+  mode: {
+    type: String,
+    required: false,
+  },
+});
 </script>
 
 <style scoped>

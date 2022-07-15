@@ -10,20 +10,18 @@
   </button>
 </template>
 
-<script>
-import CartIcon from '../../icons/CartIcon.vue';
-import BaseIcon from '../BaseIcon.vue';
-import FadeTransition from '../FadeTransition.vue';
-export default {
-  components: { BaseIcon, CartIcon, FadeTransition },
-  props: {
-    quantity: {
-      type: Number,
-      required: false,
-      default: null,
-    },
+<script setup>
+import CartIcon from "../../icons/CartIcon.vue";
+import BaseIcon from "../BaseIcon.vue";
+import FadeTransition from "../FadeTransition.vue";
+
+const props = defineProps({
+  quantity: {
+    type: Number,
+    required: false,
+    default: null,
   },
-};
+});
 </script>
 
 <style scoped>

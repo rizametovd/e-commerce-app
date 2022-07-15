@@ -12,16 +12,8 @@
 
     <ul class="cart__list">
       <li class="cart__grid" v-for="product in products" :key="product.id">
-        <img
-          :src="product.image"
-          class="cart__img"
-          :alt="product.title"
-          @click="onClick(product.id)"
-        />
-        <p
-          class="cart__item-title cart__item-text"
-          @click="onClick(product.id)"
-        >
+        <img :src="product.image" class="cart__img" :alt="product.title" @click="onClick(product.id)" />
+        <p class="cart__item-title cart__item-text" @click="onClick(product.id)">
           {{ product.title }}
         </p>
 
@@ -29,8 +21,8 @@
           <span>Quantity:</span>
           <quantity-block
             :quantity="product.quantity"
-            @increment="incrementQuantity(product.id)"
-            @decrement="decrementQuantity(product.id)"
+            @increment="store.dispatch('incrementQuantity', product.id)"
+            @decrement="store.dispatch('decrementQuantity', product.id)"
           ></quantity-block>
         </div>
 
@@ -41,19 +33,11 @@
 
         <div class="cart__mobile">
           <span>Subtotal:</span>
-          <p class="cart__item-text">
-            ${{ (product.price * product.quantity).toFixed(2) }}
-          </p>
+          <p class="cart__item-text">${{ (product.price * product.quantity).toFixed(2) }}</p>
         </div>
 
         <div class="cart__mobile-action">
-          <base-icon-button
-            @click="deleteProduct(product.id)"
-            variant="contained"
-            iconHoverColor="#ef2525"
-            iconColor="#74747474"
-            opacity="1"
-          >
+          <base-icon-button @click="store.dispatch('deleteProduct', product.id)" variant="contained" iconHoverColor="#ef2525" iconColor="#74747474" opacity="1">
             <delete-icon></delete-icon>
           </base-icon-button>
         </div>
@@ -71,7 +55,7 @@
 
     <div class="cart__totals-block" v-if="delivery">
       <span class="cart__totals-block-title">Delivery price:</span>
-      <p>{{ !isFreeDelivery ? "$" : "" }}{{ deliveryPrice }}</p>
+      <p>{{ !isFreeDelivery ? '$' : '' }}{{ deliveryPrice }}</p>
     </div>
 
     <div class="cart__totals-block" v-if="delivery">
@@ -81,75 +65,45 @@
   </section>
 </template>
 
-<script>
-import { mapActions } from "vuex";
-import DeleteIcon from "./icons/DeleteIcon.vue";
-import BaseButton from "./UI/Buttons/BaseButton.vue";
-import BaseIconButton from "./UI/Buttons/BaseIconButton.vue";
-import IconBase from "./UI/BaseIcon.vue";
-import QuantityBlock from "./UI/QuantityBlock.vue";
-export default {
-  emits: ["onClick"],
-  components: {
-    QuantityBlock,
-    BaseButton,
-    IconBase,
-    DeleteIcon,
-    BaseIconButton,
+<script setup>
+import { mapActions, useStore } from 'vuex';
+import DeleteIcon from './icons/DeleteIcon.vue';
+import BaseButton from './UI/Buttons/BaseButton.vue';
+import BaseIconButton from './UI/Buttons/BaseIconButton.vue';
+import IconBase from './UI/BaseIcon.vue';
+import QuantityBlock from './UI/QuantityBlock.vue';
+import { computed } from '@vue/runtime-core';
+import { useRouter } from 'vue-router';
+const props = defineProps({
+  products: {
+    type: Array,
+    required: true,
   },
-  props: {
-    products: {
-      type: Array,
-      required: true,
-    },
-    delivery: {
-      type: Object,
-      required: false,
-      default: null,
-    },
+  delivery: {
+    type: Object,
+    required: false,
+    default: null,
   },
+});
 
-  methods: {
-    ...mapActions(["incrementQuantity", "decrementQuantity", "deleteProduct"]),
+const emit = defineEmits(['onClick']);
+const store = useStore();
+const router = useRouter();
 
-    onClick(id) {
-      this.$router.push(`/product/${id}`);
-      this.$emit("onClick", "cart");
-    },
-  },
+const totalAmount = computed(() => +props.products.reduce((total, product) => (total += product.price * product.quantity), 0).toFixed(2));
 
-  computed: {
-    totalAmount() {
-      return +this.products
-        .reduce(
-          (total, product) => (total += product.price * product.quantity),
-          0
-        )
-        .toFixed(2);
-    },
+const totalQuantity = computed(() => props.products.reduce((total, product) => (total += product.quantity), 0));
+const isFreeDelivery = computed(() => props.delivery.price === 0);
 
-    totalQuantity() {
-      return this.products.reduce(
-        (total, product) => (total += product.quantity),
-        0
-      );
-    },
+const deliveryPrice = computed(() => {
+  if (!props.delivery) return;
+  return isFreeDelivery ? 'Free' : props.delivery.price;
+});
+const total = computed(() => (isFreeDelivery ? totalAmount : (deliveryPrice + totalAmount).toFixed(2)));
 
-    isFreeDelivery() {
-      return this.delivery.price === 0;
-    },
-
-    deliveryPrice() {
-      if (!this.delivery) return;
-      return this.isFreeDelivery ? "Free" : this.delivery.price;
-    },
-
-    total() {
-      return this.isFreeDelivery
-        ? this.totalAmount
-        : (this.deliveryPrice + this.totalAmount).toFixed(2);
-    },
-  },
+const onClick = (id) => {
+  router.push(`/product/${id}`);
+  emit('onClick', 'cart');
 };
 </script>
 

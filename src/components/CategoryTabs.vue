@@ -1,33 +1,33 @@
 <template>
   <ul class="menuList">
-    <li :class="['menuList__item', { menuList__item_active: isActiveTab === item }]" v-for="item in items" :key="item" @click="setActiveTab(item)">
+    <li
+      :class="[
+        'menuList__item',
+        { menuList__item_active: isActiveTab === item },
+      ]"
+      v-for="item in items"
+      :key="item"
+      @click="setActiveTab(item)"
+    >
       {{ item.toUpperCase() }}
     </li>
   </ul>
 </template>
 
-<script>
-export default {
-  emits: ['onCategoryClick'],
-  props: {
-    items: {
-      type: Array,
-      required: true,
-    },
+<script setup>
+import { ref } from "@vue/reactivity";
+const emit = defineEmits(["onCategoryClick"]);
+const props = defineProps({
+  items: {
+    type: Array,
+    required: true,
   },
+});
 
-  data() {
-    return {
-      isActiveTab: 'all',
-    };
-  },
-
-  methods: {
-    setActiveTab(item) {
-      this.isActiveTab = item;
-      this.$emit('onCategoryClick', item);
-    },
-  },
+let isActiveTab = ref("all");
+const setActiveTab = (item) => {
+  isActiveTab.value = item;
+  emit("onCategoryClick", item);
 };
 </script>
 
@@ -57,7 +57,7 @@ export default {
   }
 
   .menuList__item {
-    font-family: 'Open Sans';
+    font-family: "Open Sans";
     font-weight: 400;
     font-size: 16px;
     color: #858585;
@@ -82,7 +82,7 @@ export default {
   }
 
   .menuList__item_active::after {
-    content: '';
+    content: "";
     display: block;
     position: absolute;
     top: 35px;

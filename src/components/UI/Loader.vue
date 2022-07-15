@@ -7,11 +7,6 @@
     </div>
 </template>
 
-<script>
-export default {
-};
-</script>
-
 <style scoped>
 .lds-ring {
   display: inline-block;

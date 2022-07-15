@@ -4,16 +4,14 @@
   </transition>
 </template>
 
-<script>
-export default {
-  props: {
-    duration: {
-      type: Number,
-      required: false,
-      default: 0.3,
-    },
+<script setup>
+const props = defineProps({
+  duration: {
+    type: Number,
+    required: false,
+    default: 0.3,
   },
-};
+});
 </script>
 
 <style scoped>
@@ -22,7 +20,7 @@ export default {
 }
 
 .fade-enter-active {
-  transition: opacity v-bind(duration + "s") ease;
+  transition: opacity v-bind(duration + 's') ease;
 }
 
 .fade-enter-to {

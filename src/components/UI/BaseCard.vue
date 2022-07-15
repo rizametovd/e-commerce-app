@@ -4,16 +4,13 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    isFullWidth: {
-      type: Boolean,
-      required: false,
-    },
-    elHeight: {},
+<script setup>
+const props = defineProps({
+  isFullWidth: {
+    type: Boolean,
+    required: false,
   },
-};
+});
 </script>
 
 <style scoped>
@@ -31,8 +28,5 @@ export default {
 
 .base__card_full-width {
   width: 100%;
-}
-
-@media screen and (min-width: 768px) {
 }
 </style>

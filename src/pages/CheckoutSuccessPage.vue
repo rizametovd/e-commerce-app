@@ -1,15 +1,15 @@
 <template>
   <div class="checkout-success">
-    <base-heading variant="h1" class="checkout-success__title"
-      >Success</base-heading
+    <BaseHeading variant="h1" class="checkout-success__title"
+      >Success</BaseHeading
     >
-    <base-heading variant="h3" class="checkout-success__subtitle"
-      >You will be redirected to homepage in</base-heading
+    <BaseHeading variant="h3" class="checkout-success__subtitle"
+      >You will be redirected to homepage in</BaseHeading
     >
-    <count-down-timer
+    <CountDownTimer
       :timeout="5"
       @onTimerEnd="redirectToHomepage"
-    ></count-down-timer>
+    ></CountDownTimer>
   </div>
 </template>
 
@@ -21,7 +21,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const redirectToHomepage = () => {
-  router.push("/");
+  router.replace("/");
 };
 </script>
 

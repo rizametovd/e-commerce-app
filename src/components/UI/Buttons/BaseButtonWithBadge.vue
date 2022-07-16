@@ -1,17 +1,16 @@
 <template>
   <button :class="['badge', quantity && 'activeIcon']">
-    <base-icon>
+    <BaseIcon>
       <slot></slot>
-    </base-icon>
+    </BaseIcon>
 
-    <fade-transition>
+    <FadeTransition>
       <div class="badge__count" v-if="quantity">{{ quantity }}</div>
-    </fade-transition>
+    </FadeTransition>
   </button>
 </template>
 
 <script setup>
-import CartIcon from "../../icons/CartIcon.vue";
 import BaseIcon from "../BaseIcon.vue";
 import FadeTransition from "../FadeTransition.vue";
 

@@ -1,17 +1,14 @@
 <template>
   <div class="failed-http-request">
-    <fade-transition :duration="2">
-      <base-heading variant="h2" v-if="serverIsDown">{{
+    <FadeTransition :duration="2">
+      <BaseHeading variant="h2" v-if="serverIsDown">{{
         serverErrorMessage
-      }}</base-heading>
-    </fade-transition>
+      }}</BaseHeading>
+    </FadeTransition>
 
     <div class="failed-http-request__timer" v-if="!isFetching">
       <base-heading variant="h3">{{ errorMessage }}</base-heading>
-      <count-down-timer
-        :timeout="timeout"
-        @onTimerEnd="onFetchRequest"
-      ></count-down-timer>
+      <CountDownTimer :timeout="timeout" @onTimerEnd="onFetchRequest" />
       <span class="failed-http-request__status"
         >Error code: <strong>{{ errorCode }}</strong></span
       >
@@ -22,7 +19,7 @@
       class="failed-http-request__sending-request"
     >
       <base-heading variant="h3">Sending new request...</base-heading>
-      <loader></loader>
+      <Loader />
     </div>
   </div>
 </template>

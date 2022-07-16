@@ -1,18 +1,18 @@
 <template>
   <div class="quantity">
-    <base-icon-button
+    <BaseIconButton
       @click="emit('decrement')"
       :isDisabled="isButtonDisabled"
       variant="outlined"
     >
-      <minus-icon></minus-icon>
-    </base-icon-button>
+      <MinusIcon />
+    </BaseIconButton>
 
     <span class="quantity__count">{{ quantity }}</span>
 
-    <base-icon-button @click="emit('increment')" variant="outlined">
-      <plus-icon></plus-icon>
-    </base-icon-button>
+    <BaseIconButton @click="emit('increment')" variant="outlined">
+      <PlusIcon />
+    </BaseIconButton>
   </div>
 </template>
 

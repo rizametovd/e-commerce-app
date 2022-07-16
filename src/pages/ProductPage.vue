@@ -9,26 +9,26 @@
   />
 
   <div class="product-page" v-else>
-    <loader v-if="isLoading"></loader>
-    <base-card class="product-page__card" v-else>
+    <Loader v-if="isLoading" />
+    <BaseCard class="product-page__card" v-else>
       <img
-        :src="currentProduct.image"
-        :alt="currentProduct.title"
+        :src="product.image"
+        :alt="product.title"
         class="product-page__card-image"
       />
       <div class="product-page__card-content">
         <BaseHeading variant="h1" class="product-page__card-title"
-          >{{ currentProduct.title }}
+          >{{ product.title }}
         </BaseHeading>
 
-        <base-divider></base-divider>
+        <BaseDivider />
         <div class="product-page__card-rating">
-          <star-rating :rating="currentProduct.rating.rate"></star-rating>
+          <StarRating :rating="product.rating.rate" />
 
-          <base-icon-button
-            @click="handleLikeClick"
+          <BaseIconButton
+            @click="like"
             variant="contained"
-            :text="addToWishlistBtnText"
+            :text="likeBtnText"
             iconColor="lightgray"
             iconHoverColor="#ef2525"
             iconActiveColor="#ef2525"
@@ -36,42 +36,43 @@
             opacity="0.5"
             :class="likeClass"
           >
-            <like-icon></like-icon>
-          </base-icon-button>
+            <LikeIcon />
+          </BaseIconButton>
         </div>
         <div class="product-page__card-actions">
-          <base-heading variant="h2">${{ currentProduct.price }}</base-heading>
+          <BaseHeading variant="h2">${{ product.price }}</BaseHeading>
           <div class="product-page__card-actions-buy">
-            <quantity-block
+            <QuantityBlock
               @decrement="decrementQuantity"
               @increment="incrementQuantity"
               :quantity="quantity"
-            ></quantity-block>
-            <base-button
+              v-if="!isProductAlreadyInCart"
+            />
+            <BaseButton
               variant="contained"
               mode="success"
-              @click="handleAddToCartClick"
+              @click="addToCart"
               v-if="!isProductAlreadyInCart"
-              >Add to cart</base-button
+              >Add to cart</BaseButton
             >
 
-            <base-button
-              @click="openModal"
+            <BaseButton
+              @click="openModal('cart')"
               variant="contained"
               mode="success"
               v-else
-              >Already is in your Cart</base-button
+              >Already is in your Cart</BaseButton
             >
           </div>
         </div>
         <div class="product-page__card-description">
-          <base-heading variant="h3">Description</base-heading>
+          <BaseHeading variant="h3">Description</BaseHeading>
           <p>
-            {{ currentProduct.description }}
+            {{ product.description }}
           </p>
         </div>
       </div>
-    </base-card>
+    </BaseCard>
   </div>
 </template>
 
@@ -80,72 +81,66 @@ import BaseHeading from "@/components/UI/BaseHeading.vue";
 import QuantityBlock from "@/components/UI/QuantityBlock.vue";
 import BaseButton from "@/components/UI/Buttons/BaseButton.vue";
 import BaseCard from "@/components/UI/BaseCard.vue";
-import { useStore } from "vuex";
 import BaseDivider from "@/components/UI/BaseDivider.vue";
-import FadeTransition from "@/components/UI/FadeTransition.vue";
 import StarRating from "@/components/StarRating.vue";
-import BaseIcon from "@/components/UI/BaseIcon.vue";
 import Loader from "@/components/UI/Loader.vue";
 import BaseIconButton from "@/components/UI/Buttons/BaseIconButton.vue";
 import LikeIcon from "@/components/icons/LikeIcon.vue";
 import FailedHttpRequest from "@/components/FailedHttpRequest.vue";
-import { ref } from "@vue/reactivity";
 import { computed } from "@vue/runtime-core";
 import { useRoute } from "vue-router";
+import { useProductStore } from "@/store/useProductStore";
+import { storeToRefs } from "pinia";
+import { useLikeStore } from "@/store/useLikeStore";
+import { useCartStore } from "@/store/useCartStore";
+import { useCommonStore } from "@/store/useCommonStore";
+import { useQuantity } from "@/hooks/quantity.js";
 
-const store = useStore();
 const route = useRoute();
+const [quantity, incrementQuantity, decrementQuantity] = useQuantity();
 
-const quantity = ref(1);
+const productStore = useProductStore();
+const likeStore = useLikeStore();
+const cartStore = useCartStore();
+const commonStore = useCommonStore();
+const { isLoading, error, serverStatus } = storeToRefs(productStore);
 
-const currentProduct = computed(() => {
-  const product = store.getters.product(route.params.id);
-  console.log('product:', product)
+const product = computed(() => {
+  const thisProduct = productStore.product(route.params.id);
   return {
-    ...product,
+    ...thisProduct,
     quantity: quantity.value,
   };
 });
 
+const isProductLiked = computed(
+  () => likeStore.likedProduct(product.value.id) !== undefined
+);
 
-console.log('currentProduct:', currentProduct.value)
-
-const isProductLiked = computed(() => store.getters.likedProduct(currentProduct.value.id) !== undefined);
-
-const addToWishlistBtnText = computed(() =>
+const likeBtnText = computed(() =>
   isProductLiked.value ? "In your wishlist" : "Add to wishlist"
 );
 
 const isProductAlreadyInCart = computed(
-  () => store.getters.selectedProduct(route.params.id) !== undefined
+  () => cartStore.productInCart(route.params.id) !== undefined
 );
-
-
-const isLoading = computed(() => store.getters.isLoading)
-const error = computed(() => store.getters.error)
-const serverStatus = computed(() => store.getters.serverStatus)
-
-
 
 const likeClass = computed(() => [
   "product-page__card-like",
   isProductLiked.value && "product-page__card-like_active",
 ]);
 
-const handleLikeClick = () => {
-  store.dispatch("handleLikes", currentProduct.value);
+const openModal = (modal) => {
+  commonStore.openModal(modal);
 };
 
-const handleAddToCartClick = () => {
-  store.dispatch("setProductToCart", currentProduct.value);
+const like = () => {
+  likeStore.handleLikes(product.value);
 };
 
-const incrementQuantity = () => {
-  quantity.value += 1;
-};
-
-const decrementQuantity = () => {
-  quantity.value -= 1;
+const addToCart = () => {
+  cartStore.setProductToCart(product.value);
+  openModal("cart");
 };
 </script>
 

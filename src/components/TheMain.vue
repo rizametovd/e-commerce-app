@@ -1,82 +1,81 @@
 <template>
   <main class="main">
     <teleport to="body">
-      <base-modal
-        :isModalOpen="store.getters.isCartModalOpen"
-        type="cart"
-        title="Your cart"
-      >
-        <cart
-          :products="store.getters.cart"
-          v-if="isCartNotEmpty"
-          @onClick="store.dispatch('closeModal', 'cart')"
-        ></cart>
+      <BaseModal :isModalOpen="isCartModalOpen" type="cart" title="Your cart">
+        <Cart v-if="isProductsInCart" @onClick="closeModal('cart')" />
         <p v-else>Your cart is empty</p>
         <template #actions>
-          <router-link to="/checkout" v-if="isCartNotEmpty">
-            <base-button
+          <router-link to="/checkout" v-if="isProductsInCart">
+            <BaseButton
               variant="contained"
               mode="success"
-              @click="store.dispatch('closeModal', 'cart')"
-              >Checkout</base-button
+              @click="closeModal('cart')"
+              >Checkout</BaseButton
             >
           </router-link>
         </template>
-      </base-modal>
+      </BaseModal>
     </teleport>
 
     <teleport to="body">
-      <base-modal
-        :isModalOpen="store.getters.isLikesModalOpen"
+      <BaseModal
+        :isModalOpen="isLikesModalOpen"
         type="likes"
         title="Your likes"
       >
-        <likes
-          :likedProducts="store.getters.likes"
-          v-if="store.getters.likes.length > 0"
-          @onClick="store.dispatch('closeModal', 'likes')"
-        ></likes>
+        <Likes v-if="isLikes" @onClick="closeModal('likes')" />
         <p v-else>No likes yet</p>
-      </base-modal>
+      </BaseModal>
     </teleport>
 
     <router-view v-slot="{ Component }">
-      <fade-transition>
+      <FadeTransition>
         <component :is="Component" />
-      </fade-transition>
+      </FadeTransition>
     </router-view>
   </main>
 </template>
 
 <script setup>
 import { getFromLocalStorage, setToLocalStorage } from "@/utils/helpers";
-import { useStore } from "vuex";
 import BaseModal from "./UI/BaseModal.vue";
 import Cart from "./Cart.vue";
 import BaseButton from "./UI/Buttons/BaseButton.vue";
 import Likes from "./Likes.vue";
 import FadeTransition from "./UI/FadeTransition.vue";
 import { computed, onMounted, watch } from "@vue/runtime-core";
+import { useProductStore } from "@/store/useProductStore";
+import { storeToRefs } from "pinia";
+import { useCartStore } from "@/store/useCartStore";
+import { useLikeStore } from "@/store/useLikeStore";
+import { useCommonStore } from "@/store/useCommonStore";
 
-const store = useStore();
+const productStore = useProductStore();
+const cartStore = useCartStore();
+const likeStore = useLikeStore();
+const commonStore = useCommonStore();
 
-const isCartEmpty = computed(() => store.getters.cart.length === 0);
-const isNoLikes = computed(() => store.getters.likes.length === 0);
-const isNoProducts = computed(() => store.getters.products.length === 0);
-const isCartNotEmpty = computed(() => store.getters.cart.length > 0);
+const { products, isProducts } = storeToRefs(productStore);
+const { isCartModalOpen, isLikesModalOpen } = storeToRefs(commonStore);
+const { isLikes, likes } = storeToRefs(likeStore);
+const { isProductsInCart, cart } = storeToRefs(cartStore);
+
+const closeModal = (modal) => {
+  commonStore.closeModal(modal);
+};
 
 watch(
-  () => store.getters.cart,
+  () => cart.value,
   () => {
-    setToLocalStorage("cart", store.getters.cart);
+    setToLocalStorage("cart", cart.value);
   },
   { deep: true }
 );
 
 watch(
-  () => store.getters.likes,
+  () => likes.value,
   () => {
-    setToLocalStorage("likes", store.getters.likes);
+    setToLocalStorage("likes", likes.value);
   },
   { deep: true }
 );
@@ -85,94 +84,18 @@ onMounted(() => {
   const localStorageCart = getFromLocalStorage("cart");
   const localStorageLikes = getFromLocalStorage("likes");
 
-  if (localStorageCart && isCartEmpty) {
-    store.dispatch("setDataFromLocalStorage", {
-      mutation: "setProductToCart",
-      products: localStorageCart,
-    });
+  if (localStorageCart && !isProductsInCart.value) {
+    cartStore.setProductsFromLStoCart(localStorageCart);
   }
 
-  if (localStorageLikes && isNoLikes) {
-    store.dispatch("setDataFromLocalStorage", {
-      mutation: "setLike",
-      products: localStorageLikes,
-    });
+  if (localStorageLikes && !isLikes.value) {
+    likeStore.setLikesFromLS(localStorageLikes);
   }
 
-  if (isNoProducts) {
-    store.dispatch("fetchProducts");
+  if (!isProducts.value) {
+    productStore.fetchProducts();
   }
 });
-
-// export default {
-//   components: { BaseModal, Cart, BaseButton, Likes, FadeTransition },
-//   computed: {
-//     ...mapState([
-//       "cart",
-//       "likes",
-//       "products",
-//       "isLikesModalOpen",
-//       "isCartModalOpen",
-//     ]),
-//     isCartEmpty() {
-//       return this.cart.length === 0;
-//     },
-
-//     isNoLikes() {
-//       return this.likes.length === 0;
-//     },
-
-//     isNoProducts() {
-//       return this.products.length === 0;
-//     },
-
-//     isCartNotEmpty() {
-//       return this.cart.length > 0;
-//     },
-//   },
-
-//   methods: {
-//     ...mapActions(["setDataFromLocalStorage", "fetchProducts", "closeModal"]),
-//   },
-
-//   watch: {
-//     cart: {
-//       deep: true,
-//       handler() {
-//         setToLocalStorage("cart", this.cart);
-//       },
-//     },
-//     likes: {
-//       deep: true,
-//       handler() {
-//         setToLocalStorage("likes", this.likes);
-//       },
-//     },
-//   },
-
-//   mounted() {
-//     const localStorageCart = getFromLocalStorage("cart");
-//     const localStorageLikes = getFromLocalStorage("likes");
-
-//     if (localStorageCart && this.isCartEmpty) {
-//       this.setDataFromLocalStorage({
-//         mutation: "setProductToCart",
-//         products: localStorageCart,
-//       });
-//     }
-
-//     if (localStorageLikes && this.isNoLikes) {
-//       this.setDataFromLocalStorage({
-//         mutation: "setLike",
-//         products: localStorageLikes,
-//       });
-//     }
-
-//     if (this.isNoProducts) {
-//       this.fetchProducts();
-//     }
-//   },
-// };
 </script>
 
 <style scoped>

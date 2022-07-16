@@ -14,9 +14,9 @@
       @input="handleChange"
       :required="required"
     />
-    <fade-transition>
+    <FadeTransition>
       <span class="base-input__error" v-if="error">{{ error }}</span>
-    </fade-transition>
+    </FadeTransition>
   </div>
 </template>
 

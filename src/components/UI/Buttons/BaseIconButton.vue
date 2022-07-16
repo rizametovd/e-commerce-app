@@ -9,9 +9,9 @@
       :style="{ display: !text && 'contents' }"
     >
       <span class="text" v-if="text">{{ text }}</span>
-      <base-icon>
+      <BaseIcon>
         <slot></slot>
-      </base-icon>
+      </BaseIcon>
     </div>
   </button>
 </template>

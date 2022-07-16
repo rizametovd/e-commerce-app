@@ -13,18 +13,15 @@
 
     <ul>
       <li>
-        <base-button-with-badge
-          :quantity="totalLikes"
-          @click="store.dispatch('openModal', 'likesModal')"
-        >
+        <BaseButtonWithBadge :quantity="totalLikes" @click="openModal('likes')">
           <LikeIcon />
-        </base-button-with-badge>
+        </BaseButtonWithBadge>
       </li>
 
       <li>
         <BaseButtonWithBadge
-          :quantity="cartTotalProductsQuantity"
-          @click="store.dispatch('openModal', 'cartModal')"
+          :quantity="totalProductsAddedToCart"
+          @click="openModal('cart')"
         >
           <CartIcon />
         </BaseButtonWithBadge>
@@ -34,22 +31,31 @@
 </template>
 
 <script setup>
+import { useCartStore } from "@/store/useCartStore";
+import { useCommonStore } from "@/store/useCommonStore";
+import { useLikeStore } from "@/store/useLikeStore";
 import { computed } from "@vue/runtime-core";
+import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
-import { useStore } from "vuex";
 
 import CartIcon from "./icons/CartIcon.vue";
 import LikeIcon from "./icons/LikeIcon.vue";
 import BaseButtonWithBadge from "./UI/Buttons/BaseButtonWithBadge.vue";
 
-const store = useStore();
 const route = useRoute();
 
-const cartTotalProductsQuantity = computed(
-  () => store.getters.cartTotalProductsQuantity
-);
-const totalLikes = computed(() => store.getters.totalLikes);
+const cartStore = useCartStore();
+const likeStore = useLikeStore();
+const commonStore = useCommonStore();
+
+const { totalProductsAddedToCart } = storeToRefs(cartStore);
+const { totalLikes } = storeToRefs(likeStore);
+
 const isHomepage = computed(() => route.fullPath === "/");
+
+const openModal = (modal) => {
+  commonStore.openModal(modal);
+};
 </script>
 
 <style scoped>

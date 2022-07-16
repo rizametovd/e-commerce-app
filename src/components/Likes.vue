@@ -1,7 +1,7 @@
 <template>
   <ul class="likes">
     <li
-      v-for="likedProduct in likedProducts"
+      v-for="likedProduct in likes"
       :key="likedProduct.id"
       class="likes__item"
     >
@@ -9,12 +9,12 @@
         :src="likedProduct.image"
         :alt="likedProduct.title"
         class="likes__image"
-        @click="onClick(likedProduct.id)"
+        @click="goToProductPage(likedProduct.id)"
       />
       <div class="likes__product-info">
         <span
           class="likes__product-info-title"
-          @click="onClick(likedProduct.id)"
+          @click="goToProductPage(likedProduct.id)"
           >{{ likedProduct.title }}</span
         >
 
@@ -28,38 +28,40 @@
           >
         </div>
       </div>
-      <base-icon-button
-        @click="store.dispatch('handleLikes', likedProduct)"
+      <BaseIconButton
+        @click="unLike(likedProduct)"
         variant="contained"
         iconHoverColor="#ef2525"
         iconColor="#74747474"
         opacity="1"
       >
-        <delete-icon></delete-icon>
-      </base-icon-button>
+        <DeleteIcon />
+      </BaseIconButton>
     </li>
   </ul>
 </template>
 
 <script setup>
-import { useStore } from "vuex";
 import DeleteIcon from "./icons/DeleteIcon.vue";
 import BaseButton from "./UI/Buttons/BaseButton.vue";
 import BaseIconButton from "./UI/Buttons/BaseIconButton.vue";
 import IconBase from "./UI/BaseIcon.vue";
 import { useRouter } from "vue-router";
+import { useLikeStore } from "@/store/useLikeStore";
+import { storeToRefs } from "pinia";
 
 const emit = defineEmits(["onClick"]);
-const props = defineProps({
-  likedProducts: {
-    type: Array,
-    required: true,
-  },
-});
-const store = useStore();
+
+const likeStore = useLikeStore();
+const { likes } = storeToRefs(likeStore);
+
 const router = useRouter();
 
-const onClick = (id) => {
+const unLike = (product) => {
+  likeStore.handleLikes(product);
+};
+
+const goToProductPage = (id) => {
   router.push(`/product/${id}`);
   emit("onClick", "likes");
 };

@@ -1,56 +1,54 @@
 <template>
   <div class="checkout">
-    <base-heading variant="h1">Checkout</base-heading>
-    <base-placeholder v-if="store.getters.cart.length === 0"></base-placeholder>
+    <BaseHeading variant="h1">Checkout</BaseHeading>
 
-    <div class="checkout__content" v-if="store.getters.cart.length > 0">
-      <base-card>
-        <cart :products="store.getters.cart" :delivery="delivery"></cart>
-      </base-card>
+    <BasePlaceholder v-if="isProductsInCart && !isProductsInCart" text="Cart is empty. Nothing to render" />
 
-      <base-card class="checkout__content">
-        <choose-delivery
+    <div class="checkout__content" v-if="isProductsInCart && isProductsInCart">
+      <BaseCard>
+        <Cart :delivery="delivery" />
+      </BaseCard>
+
+      <BaseCard class="checkout__content">
+        <ChooseDelivery
           @onSelectDeliveryOption="setDeliveryOption"
-        ></choose-delivery>
+        ></ChooseDelivery>
 
-        <fade-transition>
-          <delivery-location
+        <FadeTransition>
+          <DeliveryLocation
             v-if="isGeoApiLocationAllowed && delivery?.type === 'delivery'"
             :location="location"
             @onConfirmLocationClick="confirmLocation"
-          ></delivery-location>
-        </fade-transition>
-      </base-card>
+          />
+        </FadeTransition>
+      </BaseCard>
 
-      <checkout-form
+      <CheckoutForm
         :delivery="delivery"
         :location="confirmedLocation"
-        :cart="store.getters.cart"
         v-if="delivery"
-      ></checkout-form>
+      ></CheckoutForm>
     </div>
   </div>
 </template>
 
 <script setup>
 import Cart from "@/components/Cart.vue";
-import { mapState, useStore } from "vuex";
 import BaseCard from "@/components/UI/BaseCard.vue";
 import { getLocationData } from "@/utils/geoCoding";
-import BaseIconButton from "@/components/UI/Buttons/BaseIconButton.vue";
-import BaseSelect from "@/components/UI/BaseSelect.vue";
 import BasePlaceholder from "@/components/UI/BasePlaceholder.vue";
 import ChooseDelivery from "@/components/ChooseDelivery.vue";
 import CheckoutForm from "@/components/CheckoutForm.vue";
-import BaseInput from "@/components/UI/BaseInput.vue";
 import DeliveryLocation from "@/components/DeliveryLocation.vue";
-import CheckoutSuccessPage from "./CheckoutSuccessPage.vue";
 import BaseHeading from "@/components/UI/BaseHeading.vue";
 import FadeTransition from "@/components/UI/FadeTransition.vue";
 import { reactive, ref } from "@vue/reactivity";
 import { watch } from "@vue/runtime-core";
+import { useCartStore } from "@/store/useCartStore";
+import { storeToRefs } from "pinia";
 
-const store = useStore();
+const cartStore = useCartStore();
+const { isProductsInCart } = storeToRefs(cartStore);
 
 const location = ref(null);
 const delivery = reactive({});
@@ -58,10 +56,7 @@ const confirmedLocation = ref(null);
 const isGeoApiLocationAllowed = ref(false);
 
 const setDeliveryOption = async (deliveryOption) => {
-  delivery.price = deliveryOption.price;
-  delivery.type = deliveryOption.type;
-  delivery.id = deliveryOption.id;
-  delivery.name = deliveryOption.name;
+  Object.assign(delivery, deliveryOption);
   if (deliveryOption.type === "delivery") {
     location.value = "";
     await getLocation();

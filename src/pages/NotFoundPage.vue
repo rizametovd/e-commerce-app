@@ -1,15 +1,12 @@
 <template>
   <section class="page-not-found">
-    <base-heading variant="h1">Page not found</base-heading>
-    <base-heading variant="h1" class="page-not-found__error">404</base-heading>
+    <BaseHeading variant="h1">Page not found</BaseHeading>
+    <BaseHeading variant="h1" class="page-not-found__error">404</BaseHeading>
 
-    <base-heading variant="h3" class="page-not-found__text"
-      >You will be redirected to homepage in</base-heading
+    <BaseHeading variant="h3" class="page-not-found__text"
+      >You will be redirected to homepage in</BaseHeading
     >
-    <count-down-timer
-      :timeout="5"
-      @onTimerEnd="redirectToHomepage"
-    ></count-down-timer>
+    <CountDownTimer :timeout="5" @onTimerEnd="redirectToHomepage" />
   </section>
 </template>
 
@@ -21,7 +18,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const redirectToHomepage = () => {
-  router.push("/");
+  router.replace("/");
 };
 </script>
 

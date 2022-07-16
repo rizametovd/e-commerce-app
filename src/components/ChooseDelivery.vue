@@ -1,11 +1,8 @@
 <template>
   <div class="delivery">
-    <base-heading variant="h2">Choose delivery</base-heading>
-    <base-select
-      :options="deliveryOptions"
-      @onSelectClick="selectDelivery"
-    ></base-select>
-    <h3 v-if="selectedDiveryOption.price">{{ price }}</h3>
+    <BaseHeading variant="h2">Choose delivery</BaseHeading>
+    <BaseSelect :options="deliveryOptions" @onSelectClick="selectDelivery" />
+    <h3 v-if="selectedDiveryOption.name">{{ price }}</h3>
   </div>
 </template>
 
@@ -35,10 +32,7 @@ const deliveryOptions = DELIVERY_OPTIONS;
 const selectedDiveryOption = reactive({});
 
 const selectDelivery = (deliveryOption) => {
-  selectedDiveryOption.price = deliveryOption.price;
-  selectedDiveryOption.type = deliveryOption.type;
-  selectedDiveryOption.id = deliveryOption.id;
-  selectedDiveryOption.name = deliveryOption.name;
+  Object.assign(selectedDiveryOption, deliveryOption);
   emit("onSelectDeliveryOption", deliveryOption);
 };
 

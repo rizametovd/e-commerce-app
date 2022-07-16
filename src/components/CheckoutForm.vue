@@ -1,12 +1,12 @@
 <template>
-  <fade-transition>
-    <base-card>
-      <base-heading variant="h2">Your personal data</base-heading>
+  <FadeTransition>
+    <BaseCard>
+      <BaseHeading variant="h2">Your personal data</BaseHeading>
       <div class="checkout-form">
-        <base-form @submit.prevent="submitForm">
+        <BaseForm @submit.prevent="submitForm">
           <ul class="checkout-form__input-list">
             <li v-for="input in inputs" :key="input.label">
-              <base-input
+              <BaseInput
                 :placeholder="input.placeholder"
                 :label="input.label"
                 :type="input.type"
@@ -15,21 +15,20 @@
                 :error="formError[input?.name]"
                 :value="userInput[input.name]"
                 :handleChange="handleChange"
-              ></base-input>
+              />
             </li>
           </ul>
 
-          <base-button variant="contained" type="submit" mode="success"
-            >Submit</base-button
+          <BaseButton variant="contained" type="submit" mode="success"
+            >Submit</BaseButton
           >
-        </base-form>
+        </BaseForm>
       </div>
-    </base-card>
-  </fade-transition>
+    </BaseCard>
+  </FadeTransition>
 </template>
 
 <script setup>
-import { useStore } from "vuex";
 import BaseCard from "./UI/BaseCard.vue";
 import BaseForm from "./UI/BaseForm.vue";
 import BaseHeading from "./UI/BaseHeading.vue";
@@ -40,6 +39,8 @@ import { INPUT_FIELDS } from "@/constants/checkoutFormInputs";
 import { reactive, ref } from "@vue/reactivity";
 import { useRouter } from "vue-router";
 import { computed, watch } from "@vue/runtime-core";
+import { useCartStore } from "@/store/useCartStore";
+import { clearLocalStorare } from "@/utils/helpers";
 
 const USER_INPUT_INIT = {
   name: "",
@@ -59,13 +60,10 @@ const props = defineProps({
     type: [null, String],
     required: true,
   },
-  cart: {
-    type: Array,
-    required: true,
-  },
 });
-const store = useStore();
+
 const router = useRouter();
+const cartStore = useCartStore();
 
 const inputFields = INPUT_FIELDS;
 const userInput = reactive({ ...USER_INPUT_INIT });
@@ -126,8 +124,10 @@ const submitForm = () => {
     },
   });
 
-  router.push("/checkout/success");
-  store.dispatch("clearCart");
+  router.replace("/checkout/success");
+  clearLocalStorare("cart");
+  cartStore.clearCart();
+
   Object.assign(userInput, USER_INPUT_INIT);
 };
 
@@ -150,144 +150,6 @@ watch(
   },
   { immediate: true }
 );
-
-// export default {
-//   components: {
-//     BaseForm,
-//     BaseInput,
-//     BaseCard,
-//     BaseButton,
-//     BaseHeading,
-//     FadeTransition,
-//   },
-//   props: {
-//     delivery: {
-//       type: [null, Object],
-//       required: true,
-//     },
-//     location: {
-//       type: [null, String],
-//       required: true,
-//     },
-//     cart: {
-//       type: Array,
-//       required: true,
-//     },
-//   },
-
-//   data() {
-//     return {
-//       inputFields: INPUT_FIELDS,
-//       userInput: {
-//         name: "",
-//         phone: "",
-//         comment: "",
-//         location: "",
-//         email: "",
-//         address: "",
-//       },
-//       formError: {},
-//     };
-//   },
-
-//   methods: {
-//     ...mapActions(["clearCart"]),
-
-//     handleChange(e) {
-//       const field = e.target.name;
-//       const value = e.target.value;
-
-//       this.clearValidation(field);
-
-//       this.userInput = {
-//         ...this.userInput,
-//         [field]: value,
-//       };
-//     },
-
-//     clearValidation(field) {
-//       if (field) {
-//         this.formError = {
-//           ...this.formError,
-//           [field]: "",
-//         };
-//         return;
-//       }
-//       this.formError = {};
-//     },
-
-//     validateForm() {
-//       let isFormValid = true;
-//       const isNameInputValid = this.userInput.name.trim().length > 2;
-//       const isPhoneValid =
-//         this.userInput.phone.trim().length >= 10 &&
-//         this.userInput.phone.trim().length <= 20;
-
-//       if (!isNameInputValid || !isPhoneValid) {
-//         this.formError = {
-//           name: isNameInputValid
-//             ? ""
-//             : "Name cannot be less or equal than 2 letters",
-//           phone: isPhoneValid ? "" : "Phone number digits range is 10-20",
-//         };
-
-//         isFormValid = false;
-//       }
-
-//       return isFormValid;
-//     },
-
-//     submitForm() {
-//       if (!this.validateForm()) return;
-
-//       console.log("order:", {
-//         id: 1,
-//         customer: {
-//           name: this.userInput.name,
-//           phone: this.userInput.phone,
-//           email: this.userInput.email,
-//           comment: this.userInput.comment,
-//         },
-//         products: this.cart,
-//         delivery: {
-//           ...this.delivery,
-//           region: this.userInput.location,
-//           address: this.userInput.address,
-//         },
-//       });
-
-//       this.$router.push("/checkout/success");
-//       this.clearCart();
-//       this.userInput = {};
-//     },
-//   },
-
-//   computed: {
-//     inputs() {
-//       return this.inputFields.filter((field) => {
-//         if (!this.delivery) return field;
-
-//         if (this.delivery.type === "pickup") {
-//           return field.name !== "location" && field.name !== "address";
-//         }
-
-//         return field;
-//       });
-//     },
-//   },
-
-//   watch: {
-//     location: {
-//       immediate: true,
-//       handler() {
-//         this.userInput = {
-//           ...this.userInput,
-//           location: this.location,
-//         };
-//       },
-//     },
-//   },
-// };
 </script>
 
 <style>

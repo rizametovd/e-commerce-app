@@ -1,21 +1,13 @@
 <template>
-  <the-header></the-header>
-  <the-main></the-main>
-  <the-footer></the-footer>
+  <TheHeader />
+  <TheMain />
+  <TheFooter />
 </template>
 
 <script setup>
 import TheFooter from "./components/TheFooter.vue";
 import TheHeader from "./components/TheHeader.vue";
 import TheMain from "./components/TheMain.vue";
-
-// export default {
-//   components: {
-//     TheFooter,
-//     TheHeader,
-//     TheMain,
-//   },
-// };
 </script>
 
 <style>

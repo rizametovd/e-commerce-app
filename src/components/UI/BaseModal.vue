@@ -1,13 +1,13 @@
 <template>
-  <fade-transition>
+  <FadeTransition>
     <div
-      @click="store.dispatch('closeModal', type)"
+      @click="closeModal(type)"
       class="modal__backdrop"
       v-if="isModalOpen"
     ></div>
-  </fade-transition>
+  </FadeTransition>
 
-  <fade-transition>
+  <FadeTransition>
     <dialog class="modal" open v-if="isModalOpen">
       <h2>
         {{ title }}
@@ -17,19 +17,17 @@
       </section>
 
       <section class="modal__actions">
-        <base-button
-          @click="store.dispatch('closeModal', type)"
-          variant="outlined"
-          >{{ closeButtonText }}</base-button
-        >
+        <BaseButton @click="closeModal(type)" variant="outlined">{{
+          closeButtonText
+        }}</BaseButton>
         <slot name="actions"></slot>
       </section>
     </dialog>
-  </fade-transition>
+  </FadeTransition>
 </template>
 
 <script setup>
-import { useStore } from "vuex";
+import { useCommonStore } from "@/store/useCommonStore";
 import BaseButton from "./Buttons/BaseButton.vue";
 import FadeTransition from "./FadeTransition.vue";
 
@@ -54,7 +52,11 @@ const props = defineProps({
   },
 });
 
-const store = useStore();
+const commonStore = useCommonStore();
+
+const closeModal = (modal) => {
+  commonStore.closeModal(modal);
+};
 </script>
 
 <style scoped>

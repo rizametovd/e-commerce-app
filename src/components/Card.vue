@@ -1,18 +1,18 @@
 <template>
   <div class="card">
-    <base-card :isFullWidth="true">
+    <BaseCard :isFullWidth="true">
       <div class="card__container">
         <div class="card__image-container">
           <img
             :src="image"
             class="card__image"
             :alt="title"
-            @click="router.push(`product/${id}`)"
+            @click="goToPage(id)"
           />
 
           <div class="card__like-btn">
-            <base-icon-button
-              @click="handleLikeClick"
+            <BaseIconButton
+              @click="like"
               variant="contained"
               iconColor="lightgray"
               iconHoverColor="#ef2525"
@@ -20,17 +20,14 @@
               :isActive="isProductLiked"
               opacity="0.5"
             >
-              <like-icon></like-icon>
-            </base-icon-button>
+              <LikeIcon />
+            </BaseIconButton>
           </div>
         </div>
 
-        <base-heading
-          variant="h4"
-          class="card__title"
-          @click="router.push(`product/${id}`)"
-          >{{ title }}</base-heading
-        >
+        <BaseHeading variant="h4" class="card__title" @click="goToPage(id)">{{
+          title
+        }}</BaseHeading>
 
         <div class="card__rating">
           <img src="../assets/star-icon.svg" />
@@ -39,43 +36,41 @@
 
         <h3 class="card__price">${{ price }}</h3>
 
-        <div class="card__actions" v-if="!isProductAlreadyInCart">
-          <quantity-block
+        <div class="card__actions" v-if="!isProductInCart">
+          <QuantityBlock
             @decrement="decrementQuantity"
             @increment="incrementQuantity"
             :quantity="quantity"
-          ></quantity-block>
-          <base-icon-button
+          />
+          <BaseIconButton
             variant="contained"
             text="Add to cart"
             iconColor="lightgray"
             iconHoverColor="#ffa801"
-            @click="handleAddToCartClick"
+            @click="addToCart"
           >
-            <cart-icon></cart-icon>
-          </base-icon-button>
+            <CartIcon />
+          </BaseIconButton>
         </div>
 
-        <fade-transition>
-          <base-button
-            @click="store.dispatch('openModal', 'cartModal')"
+        <FadeTransition>
+          <BaseButton
+            @click="openModal('cart')"
             variant="contained"
             mode="success"
-            v-if="isProductAlreadyInCart"
-            >Already is in your Cart</base-button
+            v-if="isProductInCart"
+            >Already is in your Cart</BaseButton
           >
-        </fade-transition>
+        </FadeTransition>
       </div>
-    </base-card>
+    </BaseCard>
   </div>
 </template>
 
 <script setup>
-import IconBase from "./UI/BaseIcon.vue";
 import LikeIcon from "./icons/LikeIcon.vue";
 import CartIcon from "./icons/CartIcon.vue";
 import BaseCard from "./UI/BaseCard.vue";
-import { mapActions, mapGetters, useStore } from "vuex";
 import QuantityBlock from "./UI/QuantityBlock.vue";
 import BaseButton from "./UI/Buttons/BaseButton.vue";
 import BaseIconButton from "./UI/Buttons/BaseIconButton.vue";
@@ -84,6 +79,10 @@ import BaseHeading from "./UI/BaseHeading.vue";
 import { ref } from "@vue/reactivity";
 import { computed } from "@vue/runtime-core";
 import { useRouter } from "vue-router";
+import { useCartStore } from "@/store/useCartStore";
+import { useLikeStore } from "@/store/useLikeStore";
+import { useCommonStore } from "@/store/useCommonStore";
+import {useQuantity} from '@/hooks/quantity.js';
 
 const props = defineProps({
   image: {
@@ -107,9 +106,13 @@ const props = defineProps({
     required: true,
   },
 });
-const store = useStore();
+
+const [quantity, incrementQuantity, decrementQuantity] = useQuantity();
+const cartStore = useCartStore();
+const likesStore = useLikeStore();
+const commonStore = useCommonStore();
 const router = useRouter();
-let quantity = ref(1);
+
 
 const product = computed(() => {
   return {
@@ -122,27 +125,29 @@ const product = computed(() => {
   };
 });
 
-const isProductAlreadyInCart = computed(
-  () => store.getters.selectedProduct(props.id) !== undefined
+const isProductInCart = computed(
+  () => cartStore.productInCart(props.id) !== undefined
 );
+
 const isProductLiked = computed(
-  () => store.getters.likedProduct(props.id) !== undefined
+  () => likesStore.likedProduct(props.id) !== undefined
 );
 
-const incrementQuantity = () => {
-  quantity.value += 1;
+const openModal = (modal) => {
+  commonStore.openModal(modal);
 };
 
-const decrementQuantity = () => {
-  quantity.value -= 1;
+const goToPage = (id) => {
+  router.push(`product/${id}`);
 };
 
-const handleLikeClick = () => {
-  store.dispatch("handleLikes", product.value);
+const like = () => {
+  likesStore.handleLikes(product.value);
 };
 
-const handleAddToCartClick = () => {
-  store.dispatch("setProductToCart", product.value);
+const addToCart = () => {
+  cartStore.setProductToCart(product.value);
+  openModal("cart");
 };
 </script>
 

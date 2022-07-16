@@ -29,19 +29,19 @@ export default createStore({
   },
   getters: {
     serverStatus(state) {
-      return state.serverStatus
+      return state.serverStatus;
     },
 
     error(state) {
-      return state.error
+      return state.error;
     },
 
     isCartModalOpen(state) {
-      return state.isCartModalOpen
+      return state.isCartModalOpen;
     },
 
     isLikesModalOpen(state) {
-      return state.isLikesModalOpen
+      return state.isLikesModalOpen;
     },
 
     cart(state) {
@@ -49,15 +49,15 @@ export default createStore({
     },
 
     likes(state) {
-      return state.likes
+      return state.likes;
     },
 
     products(state) {
-      return state.products
+      return state.products;
     },
 
     isLoading(state) {
-      return state.isLoading
+      return state.isLoading;
     },
 
     categories(state) {

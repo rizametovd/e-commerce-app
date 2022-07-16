@@ -11,19 +11,27 @@
     </div>
 
     <ul class="cart__list">
-      <li class="cart__grid" v-for="product in products" :key="product.id">
-        <img :src="product.image" class="cart__img" :alt="product.title" @click="onClick(product.id)" />
-        <p class="cart__item-title cart__item-text" @click="onClick(product.id)">
+      <li class="cart__grid" v-for="product in cart" :key="product.id">
+        <img
+          :src="product.image"
+          class="cart__img"
+          :alt="product.title"
+          @click="goToProductPage(product.id)"
+        />
+        <p
+          class="cart__item-title cart__item-text"
+          @click="goToProductPage(product.id)"
+        >
           {{ product.title }}
         </p>
 
         <div class="cart__mobile">
           <span>Quantity:</span>
-          <quantity-block
+          <QuantityBlock
             :quantity="product.quantity"
-            @increment="store.dispatch('incrementQuantity', product.id)"
-            @decrement="store.dispatch('decrementQuantity', product.id)"
-          ></quantity-block>
+            @increment="incrementQuantity(product.id)"
+            @decrement="decrementQuantity(product.id)"
+          ></QuantityBlock>
         </div>
 
         <div class="cart__mobile">
@@ -33,32 +41,40 @@
 
         <div class="cart__mobile">
           <span>Subtotal:</span>
-          <p class="cart__item-text">${{ (product.price * product.quantity).toFixed(2) }}</p>
+          <p class="cart__item-text">
+            ${{ (product.price * product.quantity).toFixed(2) }}
+          </p>
         </div>
 
         <div class="cart__mobile-action">
-          <base-icon-button @click="store.dispatch('deleteProduct', product.id)" variant="contained" iconHoverColor="#ef2525" iconColor="#74747474" opacity="1">
-            <delete-icon></delete-icon>
-          </base-icon-button>
+          <BaseIconButton
+            @click="removeProductFromCart(product.id)"
+            variant="contained"
+            iconHoverColor="#ef2525"
+            iconColor="#74747474"
+            opacity="1"
+          >
+            <DeleteIcon />
+          </BaseIconButton>
         </div>
       </li>
     </ul>
 
     <div class="cart__totals-block">
       <span class="cart__totals-block-title">Total quantity:</span>
-      <p>{{ totalQuantity }} pcs</p>
+      <p>{{ totalProductsAddedToCart }} pcs</p>
     </div>
     <div class="cart__totals-block">
       <span class="cart__totals-block-title">Total amount: </span>
       <p>${{ totalAmount }}</p>
     </div>
 
-    <div class="cart__totals-block" v-if="delivery">
+    <div class="cart__totals-block" v-if="delivery && delivery.name">
       <span class="cart__totals-block-title">Delivery price:</span>
-      <p>{{ !isFreeDelivery ? '$' : '' }}{{ deliveryPrice }}</p>
+      <p>{{ !isFreeDelivery ? "$" : "" }}{{ deliveryPrice }}</p>
     </div>
 
-    <div class="cart__totals-block" v-if="delivery">
+    <div class="cart__totals-block" v-if="delivery && delivery.name">
       <span class="cart__totals-block-title">Total:</span>
       <p>${{ total }}</p>
     </div>
@@ -66,44 +82,66 @@
 </template>
 
 <script setup>
-import { mapActions, useStore } from 'vuex';
-import DeleteIcon from './icons/DeleteIcon.vue';
-import BaseButton from './UI/Buttons/BaseButton.vue';
-import BaseIconButton from './UI/Buttons/BaseIconButton.vue';
-import IconBase from './UI/BaseIcon.vue';
-import QuantityBlock from './UI/QuantityBlock.vue';
-import { computed } from '@vue/runtime-core';
-import { useRouter } from 'vue-router';
+import DeleteIcon from "./icons/DeleteIcon.vue";
+import BaseIconButton from "./UI/Buttons/BaseIconButton.vue";
+import QuantityBlock from "./UI/QuantityBlock.vue";
+import { computed } from "@vue/runtime-core";
+import { useRouter } from "vue-router";
+import { useCartStore } from "@/store/useCartStore";
+import { storeToRefs } from "pinia";
 const props = defineProps({
-  products: {
-    type: Array,
-    required: true,
-  },
+  // products: {
+  //   type: Array,
+  //   required: true,
+  // },
   delivery: {
     type: Object,
     required: false,
-    default: null,
   },
+  // totalProductsAddedToCart: {
+  //   type: Number,
+  //   required: true,
+  // },
+  // totalAmount: {
+  //   type: Number,
+  //   required: true,
+  // },
 });
 
-const emit = defineEmits(['onClick']);
-const store = useStore();
+const emit = defineEmits(["onClick"]);
+
 const router = useRouter();
+const cartStore = useCartStore();
+const {cart, totalProductsAddedToCart, totalAmount} = storeToRefs(cartStore)
 
-const totalAmount = computed(() => +props.products.reduce((total, product) => (total += product.price * product.quantity), 0).toFixed(2));
+const incrementQuantity = (id) => {
+  cartStore.incrementQuantity(id);
+};
 
-const totalQuantity = computed(() => props.products.reduce((total, product) => (total += product.quantity), 0));
+const decrementQuantity = (id) => {
+  cartStore.decrementQuantity(id);
+};
+
+const removeProductFromCart = (id) => {
+  cartStore.removeProductFromCart(id);
+};
+
 const isFreeDelivery = computed(() => props.delivery.price === 0);
 
 const deliveryPrice = computed(() => {
-  if (!props.delivery) return;
-  return isFreeDelivery ? 'Free' : props.delivery.price;
+  if (!props.delivery.name) return;
+  return isFreeDelivery.value ? "Free" : props.delivery.price;
 });
-const total = computed(() => (isFreeDelivery ? totalAmount : (deliveryPrice + totalAmount).toFixed(2)));
 
-const onClick = (id) => {
+const total = computed(() =>
+  isFreeDelivery.value
+    ? totalAmount.value
+    : (deliveryPrice.value + totalAmount.value).toFixed(2)
+);
+
+const goToProductPage = (id) => {
   router.push(`/product/${id}`);
-  emit('onClick', 'cart');
+  emit("onClick", "cart");
 };
 </script>
 

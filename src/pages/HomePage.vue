@@ -1,5 +1,5 @@
 <template>
-  <catalog></catalog>
+  <Catalog />
 </template>
 
 <script setup>

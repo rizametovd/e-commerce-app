@@ -1,15 +1,15 @@
 <template>
   <div class="delivery-location">
-    <base-heading variant="h3" v-if="isLocationVisible">
+    <BaseHeading variant="h3" v-if="isLocationVisible">
       <span class="delivery-location__title">Your location is:</span>
       {{ location }}
-    </base-heading>
+    </BaseHeading>
     <div v-if="!isSelected" class="delivery-location__confirm-block">
-      <base-heading variant="h3">Is that correct?</base-heading>
+      <BaseHeading variant="h3">Is that correct?</BaseHeading>
       <div class="delivery-location__actions">
-        <base-button variant="outlined" @click="confirm(false)">No</base-button>
-        <base-button variant="contained" mode="success" @click="confirm(true)"
-          >Yes</base-button
+        <BaseButton variant="outlined" @click="confirm(false)">No</BaseButton>
+        <BaseButton variant="contained" mode="success" @click="confirm(true)"
+          >Yes</BaseButton
         >
       </div>
     </div>
@@ -20,50 +20,42 @@
   </div>
 </template>
 
-<script>
-import BaseIconButton from "./UI/Buttons/BaseIconButton.vue";
+<script setup>
 import BaseButton from "./UI/Buttons/BaseButton.vue";
 import BaseHeading from "./UI/BaseHeading.vue";
-export default {
-  emits: ["onConfirmLocationClick"],
-  components: { BaseIconButton, BaseButton, BaseHeading },
-  props: {
-    location: {
-      type: String,
-      required: true,
-    },
-  },
+import { ref } from "@vue/reactivity";
+import { computed } from "@vue/runtime-core";
 
-  data() {
-    return {
-      isCorrectRegion: false,
-      isSelected: false,
-    };
-  },
+const MESSAGE_SUCCESS = "Thank you. Your region will be set automatically";
+const MESSAGE_FAIL =
+  "We are sorry. Please enter your delivery region manually in the form below";
 
-  methods: {
-    confirm(isConfirmed) {
-      this.isCorrectRegion = isConfirmed;
-      this.isSelected = true;
-      this.$emit("onConfirmLocationClick", isConfirmed);
-    },
+const emit = defineEmits(["onConfirmLocationClick"]);
+const props = defineProps({
+  location: {
+    type: String,
+    required: true,
   },
+});
 
-  computed: {
-    message() {
-      return this.isCorrectRegion
-        ? "Thank you. Your region will be set automatically"
-        : "We are sorry. Please enter your delivery region manually in the form below";
-    },
+const isCorrectRegion = ref(false);
+const isSelected = ref(false);
 
-    isLocationVisible() {
-      return (
-        (this.location && !this.isSelected) ||
-        (this.location && this.isSelected && this.isCorrectRegion)
-      );
-    },
-  },
+const confirm = (isConfirmed) => {
+  isCorrectRegion.value = isConfirmed;
+  isSelected.value = true;
+  emit("onConfirmLocationClick", isConfirmed);
 };
+
+const message = computed(() =>
+  isCorrectRegion.value ? MESSAGE_SUCCESS : MESSAGE_FAIL
+);
+
+const isLocationVisible = computed(
+  () =>
+    (props.location && !isSelected.value) ||
+    (props.location && isSelected.value && isCorrectRegion.value)
+);
 </script>
 
 <style scoped>

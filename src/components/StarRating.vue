@@ -2,16 +2,16 @@
   <div class="star-rating">
     <div class="star-rating__stars">
       <span v-for="star in starLimit" :key="star">
-        <base-icon fill="lightgray">
-          <star-icon></star-icon>
-        </base-icon>
+        <BaseIcon fill="lightgray">
+          <StarIcon />
+        </BaseIcon>
       </span>
 
       <div class="star-rating__contained">
         <span v-for="star in starLimit" :key="star">
-          <base-icon fill="#ffa801">
-            <star-icon></star-icon>
-          </base-icon>
+          <BaseIcon fill="#ffa801">
+            <StarIcon />
+          </BaseIcon>
         </span>
       </div>
     </div>

@@ -1,12 +1,13 @@
 <template>
   <footer class="footer">
-    <hr />
-    <base-heading variant="h1" class="footer__title">The Footer</base-heading>
+    <BaseDivider />
+    <BaseHeading variant="h1" class="footer__title">The Footer</BaseHeading>
   </footer>
 </template>
 
 <script setup>
 import BaseHeading from "./UI/BaseHeading.vue";
+import BaseDivider from "@/components/UI/BaseDivider.vue";
 </script>
 
 <style scoped>
@@ -18,10 +19,5 @@ import BaseHeading from "./UI/BaseHeading.vue";
   justify-self: center;
   align-self: center;
   height: 100%;
-}
-
-hr {
-  border: 0;
-  border-top: 2px solid #f6f6f6;
 }
 </style>

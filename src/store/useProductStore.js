@@ -1,4 +1,4 @@
-import { wait, clearLocalStorare } from '@/utils/helpers';
+import { wait } from '@/utils/helpers';
 import { defineStore } from 'pinia';
 
 const FETCH_ATTEMPTS_COUNT = 3;
@@ -38,6 +38,7 @@ export const useProductStore = defineStore('products', {
       return state.products.find((item) => item.id === +id);
     },
   },
+
   actions: {
     async fetchProducts(attempt = 1) {
       try {
@@ -55,7 +56,7 @@ export const useProductStore = defineStore('products', {
         this.isLoading = false;
 
         if (attempt <= FETCH_ATTEMPTS_COUNT) {
-          this.fetchingError = {
+          this.error = {
             isError: true,
             message: e.message,
             errorCode: e.cause.status,
@@ -63,10 +64,10 @@ export const useProductStore = defineStore('products', {
           };
 
           await wait(attempt * FETCH_DELAY_REQUEST_MS);
-          return fetchProducts('fetchProducts', attempt + 1);
+          return this.fetchProducts(attempt + 1);
         }
 
-        this.serverHealth = { isDown: true, message: SERVER_ERROR_MESSAGE };
+        this.serverStatus = { isDown: true, message: SERVER_ERROR_MESSAGE };
       } finally {
         this.isLoading = false;
       }

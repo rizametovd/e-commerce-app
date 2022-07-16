@@ -54,9 +54,9 @@ https://polite-beijinho-ecade0.netlify.app
 
 ## Стек
 
-- Vue 3
+- Vue 3 Composition API
 - Vue Router
-- Vuex
+- Pinia
 - API товаров: [fakestoreapi.com](https://fakestoreapi.com/)
 - API геокодера: [BigDataCloud](https://www.bigdatacloud.com/docs/api/free-reverse-geocode-to-city-api)
 - Адаптивная верстка

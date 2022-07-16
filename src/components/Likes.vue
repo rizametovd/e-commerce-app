@@ -96,6 +96,7 @@ const goToProductPage = (id) => {
 }
 
 .likes__product-info-title {
+  text-align: left;
   cursor: pointer;
 }
 

@@ -9,7 +9,7 @@
           v-if="isProducts"
         />
       </div>
-      <hr />
+      <BaseDivider />
     </div>
 
     <FadeTransition>
@@ -40,6 +40,7 @@ import ProductList from "./ProductList.vue";
 import FailedHttpRequest from "./FailedHttpRequest.vue";
 import Loader from "./UI/Loader.vue";
 import FadeTransition from "./UI/FadeTransition.vue";
+import BaseDivider from '@/components/UI/BaseDivider.vue'
 import { ref } from "@vue/reactivity";
 import { computed } from "@vue/runtime-core";
 import { useProductStore } from "@/store/useProductStore";
@@ -89,13 +90,6 @@ const productList = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 20px;
-}
-
-hr {
-  border: 0;
-  width: 100%;
-  border-top: 2px solid #f6f6f6;
-  margin: 0;
 }
 
 .catalog__loader {

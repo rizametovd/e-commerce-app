@@ -2,9 +2,11 @@
   <div class="checkout">
     <BaseHeading variant="h1">Checkout</BaseHeading>
 
-    <BasePlaceholder v-if="isProductsInCart && !isProductsInCart" text="Cart is empty. Nothing to render" />
+    <BasePlaceholder v-if="!isProductsInCart"
+      >Cart is empty. Nothing to render</BasePlaceholder
+    >
 
-    <div class="checkout__content" v-if="isProductsInCart && isProductsInCart">
+    <div class="checkout__content" v-if="isProductsInCart">
       <BaseCard>
         <Cart :delivery="delivery" />
       </BaseCard>

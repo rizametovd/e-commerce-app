@@ -11,9 +11,5 @@ export const useQuantity = () => {
     quantity.value -= 1;
   };
 
-  return [
-    quantity,
-    incrementQuantity,
-    decrementQuantity,
-  ];
+  return [quantity, incrementQuantity, decrementQuantity];
 };

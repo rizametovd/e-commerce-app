@@ -3,12 +3,7 @@
     <BaseCard :isFullWidth="true">
       <div class="card__container">
         <div class="card__image-container">
-          <img
-            :src="image"
-            class="card__image"
-            :alt="title"
-            @click="goToPage(id)"
-          />
+          <img :src="image" class="card__image" :alt="title" @click="goToPage(id)" />
 
           <div class="card__like-btn">
             <BaseIconButton
@@ -25,9 +20,7 @@
           </div>
         </div>
 
-        <BaseHeading variant="h4" class="card__title" @click="goToPage(id)">{{
-          title
-        }}</BaseHeading>
+        <BaseHeading variant="h4" class="card__title" @click="goToPage(id)">{{ title }}</BaseHeading>
 
         <div class="card__rating">
           <img src="../assets/star-icon.svg" />
@@ -37,30 +30,14 @@
         <h3 class="card__price">${{ price }}</h3>
 
         <div class="card__actions" v-if="!isProductInCart">
-          <QuantityBlock
-            @decrement="decrementQuantity"
-            @increment="incrementQuantity"
-            :quantity="quantity"
-          />
-          <BaseIconButton
-            variant="contained"
-            text="Add to cart"
-            iconColor="lightgray"
-            iconHoverColor="#ffa801"
-            @click="addToCart"
-          >
+          <QuantityBlock @decrement="decrementQuantity" @increment="incrementQuantity" :quantity="quantity" />
+          <BaseIconButton variant="contained" text="Add to cart" iconColor="lightgray" iconHoverColor="#ffa801" @click="addToCart">
             <CartIcon />
           </BaseIconButton>
         </div>
 
         <FadeTransition>
-          <BaseButton
-            @click="openModal('cart')"
-            variant="contained"
-            mode="success"
-            v-if="isProductInCart"
-            >Already is in your Cart</BaseButton
-          >
+          <BaseButton @click="openModal('cart')" variant="contained" mode="success" v-if="isProductInCart">Already is in your Cart</BaseButton>
         </FadeTransition>
       </div>
     </BaseCard>
@@ -68,21 +45,21 @@
 </template>
 
 <script setup>
-import LikeIcon from "./icons/LikeIcon.vue";
-import CartIcon from "./icons/CartIcon.vue";
-import BaseCard from "./UI/BaseCard.vue";
-import QuantityBlock from "./UI/QuantityBlock.vue";
-import BaseButton from "./UI/Buttons/BaseButton.vue";
-import BaseIconButton from "./UI/Buttons/BaseIconButton.vue";
-import FadeTransition from "./UI/FadeTransition.vue";
-import BaseHeading from "./UI/BaseHeading.vue";
-import { ref } from "@vue/reactivity";
-import { computed } from "@vue/runtime-core";
-import { useRouter } from "vue-router";
-import { useCartStore } from "@/store/useCartStore";
-import { useLikeStore } from "@/store/useLikeStore";
-import { useCommonStore } from "@/store/useCommonStore";
-import {useQuantity} from '@/hooks/quantity.js';
+import LikeIcon from './icons/LikeIcon.vue';
+import CartIcon from './icons/CartIcon.vue';
+import BaseCard from './UI/BaseCard.vue';
+import QuantityBlock from './UI/QuantityBlock.vue';
+import BaseButton from './UI/Buttons/BaseButton.vue';
+import BaseIconButton from './UI/Buttons/BaseIconButton.vue';
+import FadeTransition from './UI/FadeTransition.vue';
+import BaseHeading from './UI/BaseHeading.vue';
+import { ref } from '@vue/reactivity';
+import { computed } from '@vue/runtime-core';
+import { useRouter } from 'vue-router';
+import { useCartStore } from '@/store/useCartStore';
+import { useLikeStore } from '@/store/useLikeStore';
+import { useCommonStore } from '@/store/useCommonStore';
+import { useQuantity } from '@/hooks/quantity.js';
 
 const props = defineProps({
   image: {
@@ -113,7 +90,6 @@ const likesStore = useLikeStore();
 const commonStore = useCommonStore();
 const router = useRouter();
 
-
 const product = computed(() => {
   return {
     id: props.id,
@@ -125,13 +101,9 @@ const product = computed(() => {
   };
 });
 
-const isProductInCart = computed(
-  () => cartStore.productInCart(props.id) !== undefined
-);
+const isProductInCart = computed(() => cartStore.productInCart(props.id) !== undefined);
 
-const isProductLiked = computed(
-  () => likesStore.likedProduct(props.id) !== undefined
-);
+const isProductLiked = computed(() => likesStore.likedProduct(props.id) !== undefined);
 
 const openModal = (modal) => {
   commonStore.openModal(modal);
@@ -147,7 +119,7 @@ const like = () => {
 
 const addToCart = () => {
   cartStore.setProductToCart(product.value);
-  openModal("cart");
+  openModal('cart');
 };
 </script>
 
@@ -206,7 +178,7 @@ const addToCart = () => {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  gap: 47px;
+  gap: 20px;
 }
 
 @media screen and (min-width: 768px) {
@@ -218,6 +190,10 @@ const addToCart = () => {
   .card__title:hover {
     transition: color 0.1s linear;
     color: #ffa801;
+  }
+
+  .card__actions {
+    gap: 47px;
   }
 }
 </style>
